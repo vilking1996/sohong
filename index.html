@@ -199,62 +199,64 @@
 
   
 
-<!-- Container chứa logo giữa màn hình -->
-<div id="logo-column">
+<!-- Container chứa logo giữa khung hình phía dưới -->
+<div id="logo-row">
   <!-- VISA -->
   <div class="bank-logo-container">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="VISA Logo" class="bank-logo">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="VISA" class="bank-logo">
     <canvas class="smoke-canvas"></canvas>
   </div>
 
   <!-- Vietcombank -->
   <div class="bank-logo-container">
-    <img src="https://upload.wikimedia.org/wikipedia/vi/8/85/Vietcombank_Logo.png" alt="Vietcombank Logo" class="bank-logo">
+    <img src="https://upload.wikimedia.org/wikipedia/vi/8/85/Vietcombank_Logo.png" alt="Vietcombank" class="bank-logo">
     <canvas class="smoke-canvas"></canvas>
   </div>
 
   <!-- Sacombank -->
   <div class="bank-logo-container">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/Logo-Sacombank-new.png" alt="Sacombank Logo" class="bank-logo">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/Logo-Sacombank-new.png" alt="Sacombank" class="bank-logo">
     <canvas class="smoke-canvas"></canvas>
   </div>
 
   <!-- VietinBank -->
   <div class="bank-logo-container">
-    <img src="https://upload.wikimedia.org/wikipedia/vi/9/9d/Logo_Vietinbank.png" alt="VietinBank Logo" class="bank-logo">
+    <img src="https://upload.wikimedia.org/wikipedia/vi/9/9d/Logo_Vietinbank.png" alt="VietinBank" class="bank-logo">
     <canvas class="smoke-canvas"></canvas>
   </div>
 </div>
 
 <!-- CSS -->
 <style>
-  #logo-column {
+  #logo-row {
     position: fixed;
-    top: 129%;
+    bottom: 5%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    gap: 0px; /* Sát tuyệt đối */
+    gap: 20px;
+    width: auto;
+    padding: 10px;
+    background: transparent;
     z-index: 9999;
     pointer-events: none;
   }
 
   .bank-logo-container {
     position: relative;
-    width: 177px;
-    height: 177px;
-    margin: 0; /* Xóa khoảng trắng */
-    padding: 0;
+    width: 80px;
+    height: 80px;
+    flex: 0 0 auto;
   }
 
   .bank-logo {
     width: 100%;
+    height: auto;
     animation: spin 6s linear infinite;
     position: relative;
     z-index: 2;
-    display: block;
   }
 
   @keyframes spin {
@@ -264,26 +266,26 @@
 
   .smoke-canvas {
     position: absolute;
-    top: -60px;
-    left: -60px;
-    width: 280px;
-    height: 280px;
+    top: -50px;
+    left: -50px;
+    width: 180px;
+    height: 180px;
     z-index: 1;
     pointer-events: none;
   }
 </style>
 
-<!-- Script tạo hiệu ứng khói -->
+<!-- JavaScript tạo hiệu ứng khói đen -->
 <script>
   document.querySelectorAll('.smoke-canvas').forEach(canvas => {
     const ctx = canvas.getContext('2d');
-    canvas.width = 280;
-    canvas.height = 280;
+    canvas.width = 180;
+    canvas.height = 180;
     let particles = [];
 
     function createParticle() {
       const angle = Math.random() * 2 * Math.PI;
-      const radius = 40 + Math.random() * 30;
+      const radius = 30 + Math.random() * 20;
       const x = canvas.width / 2 + Math.cos(angle) * radius;
       const y = canvas.height / 2 + Math.sin(angle) * radius;
 
@@ -291,8 +293,8 @@
         x,
         y,
         vx: (Math.random() - 0.5),
-        vy: (Math.random() - 1.5) * 1.5,
-        size: Math.random() * 25 + 10,
+        vy: (Math.random() - 1.5),
+        size: Math.random() * 20 + 5,
         alpha: 1
       });
     }
@@ -309,13 +311,13 @@
         ctx.fill();
         p.x += p.vx;
         p.y += p.vy;
-        p.alpha -= 0.01;
+        p.alpha -= 0.015;
       });
       particles = particles.filter(p => p.alpha > 0);
       requestAnimationFrame(draw);
     }
 
-    setInterval(createParticle, 120);
+    setInterval(createParticle, 100);
     draw();
   });
 </script>
