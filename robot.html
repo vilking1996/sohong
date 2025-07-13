@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Hiển thị 6 khung Sketchfab</title>
+  <title>Hiển thị 8 khung Sketchfab</title>
   <style>
     html, body {
       margin: 0;
@@ -39,21 +39,33 @@
       border: none;
     }
 
-    /* Khung chồng thêm bên trái & phải */
+    /* Khung chồng bên trái & phải giữa */
     .side-frame {
       position: absolute;
-      top: 33.3%; /* Giữa chiều cao */
       height: 33.3%;
       width: 25%;
       z-index: 10;
       box-shadow: 0 0 10px rgba(0,0,0,0.5);
     }
 
-    .left-frame {
+    .left-frame-middle {
+      top: 33.3%;
       left: 0;
     }
 
-    .right-frame {
+    .right-frame-middle {
+      top: 33.3%;
+      right: 0;
+    }
+
+    /* Khung chồng bên trái & phải trên */
+    .left-frame-top {
+      top: 0;
+      left: 0;
+    }
+
+    .right-frame-top {
+      top: 0;
       right: 0;
     }
   </style>
@@ -81,12 +93,20 @@
     </div>
   </div>
 
-  <!-- Thêm 2 khung hiển thị bên trái và phải -->
-  <div class="side-frame left-frame">
+  <!-- Hai khung bên trái và phải giữa -->
+  <div class="side-frame left-frame-middle">
     <iframe src="https://sketchfab.com/models/6af45961a024459cae515c3b5cad8376/embed"></iframe>
   </div>
-  <div class="side-frame right-frame">
+  <div class="side-frame right-frame-middle">
     <iframe src="https://sketchfab.com/models/6af45961a024459cae515c3b5cad8376/embed"></iframe>
+  </div>
+
+  <!-- Hai khung bên trái và phải phía trên -->
+  <div class="side-frame left-frame-top">
+    <iframe src="https://sketchfab.com/models/8bb62a1b3baf44d29299001f639899a3/embed"></iframe>
+  </div>
+  <div class="side-frame right-frame-top">
+    <iframe src="https://sketchfab.com/models/8bb62a1b3baf44d29299001f639899a3/embed"></iframe>
   </div>
 </body>
 </html>
