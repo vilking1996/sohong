@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Body Damage Sync Viewer</title>
+  <style>
+    html, body { margin: 0; height: 100%; overflow: hidden; }
+    #sketchfab-viewer { width: 100vw; height: 100vh; }
+  </style>
+</head>
+<body>
+  <div id="sketchfab-viewer"></div>
+
+  <script src="https://static.sketchfab.com/api/sketchfab-viewer-1.12.1.js"></script>
+  <script>
+    const iframe = document.createElement('iframe');
+    iframe.id = 'api-frame';
+    iframe.style = 'width:100%; height:100%; border:0;';
+    document.getElementById('sketchfab-viewer').appendChild(iframe);
+
+    const client = new Sketchfab(iframe);
+    const MODEL_UID = '7ea21567ff9942bf9511e2d99efe85d9';
+    let api = null;
+
+    const partToMaterial = {
+      chest: 'Material.001',
+      left_arm: 'Material.002',
+      right_arm: 'Material.003',
+      head: 'Material.004',
+      leg: 'Material.005',
+    };
+
+    const defaultColor = [0.8, 0.8, 0.8];
+    const highlightColor = [0, 1, 0]; // sáng xanh
+    const damageColor = [1, 0, 0];    // đỏ
+
+    let currentVisible = [];
+    let currentDamaged = [];
+
+    client.init(MODEL_UID, {
+      success: function (apiInstance) {
+        api = apiInstance;
+        api.start();
+        api.addEventListener('viewerready', function () {
+          console.log('Sketchfab ready');
+        });
+      },
+      error: function () {
+        alert('Không thể tải Sketchfab');
+      },
+      autostart: 1,
+      preload: 1
+    });
+
+    // 🔁 Cập nhật màu cho các vùng mô hình
+    function updateHighlights() {
+      api.getMaterialList((err, materials) => {
+        if (err) return;
+
+        materials.forEach(mat => {
+          let newColor = defaultColor;
+          for (const part in partToMaterial) {
+            if (mat.name === partToMaterial[part]) {
+              if (currentDamaged.includes(part)) {
+                newColor = damageColor;
+              } else if (currentVisible.includes(part)) {
+                newColor = highlightColor;
+              }
+              break;
+            }
+          }
+          mat.channels.AlbedoPBR.color = newColor;
+          api.setMaterial(mat);
+        });
+      });
+    }
+
+    // 📡 WebSocket nhận dữ liệu từ ESP32
+    const socket = new WebSocket('ws://localhost:81'); // đổi IP đúng với ESP32 hoặc server
+
+    socket.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        currentVisible = data.visible || [];
+        currentDamaged = data.damage || [];
+        updateHighlights();
+      } catch (e) {
+        console.error('Dữ liệu không hợp lệ:', event.data);
+      }
+    };
+  </script>
+</body>
+</html>
