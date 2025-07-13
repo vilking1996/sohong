@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Hiển thị 4 khung Sketchfab</title>
+  <title>Hiển thị 6 khung Sketchfab</title>
   <style>
     html, body {
       margin: 0;
@@ -38,6 +38,24 @@
       height: 100%;
       border: none;
     }
+
+    /* Khung chồng thêm bên trái & phải */
+    .side-frame {
+      position: absolute;
+      top: 33.3%; /* Giữa chiều cao */
+      height: 33.3%;
+      width: 25%;
+      z-index: 10;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    .left-frame {
+      left: 0;
+    }
+
+    .right-frame {
+      right: 0;
+    }
   </style>
 </head>
 <body>
@@ -61,6 +79,14 @@
     <div class="bottom-frame">
       <iframe src="https://sketchfab.com/models/90d7eecef0034b25beff96ebaa15190c/embed"></iframe>
     </div>
+  </div>
+
+  <!-- Thêm 2 khung hiển thị bên trái và phải -->
+  <div class="side-frame left-frame">
+    <iframe src="https://sketchfab.com/models/6af45961a024459cae515c3b5cad8376/embed"></iframe>
+  </div>
+  <div class="side-frame right-frame">
+    <iframe src="https://sketchfab.com/models/6af45961a024459cae515c3b5cad8376/embed"></iframe>
   </div>
 </body>
 </html>
