@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>🎟️ Vé Số Từ Ảnh</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html, body {
+      margin: 0; padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: url('https://c1.wallpaperflare.com/preview/348/680/5/trang-an-bai-dinh-ninh-binh-province-landscape.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    #container {
+      margin-top: 30px;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 25px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 0 15px #ff4081;
+      max-width: 90vw;
+    }
+    #selfieImg {
+      margin: 15px auto 0 auto;
+      display: block;
+      max-width: 240px;
+      border-radius: 10px;
+    }
+    #result {
+      margin-top: 15px;
+      white-space: pre-wrap;
+      background: rgba(255,255,255,0.1);
+      padding: 10px;
+      border-radius: 10px;
+      max-height: 35vh;
+      overflow-y: auto;
+      font-size: 14px;
+      text-align: left;
+    }
+    #ticket {
+      margin-top: 10px;
+      font-size: 18px;
+      color: #ffd700;
+    }
+    #countdown {
+      margin-top: 10px;
+      font-size: 16px;
+      color: #00eaff;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <h1>📷 Chụp Hoặc Tải Ảnh Selfie Để Nhận Vé Số</h1>
+    <input type="file" accept="image/*" capture="environment" id="fileInput">
+    <div id="ticket">🎫 Chưa có vé</div>
+    <img id="selfieImg" alt="Ảnh selfie">
+    <div id="countdown">⏳ Đang đếm ngược...</div>
+    <h3>📅 Danh sách 255 vé số (tạo mới mỗi ~7 tiếng)</h3>
+    <div id="result">Đang chờ...</div>
+  </div>
+
+  <canvas id="fireworks" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;"></canvas>
+  <audio id="winSound" src="https://tiengdong.com/wp-content/uploads/Tieng-vo-tay-hoan-ho-www_tiengdong_com.mp3  
+"></audio>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
+  <script>
+    const fileInput = document.getElementById('fileInput');
+    const ticketBox = document.getElementById('ticket');
+    const selfieImg = document.getElementById('selfieImg');
+    const result = document.getElementById('result');
+    const fireCtx = document.getElementById('fireworks').getContext('2d');
+    const winSound = document.getElementById('winSound');
+    const countdownEl = document.getElementById('countdown');
+
+    let currentFile = null;
+    let countdownSeconds = 25177;
+
+    fileInput.onchange = async (e) => {
+      currentFile = e.target.files[0];
+      if (!currentFile) return;
+      await processFile(currentFile);
+    };
+
+    async function processFile(file) {
+      const url = URL.createObjectURL(file);
+      selfieImg.src = url;
+      selfieImg.style.display = 'block';
+
+      const arrayBuffer = await file.arrayBuffer();
+      const hash = await crypto.subtle.digest("SHA-256", arrayBuffer);
+      const hashArray = Array.from(new Uint8Array(hash));
+      const numberHash = hashArray.reduce((sum, b) => sum + b, 0);
+      const ticket = (numberHash % 100000).toString().padStart(5, '0');
+
+      ticketBox.innerHTML = `🎫 Vé của bạn: <b>${ticket}</b>`;
+      drawTickets(ticket);
+    }
+
+    function generateTickets(seed) {
+      const set = new Set();
+      Math.seedrandom(seed);
+      while (set.size < 255) {
+        const num = Math.floor(Math.random() * 100000).toString().padStart(5, '0');
+        set.add(num);
+      }
+      return Array.from(set);
+    }
+
+    function drawTickets(myTicket) {
+      const now = Math.floor(Date.now() / (1000 * 25177));
+      const seed = now.toString();
+      const tickets = generateTickets(seed);
+      const winners = new Set();
+      while (winners.size < 177) {
+        winners.add(tickets[Math.floor(Math.random() * tickets.length)]);
+      }
+
+      result.textContent = tickets.map(t =>
+        `${t} — ${winners.has(t) ? '🎉 5 triệu USD' : '💸 2 triệu USD'}`
+      ).join('\n');
+
+      if (winners.has(myTicket)) {
+        ticketBox.innerHTML += `<br><b style="color:lightgreen;">🎯 Bạn đã TRÚNG 5 triệu USD!</b>`;
+        winSound.play();
+        fireEffect();
+      } else {
+        ticketBox.innerHTML += `<br><b style="color:pink;">😢 Rất tiếc, bạn chưa trúng. Hãy thử lại nhé!</b>`;
+      }
+    }
+
+    function fireEffect() {
+      const fw = document.getElementById('fireworks');
+      fw.width = window.innerWidth;
+      fw.height = window.innerHeight;
+      let particles = [];
+      for (let i = 0; i < 100; i++) {
+        particles.push({
+          x: fw.width / 2,
+          y: fw.height / 2,
+          vx: Math.random() * 6 - 3,
+          vy: Math.random() * -6 - 1,
+          alpha: 1
+        });
+      }
+      function animate() {
+        fireCtx.clearRect(0, 0, fw.width, fw.height);
+        particles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.alpha -= 0.01;
+          fireCtx.fillStyle = `rgba(255, 200, 0, ${p.alpha})`;
+          fireCtx.beginPath();
+          fireCtx.arc(p.x, p.y, 3, 0, 2 * Math.PI);
+          fireCtx.fill();
+        });
+        particles = particles.filter(p => p.alpha > 0);
+        if (particles.length) requestAnimationFrame(animate);
+      }
+      animate();
+    }
+
+    function updateCountdown() {
+      const hrs = Math.floor(countdownSeconds / 3600).toString().padStart(2, '0');
+      const mins = Math.floor((countdownSeconds % 3600) / 60).toString().padStart(2, '0');
+      const secs = (countdownSeconds % 60).toString().padStart(2, '0');
+      countdownEl.textContent = `⏳ Còn ${hrs}:${mins}:${secs} nữa sẽ cập nhật vé số mới`;
+
+      countdownSeconds--;
+
+      if (countdownSeconds < 0) {
+        countdownSeconds = 25177;
+        if (currentFile) processFile(currentFile);
+      }
+    }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+  </script>
+</body>
+</html>
