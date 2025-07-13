@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Hiển thị 4 khung Sketchfab</title>
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .top-frame {
+      height: 33.3%;
+    }
+
+    .middle-frames {
+      display: flex;
+      height: 33.3%;
+    }
+
+    .middle-frame {
+      flex: 1;
+    }
+
+    .bottom-frame {
+      height: 33.3%;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Khung trên cùng 33.3% -->
+    <div class="top-frame">
+      <iframe src="https://sketchfab.com/models/1532b74a76dc43d18a4fc2c5ba1f2229/embed"></iframe>
+    </div>
+
+    <!-- Hai khung giữa 33.3%, chia đôi -->
+    <div class="middle-frames">
+      <div class="middle-frame">
+        <iframe src="https://sketchfab.com/models/2e6d680639bc424abd3af2e2b1ee944f/embed"></iframe>
+      </div>
+      <div class="middle-frame">
+        <iframe src="https://sketchfab.com/models/2e6d680639bc424abd3af2e2b1ee944f/embed"></iframe>
+      </div>
+    </div>
+
+    <!-- Khung dưới cùng 33.3% -->
+    <div class="bottom-frame">
+      <iframe src="https://sketchfab.com/models/90d7eecef0034b25beff96ebaa15190c/embed"></iframe>
+    </div>
+  </div>
+</body>
+</html>
