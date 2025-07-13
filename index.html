@@ -1,185 +1,379 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <title>🎟️ Vé Số Từ Ảnh</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sổ Hồng Online</title>
+<style>
+  body, html {
+    margin: 0; padding: 0; height: 100vh; font-family: Arial, sans-serif;
+    background: url('https://onevivu.vn/wp-content/uploads/2020/10/Du-lich-Trang-An-Ninh-Binh-1.jpg') no-repeat center/cover;
+  }
+  #container {
+    display: flex; height: 100vh; background: rgba(255,255,255,0);
+  }
+  #left-panel {
+    flex: 1;
+    background: url('nen.png');
+    background-size: 69%;
+    height: 100vh;
+    background-repeat: no-repeat;
+    background-position: center; 
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    border-right: 2px solid #ccc;
+    position: relative;
+  }
+  #left-panel h2 {
+    margin-top: 0;
+    font-weight: bold;
+    font-size: 24px;
+    border-bottom: 2px solid #333;
+    padding-bottom: 10px;
+  }
+  #search-bar {
+    margin-bottom: 20px;
+    display: flex;
+  }
+  #search-input {
+    flex: 1;
+    padding: 8px;
+    font-size: 16px;
+  }
+  #search-button {
+    padding: 8px 16px;
+    font-size: 16px;
+    cursor: pointer;
+    background: #007bff;
+    border: none;
+    color: pink;
+  }
+  #results {
+    max-height: 30vh;
+    overflow-y: auto;
+  }
+  .record-item {
+    padding: 10px;
+    border-bottom: 1px solid #999;
+    cursor: pointer;
+  }
+  .record-item:hover {
+    background-color: #ddd;
+  }
+  #sohong-display {
+    margin-top: 20px;
+    background: transparent;
+    border: 2px solid #FFC0CB;
+    padding: 20px;
+    box-shadow: inset 0 0 10px #ADD8E6;
+    font-family: 'Times New Roman', serif;
+    line-height: 1.6;
+    font-size: 16px;
+    max-height: 35vh;
+    overflow-y: auto;
+  }
+  #right-panel {
+    flex: 1;
+    position: relative;
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+  #right-panel img, #right-panel video {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  
+
+</style>
+</head>
+<body>
+  <div id="container">
+    <div id="left-panel">
+      <h2>Sổ Hồng Online</h2>
+      <div id="search-bar">
+        <input type="text" id="search-input" placeholder="ID or Name..." />
+        <button id="search-button">Tìm kiếm</button>
+      </div>
+      <div id="results"></div>
+      <div id="sohong-display">Vui lòng chọn một sổ hồng để xem chi tiết.</div>
+    </div>
+    <div id="right-panel">
+      <p style="color:#fff;">Chọn sổ hồng để xem hình/video vị trí đất</p>
+    </div>
+  </div>
+<script src="data.js"></script>
+<script src="script.js"></script>
+<script>
+  const resultsDiv = document.getElementById('results');
+  const sohongDisplay = document.getElementById('sohong-display');
+  const rightPanel = document.getElementById('right-panel');
+  const searchInput = document.getElementById('search-input');
+  const searchButton = document.getElementById('search-button');
+
+  function renderResults(list) {
+    resultsDiv.innerHTML = '';
+    if (list.length === 0) {
+      resultsDiv.innerHTML = '<p>Không tìm thấy kết quả phù hợp.</p>';
+      return;
+    }
+    list.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'record-item';
+      div.textContent = `${item.id} - ${item.chuHo}`;
+      div.onclick = () => showDetails(item);
+      resultsDiv.appendChild(div);
+    });
+  }
+
+  function showDetails(sohong) {
+    sohongDisplay.innerHTML = `
+      <strong>Số Sổ Hồng:</strong> ${sohong.id}<br>
+      <strong>Chủ Hộ:</strong> ${sohong.chuHo}<br>
+      <strong>Địa Chỉ:</strong> ${sohong.diaChi}<br>
+      <strong>Số Dư:</strong> ${sohong.soDu} VNĐ<br>
+      <pre style="white-space: pre-wrap; margin-top: 10px;">${sohong.thongTin}</pre>
+    `;
+    rightPanel.innerHTML = '';
+    if (sohong.videoUrl) {
+      const video = document.createElement('video');
+      video.src = sohong.videoUrl;
+      video.controls = true;
+      rightPanel.appendChild(video);
+    } else if (sohong.imgUrl) {
+      const img = document.createElement('img');
+      img.src = sohong.imgUrl;
+      rightPanel.appendChild(img);
+    } else {
+      rightPanel.innerHTML = '<p style="color:#fff;">Không có ảnh hoặc video vị trí đất.</p>';
+    }
+  }
+
+  function searchSoHong() {
+    const keyword = searchInput.value.trim().toLowerCase();
+    if (!keyword) {
+      renderResults([]);
+      sohongDisplay.textContent = 'Vui lòng nhập từ khóa tìm kiếm.';
+      rightPanel.innerHTML = '<p style="color:#fff;">Chọn sổ hồng để xem hình/video vị trí đất</p>';
+      return;
+    }
+    const filtered = data.filter(item =>
+      item.id.toLowerCase().includes(keyword) || item.chuHo.toLowerCase().includes(keyword)
+    );
+    renderResults(filtered);
+    sohongDisplay.textContent = 'Chọn một sổ hồng để xem chi tiết.';
+    rightPanel.innerHTML = '<p style="color:#fff;">Chọn sổ hồng để xem hình/video vị trí đất</p>';
+  }
+
+  searchButton.addEventListener('click', searchSoHong);
+  searchInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') searchSoHong();
+  });
+
+  renderResults(data);
+</script>
+
+  <meta charset="UTF-8" />
+  <title>Chuyển khoản ID</title>
   <style>
-    html, body {
-      margin: 0; padding: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: url('https://c1.wallpaperflare.com/preview/348/680/5/trang-an-bai-dinh-ninh-binh-province-landscape.jpg') no-repeat center center fixed;
-      background-size: cover;
-      color: #59688f;
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      height: 100vh;
     }
-    #container {
-      margin-top: 30px;
-      background: rgba(0, 0, 0, 0.7);
-      padding: 25px;
-      border-radius: 15px;
-      text-align: center;
-      box-shadow: 0 0 15px #ff4081;
-      max-width: 90vw;
-    }
-    #selfieImg {
-      margin: 15px auto 0 auto;
-      display: block;
-      max-width: 240px;
-      border-radius: 10px;
-    }
-    #result {
-      margin-top: 15px;
-      white-space: pre-wrap;
-      background: rgba(255,255,255,0.1);
-      padding: 10px;
-      border-radius: 10px;
-      max-height: 35vh;
+    #form-container {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 48.5%;
+      height: 22%;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 17px;
       overflow-y: auto;
+      background: transparent;
+      box-shadow: -2px 2px 8px rgba(0,0,0,0.1);
+    }
+    #form-container input {
+      flex: 1 1 25%;
+      padding: 8px;
+      font-size: 17px;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+     #form-container button {
+      flex: 1 1 25%;
+      height: 48px;
+      background: rgba(0, 0, 0, 0.25);
+    }
+    #log {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 47%;
+      height: 17%;
+      overflow-y: scroll;
+      background: transparent;
+      color: #0f0;
+      padding: 10px;
       font-size: 14px;
-      text-align: left;
-    }
-    #ticket {
-      margin-top: 10px;
-      font-size: 18px;
-      color: #ffd700;
-    }
-    #countdown {
-      margin-top: 10px;
-      font-size: 16px;
-      color: #00eaff;
     }
   </style>
 </head>
 <body>
-  <div id="container">
-    <h1>📷 Chụp Hoặc Tải Ảnh Selfie Để Nhận Vé Số</h1>
-    <input type="file" accept="image/*" capture="environment" id="fileInput">
-    <div id="ticket">🎫 Chưa có vé</div>
-    <img id="selfieImg" alt="Ảnh selfie">
-    <div id="countdown">⏳ Đang đếm ngược...</div>
-    <h3>📅 Danh sách 255 vé số (tạo mới mỗi ~7 tiếng)</h3>
-    <div id="result">Đang chờ...</div>
+  <div id="form-container">
+    <h3></h3>
+    <input id="sender" placeholder="ID người gửi"><br><br>
+    <input id="receiver" placeholder="ID nhận/Visa"><br><br>
+    <input id="amount" type="number" placeholder="Số tiền"><br><br>
+    <button id="record">🎥 Quay video 8 giây</button><br><br>
+    <video id="preview" autoplay muted width="200"></video><br><br>
+    <button id="submit" disabled>Gửi chuyển khoản</button>
+    <p id="msg"></p>
   </div>
 
-  <canvas id="fireworks" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;"></canvas>
-  <audio id="winSound" src="https://tiengdong.com/wp-content/uploads/Tieng-vo-tay-hoan-ho-www_tiengdong_com.mp3  
-"></audio>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
+  <div id="log"></div>
+
   <script>
-    const fileInput = document.getElementById('fileInput');
-    const ticketBox = document.getElementById('ticket');
-    const selfieImg = document.getElementById('selfieImg');
-    const result = document.getElementById('result');
-    const fireCtx = document.getElementById('fireworks').getContext('2d');
-    const winSound = document.getElementById('winSound');
-    const countdownEl = document.getElementById('countdown');
+    let stream, mediaRecorder, recordedChunks = [], videoBlob;
+    let faceDetector;
 
-    let currentFile = null;
-    let countdownSeconds = 25177;
+    if ('FaceDetector' in window) {
+      faceDetector = new FaceDetector();
+    }
 
-    fileInput.onchange = async (e) => {
-      currentFile = e.target.files[0];
-      if (!currentFile) return;
-      await processFile(currentFile);
+    document.getElementById('record').onclick = async () => {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        document.getElementById('preview').srcObject = stream;
+
+        mediaRecorder = new MediaRecorder(stream);
+        recordedChunks = [];
+
+        mediaRecorder.ondataavailable = e => recordedChunks.push(e.data);
+
+        mediaRecorder.onstop = async () => {
+          videoBlob = new Blob(recordedChunks, { type: 'video/webm' });
+          log('🎥 Video đã quay xong. Kiểm tra khuôn mặt và xác minh là ảnh động...');
+
+          const isValid = await checkFaceInMotion(videoBlob);
+          if (isValid) {
+            log("✅ Video hợp lệ (có khuôn mặt và chuyển động). Cho phép gửi.");
+            document.getElementById('submit').disabled = true;
+            setTimeout(() => {
+              document.getElementById('submit').disabled = false;
+            }, 1000);
+          } else {
+            log("❌ Video không hợp lệ. Vui lòng quay lại.");
+            alert("Video không hợp lệ. Cần có khuôn mặt và chuyển động!");
+            document.getElementById('submit').disabled = true;
+          }
+        };
+
+        mediaRecorder.start();
+        log('🔴 Đang quay video...');
+        setTimeout(() => mediaRecorder.stop(), 8000);
+      } catch (err) {
+        alert("Không thể truy cập camera/micro: " + err);
+      }
     };
 
-    async function processFile(file) {
-      const url = URL.createObjectURL(file);
-      selfieImg.src = url;
-      selfieImg.style.display = 'block';
+    document.getElementById('submit').onclick = () => {
+      const sender = document.getElementById('sender').value.trim();
+      const receiver = document.getElementById('receiver').value.trim();
+      const amount = document.getElementById('amount').value.trim();
 
-      const arrayBuffer = await file.arrayBuffer();
-      const hash = await crypto.subtle.digest("SHA-256", arrayBuffer);
-      const hashArray = Array.from(new Uint8Array(hash));
-      const numberHash = hashArray.reduce((sum, b) => sum + b, 0);
-      const ticket = (numberHash % 100000).toString().padStart(5, '0');
+      if (!videoBlob) return alert("Bạn phải quay video trước!");
 
-      ticketBox.innerHTML = `🎫 Vé của bạn: <b>${ticket}</b>`;
-      drawTickets(ticket);
-    }
+      const formData = new FormData();
+      formData.append("sender", sender);
+      formData.append("receiver", receiver);
+      formData.append("amount", amount);
+      formData.append("video", videoBlob, "recording.webm");
 
-    function generateTickets(seed) {
-      const set = new Set();
-      Math.seedrandom(seed);
-      while (set.size < 255) {
-        const num = Math.floor(Math.random() * 100000).toString().padStart(5, '0');
-        set.add(num);
-      }
-      return Array.from(set);
-    }
-
-    function drawTickets(myTicket) {
-      const now = Math.floor(Date.now() / (1000 * 25177));
-      const seed = now.toString();
-      const tickets = generateTickets(seed);
-      const winners = new Set();
-      while (winners.size < 177) {
-        winners.add(tickets[Math.floor(Math.random() * tickets.length)]);
-      }
-
-      result.textContent = tickets.map(t =>
-        `${t} — ${winners.has(t) ? '🎉 5 triệu USD' : '💸 2 triệu USD'}`
-      ).join('\n');
-
-      if (winners.has(myTicket)) {
-        ticketBox.innerHTML += `<br><b style="color:lightgreen;">🎯 Bạn đã TRÚNG 5 triệu USD!</b>`;
-        winSound.play();
-        fireEffect();
-      } else {
-        ticketBox.innerHTML += `<br><b style="color:pink;">😢 Rất tiếc, bạn chưa trúng. Hãy thử lại nhé!</b>`;
-      }
-    }
-
-    function fireEffect() {
-      const fw = document.getElementById('fireworks');
-      fw.width = window.innerWidth;
-      fw.height = window.innerHeight;
-      let particles = [];
-      for (let i = 0; i < 100; i++) {
-        particles.push({
-          x: fw.width / 2,
-          y: fw.height / 2,
-          vx: Math.random() * 6 - 3,
-          vy: Math.random() * -6 - 1,
-          alpha: 1
+      fetch("/transfer", { method: "POST", body: formData })
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("msg").innerText = data.message;
+          log(data.message);
+          if (data.updatedData) {
+            window.data = data.updatedData;
+          }
         });
-      }
-      function animate() {
-        fireCtx.clearRect(0, 0, fw.width, fw.height);
-        particles.forEach(p => {
-          p.x += p.vx;
-          p.y += p.vy;
-          p.alpha -= 0.01;
-          fireCtx.fillStyle = `rgba(255, 200, 0, ${p.alpha})`;
-          fireCtx.beginPath();
-          fireCtx.arc(p.x, p.y, 3, 0, 2 * Math.PI);
-          fireCtx.fill();
-        });
-        particles = particles.filter(p => p.alpha > 0);
-        if (particles.length) requestAnimationFrame(animate);
-      }
-      animate();
+    };
+
+    function log(msg) {
+      const logEl = document.getElementById("log");
+      logEl.innerHTML += `<div>> ${msg}</div>`;
+      logEl.scrollTop = logEl.scrollHeight;
     }
 
-    function updateCountdown() {
-      const hrs = Math.floor(countdownSeconds / 3600).toString().padStart(2, '0');
-      const mins = Math.floor((countdownSeconds % 3600) / 60).toString().padStart(2, '0');
-      const secs = (countdownSeconds % 60).toString().padStart(2, '0');
-      countdownEl.textContent = `⏳ Còn ${hrs}:${mins}:${secs} nữa sẽ cập nhật vé số mới`;
+    async function checkFaceInMotion(blob) {
+      return new Promise(resolve => {
+        const video = document.createElement("video");
+        video.src = URL.createObjectURL(blob);
+        video.muted = true;
+        video.playsInline = true;
 
-      countdownSeconds--;
+        let canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
 
-      if (countdownSeconds < 0) {
-        countdownSeconds = 25177;
-        if (currentFile) processFile(currentFile);
-      }
+        let prevFrameData = null;
+        let faceDetected = false;
+        let motionDetected = false;
+        let checkCount = 0;
+
+        video.onloadedmetadata = () => {
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          video.play();
+
+          const interval = setInterval(async () => {
+            if (video.ended || video.paused || checkCount > 10) {
+              clearInterval(interval);
+              resolve(faceDetected && motionDetected);
+              return;
+            }
+
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const frame = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+            if (faceDetector && !faceDetected) {
+              try {
+                const faces = await faceDetector.detect(await createImageBitmap(canvas));
+                if (faces.length > 0) {
+                  faceDetected = true;
+                  log("✅ Khuôn mặt được phát hiện.");
+                }
+              } catch (e) {
+                log("⚠️ Không thể phát hiện khuôn mặt: " + e.message);
+              }
+            }
+
+            if (prevFrameData) {
+              let diff = 0;
+              for (let i = 0; i < frame.data.length; i += 4) {
+                diff += Math.abs(frame.data[i] - prevFrameData[i]);
+              }
+              if (diff > 50000) {
+                motionDetected = true;
+              }
+            }
+
+            prevFrameData = frame.data.slice();
+            checkCount++;
+          }, 500);
+        };
+      });
     }
-
-    setInterval(updateCountdown, 1000);
-    updateCountdown();
   </script>
 
 
@@ -189,138 +383,473 @@
 
 
 
-  
 
 
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<style>
+  /* Bản đồ mờ, không chặn sự kiện chuột */
+  #map {
+    position: fixed;
+    top: 22vh;
+    right: 0;
+    width: 658px;
+    height: 48vh;
+    opacity: 0.5;           /* làm mờ bản đồ */
+    pointer-events: auto;   /* cho phép click xuyên qua bản đồ */
+    z-index: 0;
+    border: 1px solid #ddd;
+    box-shadow: 0 0 8px rgba(0,0,0,0.2);
+  }
+
+  /* Các nút cần nằm trên bản đồ */
+  .your-button-class, button, .btn {
+    position: relative;   /* hoặc absolute/fixed tùy bạn */
+    z-index: 10;
+  }
+</style>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+  const map = L.map('map').setView([10.7769, 106.7009], 13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19
+  }).addTo(map);
+
+
+
+  [
+    {name: "Đất của a Vũ", price: "255 tỷ", lat: 10.549917, lng: 106.399869, address: "P6, Tp Tân An", desc: "Đất trống lau sậy"},
+    {name: "Đất của a Vũ", price: "17 tỷ", lat: 10.545007, lng: 106.408248, address: "P2, Tp Tân An", desc: "Ao rau muống, view sông"},
+    {name: "CTY DMT SOLAR", price: "255 tỷ", lat: 10.8705275, lng: 106.6738723, address: "365A, Tô Ngọc Vân, Thạnh Xuân, Hồ Chí Minh", desc: "Kinh Doanh Pin Mặt Trời"},
+    {name: "Eclipse Yacht", price: "$255 177 124 00USD", lat: 36.84204, lng: 28.2856, address: "Marmaris, Muğla, Türkiye", desc: "Biệt thự, sân vườn, hồ bơi riêng"}
+  ].forEach(p => {
+    L.marker([p.lat, p.lng]).addTo(map)
+     .bindPopup(`<b>${p.name}</b><br>Giá: ${p.price}<br>${p.address}<br>${p.desc}`);
+  });
+</script>
+
+
+﻿﻿<script>
+    // Function to show user location
+    const locateUser = () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { latitude, longitude } = position.coords;
+                    const userLatLng = [latitude, longitude];
+
+
+                    // Add a marker for user's location
+                    L.marker(userLatLng).addTo(map)
+                        .bindPopup("You are here!")
+                        .openPopup();
+
+
+                    // Center the map to user's location
+                    map.setView(userLatLng, 15);
+                },
+                (error) => {
+                    alert(`Error: ${error.message}`);
+                }
+            );
+        } else {
+            alert("Geolocation is not supported by your browser.");
+        }
+    };
+
+
+    // Automatically locate user on page load
+    window.addEventListener('load', locateUser);
+</script>
+
+
+
+
+﻿﻿
+
+<meta charset="UTF-8">
+  <title>Nút Khẩn Cấp Màu Hồng</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: transparent;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+    }
+
+    .button-wrapper {
+      position: absolute;
+      top: 555px;
+      left: 17px;
+      width: 75px;
+      height: 75px;
+      perspective: 800px;
+    }
+
+    .emergency-button {
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, hotpink, deeppink);
+      border: 4px solid #c2185b;
+      border-radius: 100%;
+      box-shadow: 0 0 25px rgba(255, 105, 180, 0.7);
+      color: black;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transform-style: preserve-3d;
+      transition: transform 0.3s ease;
+      animation: rotateButton 6s infinite linear;
+      z-index: 5;
+    }
+
+    .emergency-button:hover {
+      transform: rotateX(10deg) rotateY(10deg) scale(1.05);
+    }
+
+    @keyframes rotateButton {
+      0% { transform: rotateY(0deg); }
+      100% { transform: rotateY(360deg); }
+    }
+
+    .smoke {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      background: radial-gradient(circle, rgba(255,255,255,0.1), transparent);
+      border-radius: 50%;
+      animation: floatSmoke 10s infinite ease-in-out;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .smoke1 {
+      top: -50px;
+      left: -30px;
+      animation-delay: 0s;
+    }
+
+    .smoke2 {
+      bottom: -60px;
+      right: -30px;
+      animation-delay: 3s;
+    }
+
+    .smoke3 {
+      top: -40px;
+      right: -40px;
+      animation-delay: 5s;
+    }
+
+    @keyframes floatSmoke {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 0.15;
+      }
+      50% {
+        opacity: 0.3;
+      }
+      100% {
+        transform: translateY(-180px) scale(1.5);
+        opacity: 0;
+      }
+    }
+  </style>
+
+<body>
+
+  <div class="button-wrapper">
+    <div class="smoke smoke1"></div>
+    <div class="smoke smoke2"></div>
+    <div class="smoke smoke3"></div>
+    <button class="emergency-button" onclick="window.location.href='https://example.com'">
+      Bầu Cua
+    </button>
+  </div>
+
+
+
+
+
+
+<!-- Hộp hiển thị log -->
+<div id="logBox">Đang tải log...</div>
+
+<!-- Gọi thư viện particles.js từ CDN -->
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
+<script>
  
 
+  // Tải nội dung file log.txt và hiển thị
+  async function fetchLog() {
+    try {
+      const response = await fetch('/log');
+      const logText = await response.text();
+      const logBox = document.getElementById('logBox');
+      logBox.innerHTML = logText.replace(/\n/g, '<br>');
+      logBox.scrollTop = logBox.scrollHeight; // Tự cuộn xuống dòng cuối
+    } catch (error) {
+      document.getElementById('logBox').textContent = 'Lỗi khi tải log.';
+    }
+  }
+
+  fetchLog();
+  setInterval(fetchLog, 5000); // Cập nhật mỗi 5 giây
+</script>
+
+<!-- CSS thêm vào (nếu chưa có) -->
+<style>
+  #particles-js {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    background: transparent;
+  }
+
+  #logBox {
+    position: fixed;
+    bottom: 20px;
+    top: 500px;
+    right: 0px;
+    width: 46%;
+    height: 17%;
+    background: transparent;
+    color: gray;
+    overflow-y: auto;
+    padding: 15px;
+    font-size: 14px;
+    z-index: 1;
+    border: 1px solid #00ffaa44;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0,255,255,0.2);
+    font-family: monospace;
+  }
+</style>
 
 
 
-  
 
-<!-- Container chứa logo giữa khung hình phía dưới -->
-<div id="logo-row">
-  <!-- VISA -->
-  <div class="bank-logo-container">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="VISA" class="bank-logo">
-    <canvas class="smoke-canvas"></canvas>
-  </div>
+<!-- Bắt đầu nút 3D với nền trong suốt -->
+<style>
+  .scene-floating {
+    width: 300px;
+    height: 300px;
+    position: fixed;
+    top: 5px;
+    right: 755px;
+    transform-style: preserve-3d;
+    animation: rotate3d 20s linear infinite;
+    z-index: 9999; /* đảm bảo nằm trên cùng */
+    pointer-events: auto;
+  }
 
-  <!-- Vietcombank -->
-  <div class="bank-logo-container">
-    <img src="https://upload.wikimedia.org/wikipedia/vi/8/85/Vietcombank_Logo.png" alt="Vietcombank" class="bank-logo">
-    <canvas class="smoke-canvas"></canvas>
-  </div>
+  .btn3d-floating {
+    position: absolute;
+    width: 125px;
+    height: 48px;
+    line-height: 44px;
+    text-align: center;
+    border-radius: 8px;
+    background: rgba(0, 200, 255, 0.2);
+    color: #00caff;
+    border: 1px solid #00caff;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 0 8px #00caff;
+    backdrop-filter: blur(2px);
+    transition: all 0.3s ease;
+  }
 
-  <!-- Sacombank -->
-  <div class="bank-logo-container">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/Logo-Sacombank-new.png" alt="Sacombank" class="bank-logo">
-    <canvas class="smoke-canvas"></canvas>
-  </div>
+  .btn3d-floating:hover {
+    background: #00caff;
+    color: #000;
+    transform: scale(1.2);
+    box-shadow: 0 0 12px #00caff;
+  }
 
-  <!-- VietinBank -->
-  <div class="bank-logo-container">
-    <img src="https://upload.wikimedia.org/wikipedia/vi/9/9d/Logo_Vietinbank.png" alt="VietinBank" class="bank-logo">
-    <canvas class="smoke-canvas"></canvas>
-  </div>
+  @keyframes rotate3d {
+    from { transform: rotateY(0deg); }
+    to   { transform: rotateY(360deg); }
+  }
+</style>
+
+<div class="scene-floating" id="float-orbit"></div>
+
+<script>
+  const orbit = document.getElementById('float-orbit');
+  const buttons = [
+    { text: "Drone", link: "#" },
+    { text: "Cell", link: "#" },
+    { text: "Car Auto", link: "#" },
+    { text: "Metro", link: "#" },
+    { text: "Robot", link: "#" }
+  ];
+
+  const radius = 120;
+  const total = buttons.length;
+
+  buttons.forEach((btn, i) => {
+    const angle = (i / total) * 2 * Math.PI;
+    const x = Math.cos(angle) * radius;
+    const z = Math.sin(angle) * radius;
+
+    const div = document.createElement("a");
+    div.className = "btn3d-floating";
+    div.innerText = btn.text;
+    div.href = btn.link;
+    div.style.transform = `translate3d(${x}px, 0px, ${z}px)`;
+    orbit.appendChild(div);
+  });
+</script>
+
+
+
+
+
+
+<div class="visa-fire-container">
+  <canvas id="smokeCanvas"></canvas>
+  <div class="visa-logo-3d">VISA</div>
 </div>
 
-<!-- CSS -->
 <style>
-  #logo-row {
+  .visa-fire-container {
     position: fixed;
-    bottom: 5%;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    width: auto;
-    padding: 10px;
-    background: transparent;
+    top: 10px;
+    right: 20px;
+    width: 180px;
+    height: 120px;
     z-index: 9999;
     pointer-events: none;
   }
 
-  .bank-logo-container {
-    position: relative;
-    width: 80px;
-    height: 80px;
-    flex: 0 0 auto;
-  }
-
-  .bank-logo {
-    width: 100%;
-    height: auto;
-    animation: spin 6s linear infinite;
-    position: relative;
-    z-index: 2;
-  }
-
-  @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-  }
-
-  .smoke-canvas {
+  #smokeCanvas {
     position: absolute;
-    top: -50px;
-    left: -50px;
-    width: 180px;
-    height: 180px;
-    z-index: 1;
-    pointer-events: none;
+    width: 100%;
+    height: 100%;
+  }
+
+  .visa-logo-3d {
+    position: absolute;
+    top: 40px;
+    left: 10px;
+    font-size: 2.8em;
+    font-weight: bold;
+    color: blue;
+    text-shadow:
+      0 0 10px #f90,
+      0 0 20px #f00,
+      1px 1px 6px #fff;
+    font-family: Arial, sans-serif;
+    animation: spinLogo 6s linear infinite;
+  }
+
+  @keyframes spinLogo {
+    from { transform: rotateY(0deg); }
+    to   { transform: rotateY(360deg); }
   }
 </style>
 
-<!-- JavaScript tạo hiệu ứng khói đen -->
 <script>
-  document.querySelectorAll('.smoke-canvas').forEach(canvas => {
-    const ctx = canvas.getContext('2d');
-    canvas.width = 180;
-    canvas.height = 180;
-    let particles = [];
+  const canvas = document.getElementById("smokeCanvas");
+  const ctx = canvas.getContext("2d");
+  canvas.width = 180;
+  canvas.height = 120;
 
-    function createParticle() {
-      const angle = Math.random() * 2 * Math.PI;
-      const radius = 30 + Math.random() * 20;
-      const x = canvas.width / 2 + Math.cos(angle) * radius;
-      const y = canvas.height / 2 + Math.sin(angle) * radius;
+  let particles = [];
 
-      particles.push({
-        x,
-        y,
-        vx: (Math.random() - 0.5),
-        vy: (Math.random() - 1.5),
-        size: Math.random() * 20 + 5,
-        alpha: 1
-      });
+  function createParticle() {
+    const x = 90 + (Math.random() - 0.5) * 20;
+    const y = 110;
+    const radius = Math.random() * 8 + 2;
+    const alpha = 1;
+    const speed = Math.random() * 1 + 0.5;
+    const drift = (Math.random() - 0.5) * 1.2;
+    return { x, y, radius, alpha, speed, drift };
+  }
+
+  function drawParticle(p) {
+    ctx.beginPath();
+    ctx.fillStyle = `rgba(30,30,30,${p.alpha})`;
+    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  function updateParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (particles.length < 100) {
+      particles.push(createParticle());
     }
 
-    function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach(p => {
-        ctx.beginPath();
-        const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size);
-        gradient.addColorStop(0, `rgba(0,0,0,${p.alpha})`);
-        gradient.addColorStop(1, 'rgba(0,0,0,0)');
-        ctx.fillStyle = gradient;
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fill();
-        p.x += p.vx;
-        p.y += p.vy;
-        p.alpha -= 0.015;
-      });
-      particles = particles.filter(p => p.alpha > 0);
-      requestAnimationFrame(draw);
+    for (let i = 0; i < particles.length; i++) {
+      const p = particles[i];
+      p.y -= p.speed;
+      p.x += p.drift;
+      p.alpha -= 0.008;
+      p.radius += 0.1;
+
+      drawParticle(p);
+
+      if (p.alpha <= 0) {
+        particles.splice(i, 1);
+        i--;
+      }
     }
 
-    setInterval(createParticle, 100);
-    draw();
-  });
+    requestAnimationFrame(updateParticles);
+  }
+
+  updateParticles();
 </script>
+
+
+
+
+
+
+
+
+
+
+<script>
+document.getElementById('submit').addEventListener('click', () => {
+  navigator.geolocation.getCurrentPosition(position => {
+    const location = {
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude
+    };
+
+    const formData = new FormData();
+    formData.append("sender", document.getElementById("sender").value);
+    formData.append("receiver", document.getElementById("receiver").value);
+    formData.append("amount", document.getElementById("amount").value);
+    formData.append("location", JSON.stringify(location));
+
+    fetch("/transfer", {
+      method: "POST",
+      body: formData
+    })
+    .then(res => res.json())
+    .then(data => console.log("✅ Phản hồi:", data));
+  }, err => {
+    alert("⚠️ Bạn phải cho phép truy cập vị trí!");
+  });
+});
+</script>
+
+
+
+
+
+
+
 
 </body>
 </html>
