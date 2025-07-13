@@ -189,96 +189,10 @@
 
 
 
-  <!-- Hiệu ứng logo VISA xoay và khói đen -->
-<div id="visa-container">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="VISA Logo" id="visa-logo">
-  <canvas id="smoke-canvas"></canvas>
-</div>
+  
 
-<style>
-  #visa-container {
-    position: fixed;
-    top: 17%;
-    left: 10%;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-    z-index: 9999;
-  }
 
-  #visa-logo {
-    width: 150px;
-    animation: spin 5s linear infinite;
-    position: relative;
-    z-index: 2;
-  }
-
-  @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-  }
-
-  #smoke-canvas {
-    position: absolute;
-    top: -100px;
-    left: -100px;
-    width: 350px;
-    height: 350px;
-    z-index: 1;
-    pointer-events: none;
-  }
-</style>
-
-<script>
-  // Tạo hiệu ứng khói đen cháy bằng canvas
-  const canvas = document.getElementById('smoke-canvas');
-  const ctx = canvas.getContext('2d');
-  canvas.width = 350;
-  canvas.height = 350;
-
-  let particles = [];
-
-  function createParticle() {
-    const angle = Math.random() * 2 * Math.PI;
-    const radius = 50 + Math.random() * 30;
-    const x = canvas.width / 2 + Math.cos(angle) * radius;
-    const y = canvas.height / 2 + Math.sin(angle) * radius;
-
-    particles.push({
-      x,
-      y,
-      vx: (Math.random() - 0.5) * 1,
-      vy: (Math.random() - 1.5) * 2,
-      size: Math.random() * 30 + 10,
-      alpha: 1
-    });
-  }
-
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    particles.forEach(p => {
-      ctx.beginPath();
-      const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size);
-      gradient.addColorStop(0, `rgba(0,0,0,${p.alpha})`);
-      gradient.addColorStop(1, 'rgba(0,0,0,0)');
-      ctx.fillStyle = gradient;
-      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      ctx.fill();
-
-      p.x += p.vx;
-      p.y += p.vy;
-      p.alpha -= 0.01;
-    });
-
-    particles = particles.filter(p => p.alpha > 0);
-
-    requestAnimationFrame(draw);
-  }
-
-  setInterval(createParticle, 100);
-  draw();
-</script>
-
+ 
 
 
 
