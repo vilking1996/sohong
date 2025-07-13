@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Camera Body AI</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection/dist/movenet"></script>
+  <style>
+    body { margin: 0; background: #000; color: #0f0; font-family: monospace; text-align: center; }
+    video { width: 100%; height: auto; }
+    canvas { position: absolute; top: 0; left: 0; pointer-events: none; }
+    #startButton { margin-top: 1rem; padding: 0.5rem 1rem; background: #0f0; border: none; color: black; font-weight: bold; border-radius: 6px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h3>📱 AI đang phân tích cơ thể và tổn thương...</h3>
+  <button id="startButton">🎥 Bắt đầu Camera</button>
+  <video id="video" autoplay playsinline muted></video>
+  <canvas id="canvas"></canvas>
+  <script>
+    const socket = new WebSocket('ws://192.168.1.10:81'); // Đổi IP server tại đây
+
+    document.getElementById('startButton').addEventListener('click', async () => {
+      document.getElementById('startButton').style.display = 'none';
+      const video = await setupCamera();
+      runAI(video);
+    });
+
+    async function setupCamera() {
+      const video = document.getElementById('video');
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
+      video.srcObject = stream;
+      await new Promise(resolve => video.onloadedmetadata = resolve);
+      return video;
+    }
+
+    function mapKeypointsToMuscles(keypoints) {
+      const visible = [];
+      const conf = 0.5;
+
+      const get = name => keypoints.find(k => k.name === name);
+
+      if (get('left_shoulder')?.score > conf || get('right_shoulder')?.score > conf)
+        visible.push('deltoid');
+      if (get('left_elbow')?.score > conf || get('right_elbow')?.score > conf)
+        visible.push('biceps_brachii');
+      if (get('left_hip')?.score > conf || get('right_hip')?.score > conf)
+        visible.push('rectus_femoris');
+      if (get('nose')?.score > conf)
+        visible.push('frontalis');
+
+      return [...new Set(visible)];
+    }
+
+    function detectBlood(canvasCtx, imageData) {
+      const data = imageData.data;
+      let redPixels = 0;
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i], g = data[i + 1], b = data[i + 2];
+        if (r > 150 && g < 70 && b < 70) redPixels++;
+      }
+      return redPixels > 500; // ngưỡng phát hiện máu
+    }
+
+    async function runAI(video) {
+      const detector = await poseDetection.createDetector(poseDetection.SupportedModels.MoveNet);
+      const canvas = document.getElementById('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext('2d');
+
+      setInterval(async () => {
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const hasBlood = detectBlood(ctx, imageData);
+
+        const poses = await detector.estimatePoses(video);
+        if (poses.length > 0) {
+          const parts = mapKeypointsToMuscles(poses[0].keypoints);
+          const data = {
+            visible: parts,
+            damage: hasBlood ? parts : []
+          };
+          if (socket.readyState === WebSocket.OPEN) {
+            socket.send(JSON.stringify(data));
+            console.log('Gửi:', data);
+          }
+        }
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
