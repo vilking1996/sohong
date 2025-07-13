@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
@@ -181,5 +181,140 @@
     setInterval(updateCountdown, 1000);
     updateCountdown();
   </script>
+
+
+
+
+
+
+
+<!-- Container chứa logo giữa khung hình phía dưới -->
+<div id="logo-row">
+  <!-- VISA -->
+  <div class="bank-logo-container">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="VISA" class="bank-logo">
+    <canvas class="smoke-canvas"></canvas>
+  </div>
+
+  <!-- Vietcombank -->
+  <div class="bank-logo-container">
+    <img src="https://upload.wikimedia.org/wikipedia/vi/8/85/Vietcombank_Logo.png" alt="Vietcombank" class="bank-logo">
+    <canvas class="smoke-canvas"></canvas>
+  </div>
+
+  <!-- Sacombank -->
+  <div class="bank-logo-container">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/Logo-Sacombank-new.png" alt="Sacombank" class="bank-logo">
+    <canvas class="smoke-canvas"></canvas>
+  </div>
+
+  <!-- VietinBank -->
+  <div class="bank-logo-container">
+    <img src="https://upload.wikimedia.org/wikipedia/vi/9/9d/Logo_Vietinbank.png" alt="VietinBank" class="bank-logo">
+    <canvas class="smoke-canvas"></canvas>
+  </div>
+</div>
+
+<!-- CSS -->
+<style>
+  #logo-row {
+    position: fixed;
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    width: auto;
+    padding: 10px;
+    background: transparent;
+    z-index: 9999;
+    pointer-events: none;
+  }
+
+  .bank-logo-container {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    flex: 0 0 auto;
+  }
+
+  .bank-logo {
+    width: 100%;
+    height: auto;
+    animation: spin 6s linear infinite;
+    position: relative;
+    z-index: 2;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .smoke-canvas {
+    position: absolute;
+    top: -50px;
+    left: -50px;
+    width: 180px;
+    height: 180px;
+    z-index: 1;
+    pointer-events: none;
+  }
+</style>
+
+<!-- JavaScript tạo hiệu ứng khói đen -->
+<script>
+  document.querySelectorAll('.smoke-canvas').forEach(canvas => {
+    const ctx = canvas.getContext('2d');
+    canvas.width = 180;
+    canvas.height = 180;
+    let particles = [];
+
+    function createParticle() {
+      const angle = Math.random() * 2 * Math.PI;
+      const radius = 30 + Math.random() * 20;
+      const x = canvas.width / 2 + Math.cos(angle) * radius;
+      const y = canvas.height / 2 + Math.sin(angle) * radius;
+
+      particles.push({
+        x,
+        y,
+        vx: (Math.random() - 0.5),
+        vy: (Math.random() - 1.5),
+        size: Math.random() * 20 + 5,
+        alpha: 1
+      });
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        ctx.beginPath();
+        const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size);
+        gradient.addColorStop(0, `rgba(0,0,0,${p.alpha})`);
+        gradient.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = gradient;
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+        p.x += p.vx;
+        p.y += p.vy;
+        p.alpha -= 0.015;
+      });
+      particles = particles.filter(p => p.alpha > 0);
+      requestAnimationFrame(draw);
+    }
+
+    setInterval(createParticle, 100);
+    draw();
+  });
+</script>
+
+
+
+
 </body>
 </html>
+
+
