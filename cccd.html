@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>CCCD Layout Sửa Lỗi Tràn Chữ</title>
+  <style>
+    body {
+      margin: 0;
+      background: url('https://c1.wallpaperflare.com/preview/348/680/5/trang-an-bai-dinh-ninh-binh-province-landscape.jpg');
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .cccd-container {
+      width: 752px;
+      height: 1255px;
+      position: relative;
+      background: url('https://tuyetkypowerpoint.com/wp-content/uploads/2024/08/Hinhnen-18-QuocHuy-TrongDong-Tuyetkypowerpoint-scaled.jpg') no-repeat center;
+      background-size: cover;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+
+    .text-field {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: Arial, sans-serif;
+      color: #000;
+      font-weight: bold;
+      text-align: center;
+      width: 90%;
+    }
+
+    #cccd     { top: 40px;  font-size: 50px; }
+    #cmnd     { top: 110px; font-size: 50px; }
+    #hoten    { top: 180px; font-size: 50px; }
+    #gioitinh { top: 250px; font-size: 24px; }
+    #ngaysinh { top: 285px; font-size: 24px; }
+    #diachi   { top: 325px; font-size: 38px; line-height: 1.4; }
+    #ngaycap  { top: 485px; font-size: 24px; }
+
+    #khunganh {
+      position: absolute;
+      bottom: 330px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 200px;
+      border: 5px solid #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #eee;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
+
+    #khunganh img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    #logo {
+      position: absolute;
+      bottom: 120px;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 180px;
+      object-fit: contain;
+    }
+
+    #sodu {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255,192,203,0.17);
+      padding: 12px 24px;
+      font-size: 50px;
+      font-weight: bold;
+      color: #880e4f;
+      border-radius: 10px;
+      text-align: center;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="cccd-container">
+    <div class="text-field" id="cccd">Số CCCD: 0800 9600 4687</div>
+    <div class="text-field" id="cmnd">Số CMND: 301 787 141</div>
+    <div class="text-field" id="hoten">Họ và tên: Lê Minh Vũ</div>
+    <div class="text-field" id="gioitinh">Giới tính: Nam</div>
+    <div class="text-field" id="ngaysinh">Ngày sinh: 17/10/1996</div>
+    <div class="text-field" id="diachi">Nơi thường trú: 96/7/10, Huỳnh Việt Thanh, Phường Tân An, TP Long An, Tỉnh Tây Ninh</div>
+    <div class="text-field" id="ngaycap">Ngày cấp CCCD: 22/11/2021</div>
+
+    <div id="khunganh">
+      <img src="https://nld.mediacdn.vn/k:2015/bi-thu-tinh-uy-binh-dinh-1445011627445-crop-1444962131850/ong-nguyen-thanh-tung-dac-cu-bi-thu-tinh-uy-binh-dinh.jpg" alt="Ảnh đại diện">
+    </div>
+
+    <img id="logo" src="https://upload.wikimedia.org/wikipedia/vi/8/85/Vietcombank_Logo.png" alt="Vietcombank Logo">
+
+    <div class="text-field" id="sodu">Số dư: 124 177 255 555 vn₫</div>
+  </div>
+</body>
+</html>
