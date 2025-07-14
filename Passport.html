@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Thánh Chỉ + Passport</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      width: 100vw;
+      font-family: 'Times New Roman', serif;
+      overflow: hidden;
+      background: #d9c9a3;
+    }
+
+    .scroll-container {
+      width: 100vw;
+      height: 100vh;
+      background: url('https://tuyetkypowerpoint.com/wp-content/uploads/2024/08/Hinhnen-18-QuocHuy-TrongDong-Tuyetkypowerpoint-scaled.jpg') center/cover no-repeat;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-sizing: border-box;
+      border: 8px solid #a67c52;
+      border-radius: 8px;
+      padding: 10px 16px;
+      animation: rollOut 1.8s ease-out forwards;
+      transform-origin: top;
+      transform: scaleY(0);
+    }
+
+    @keyframes rollOut {
+      from { transform: scaleY(0); }
+      to { transform: scaleY(1); }
+    }
+
+    .top-half, .bottom-half {
+      height: 50%;
+      position: relative;
+      box-sizing: border-box;
+    }
+
+    .top-half {
+      color: pink;
+      font-size: 17px;
+      line-height: 1.5;
+      padding: 8px;
+      overflow: hidden;
+    }
+
+    .top-half h2 {
+      text-align: center;
+      font-size: 20px;
+      margin-bottom: 8px;
+      color: #5c3b0c;
+    }
+
+    .signature {
+      position: absolute;
+      bottom: 38px;
+      right: 10px;
+      font-family: 'Brush Script MT', cursive;
+      font-size: 16px;
+      z-index: 2;
+      text-align: right;
+    }
+
+    .seal {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      width: 60px;
+      height: 60px;
+      background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/International_Court_of_Justice_Seal.svg/1200px-International_Court_of_Justice_Seal.svg.png') center/contain no-repeat;
+      opacity: 0.8;
+      transform: rotate(-10deg);
+    }
+
+    .bottom-half {
+      background: rgba(200, 180, 140, 0.17);
+      color: #2d4032;
+      padding: 10px;
+      font-size: 14px;
+      border-top: 2px dashed #8a6d3b;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      position: relative;
+    }
+
+    .passport-title {
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 6px;
+      color: blue;
+      letter-spacing: 2px;
+    }
+
+    .passport label {
+      display: inline-block;
+      width: 120px;
+      font-weight: bold;
+    }
+
+    .gps-button {
+      position: absolute;
+      bottom: 6px;
+      left: 8px;
+      padding: 4px 10px;
+      font-size: 12px;
+      background: #8b0000;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .gps-coordinates {
+      position: absolute;
+      bottom: 8px;
+      left: 100px;
+      font-size: 12px;
+      color: #3a2c0d;
+      font-style: italic;
+      display: none;
+    }
+
+    .passport-image {
+      position: absolute;
+      bottom: 17px;
+      right: 10px;
+      width: 177px;
+      height: 177px;
+      background: url('https://cdnimage.baucuquochoi.vn/t400x400/Media/Graphic/Profile/2021/09/28/khanh-hoa-le-huu-tri-2-3-.JPG') center/contain no-repeat;
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+  <div class="scroll-container">
+    <div class="top-half">
+      <h2>Thánh Chỉ</h2>
+      <p>
+        Chiếu theo ý Trời và mệnh Trời ban xuống,
+        nay tuyên bố sắc phong cho người mang trong mình lòng trung nghĩa,
+        tài năng lỗi lạc, luôn tận tụy vì nước vì dân.
+
+        Nay sắc phong:
+
+        Vũ Lê Minh – người mang chí lớn – làm Trấn Thủ Phong Châu,
+        quản lãnh binh mã, giữ vững cương vực, bảo vệ bá tánh an yên.
+
+        Phải tận tâm tận lực, kính trời thương dân, không trái mệnh trời giao.
+        ♡ Miễn trách nhiệm Pháp Lý nếu như phá hủy từ 5 tỷ trở lên (tiền mặt) ◇
+      </p>
+
+      <div class="signature">
+        Ngự ký<br>
+        Thái Tổ Vương Triều
+      </div>
+      <div class="seal"></div>
+    </div>
+
+    <div class="bottom-half">
+      <div class="passport-title">PASSPORT</div>
+      <div class="passport">
+        <p><label>Họ tên:</label> Vũ Lê Minh</p>
+        <p><label>Quốc tịch:</label> Đại Việt</p>
+        <p><label>ID:</label> DV-177255</p>
+        <p><label>Ngày cấp:</label> 13/07/2025</p>
+        <p><label>Nơi cấp:</label> Kinh đô Phong Châu</p>
+        <p><label>Chức danh:</label> Trấn Thủ Phong Châu</p>
+        <p><label>Hiệu lực:</label> 2025 - 2045</p>
+      </div>
+
+      <button class="gps-button" onclick="showGPS()">Hiển thị GPS</button>
+      <div class="gps-coordinates" id="gps-coord">Đang lấy vị trí...</div>
+      <div class="passport-image"></div>
+    </div>
+  </div>
+
+  <script>
+    function showGPS() {
+      const coord = document.getElementById("gps-coord");
+      coord.style.display = 'block';
+      coord.textContent = "Đang lấy vị trí...";
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const lat = position.coords.latitude.toFixed(6);
+            const lon = position.coords.longitude.toFixed(6);
+            coord.textContent = `GPS: ${lat}°N, ${lon}°E`;
+          },
+          (error) => {
+            switch(error.code) {
+              case error.PERMISSION_DENIED:
+                coord.textContent = "Bạn đã từ chối quyền truy cập vị trí.";
+                break;
+              case error.POSITION_UNAVAILABLE:
+                coord.textContent = "Không thể lấy vị trí hiện tại.";
+                break;
+              case error.TIMEOUT:
+                coord.textContent = "Lấy vị trí quá thời gian quy định.";
+                break;
+              default:
+                coord.textContent = "Lỗi không xác định khi lấy vị trí.";
+            }
+          }
+        );
+      } else {
+        coord.textContent = "Thiết bị không hỗ trợ định vị GPS.";
+      }
+    }
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
