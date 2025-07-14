@@ -3,15 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Nuôi não 3D</title>
+  <title>Nuôi não 3D - Đa ngôn ngữ</title>
   <style>
     body, html {
       margin: 0;
       padding: 0;
-      overflow: hidden;
       background-color: black;
       color: #00ffcc;
       font-family: "Courier New", monospace;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
     }
 
     #viewer {
@@ -19,10 +21,11 @@
       top: 0;
       left: 0;
       right: 0;
-      bottom: 255px;
-      border: none;
+      bottom: 0;
       width: 100%;
-      height: calc(100% - 0px);
+      height: 100%;
+      border: none;
+      z-index: 0;
     }
 
     #console {
@@ -40,15 +43,17 @@
       line-height: 1.5;
       overflow-y: auto;
       white-space: pre-wrap;
+      z-index: 2;
     }
 
     #controls {
       position: absolute;
       top: 10px;
       left: 10px;
-      z-index: 999;
+      z-index: 3;
       display: flex;
       gap: 10px;
+      background-color: transparent;
     }
 
     select, button {
@@ -62,7 +67,7 @@
       cursor: pointer;
     }
 
-    button:hover {
+    button:hover, select:hover {
       background-color: #0ff;
       color: #111;
     }
@@ -72,19 +77,15 @@
 
 <!-- Controls -->
 <div id="controls">
-  <select id="langSelect">
+  <select id="langConsole">
     <option value="vi">Tiếng Việt</option>
     <option value="en">English</option>
     <option value="fr">Français</option>
-    <option value="ja">日本語 (Japanese)</option>
-    <option value="zh">中文 (Chinese)</option>
-    <option value="ko">한국어 (Korean)</option>
-    <option value="de">Deutsch</option>
-    <option value="it">Italiano</option>
-    <option value="ru">Русский (Russian)</option>
-    <option value="es">Español</option>
+    <option value="ja">日本語</option>
+    <option value="zh">中文</option>
+    <option value="ko">한국어</option>
   </select>
-  <button onclick="trySpeak()">Đọc Console</button>
+  <button onclick="trySpeak()">🔊 Read Console (English)</button>
 </div>
 
 <!-- 3D Viewer -->
@@ -99,61 +100,119 @@
 <div id="console"><pre id="text"></pre></div>
 
 <script>
-  const lines = [
-    "⮞ Hệ thống bắt đầu truyền dịch sinh học...",
-    "⮞ Dung dịch chứa Glucose, Amino Acid, Vitamin B, C, D...",
-    "⮞ Bổ sung khí Oxy tinh khiết vào mạch truyền...",
-    "⮞ Dòng dung dịch lưu thông từ vùng chẩm qua tiểu não...",
-    "⮞ Dòng chảy ổn định 255ml/phút — duy trì áp lực nội sọ...",
-    "⮞ Quá trình trao đổi chất bắt đầu...",
-    "⮞ Sóng điện não tăng nhẹ...",
-    "⮞ Chức năng ghi nhớ và tư duy được kích hoạt...",
-    "⮞ ...",
-    "⮞ Chu trình truyền dung dịch tiếp tục tuần hoàn."
-  ];
+  const data = {
+    vi: [
+      "⮞ Hệ thống bắt đầu truyền dịch sinh học...",
+      "⮞ Dung dịch chứa Glucose, Amino Acid, Vitamin B, C, D...",
+      "⮞ Bổ sung khí Oxy tinh khiết vào mạch truyền...",
+      "⮞ Dòng dung dịch lưu thông từ vùng chẩm qua tiểu não...",
+      "⮞ Dòng chảy ổn định 255ml/phút — duy trì áp lực nội sọ...",
+      "⮞ Quá trình trao đổi chất bắt đầu...",
+      "⮞ Sóng điện não tăng nhẹ...",
+      "⮞ Chức năng ghi nhớ và tư duy được kích hoạt...",
+      "⮞ ...",
+      "⮞ Chu trình truyền dung dịch tiếp tục tuần hoàn."
+    ],
+    en: [
+      "⮞ System initiating biological infusion...",
+      "⮞ Solution contains Glucose, Amino Acids, Vitamins B, C, D...",
+      "⮞ Injecting pure Oxygen into cerebral vessels...",
+      "⮞ Fluid flowing from occipital region through cerebellum...",
+      "⮞ Flow rate stable at 255ml/min — maintaining intracranial pressure...",
+      "⮞ Metabolic exchange process starting...",
+      "⮞ Brainwave activity slightly increased...",
+      "⮞ Memory and cognition functions activated...",
+      "⮞ ...",
+      "⮞ Nutrient circulation continues in loop."
+    ],
+    fr: [
+      "⮞ Démarrage de la perfusion biologique...",
+      "⮞ Solution contenant glucose, acides aminés, vitamines B, C, D...",
+      "⮞ Injection d'oxygène pur dans les vaisseaux cérébraux...",
+      "⮞ Le liquide circule de l’occiput au cervelet...",
+      "⮞ Débit stable à 255ml/min — pression intracrânienne maintenue...",
+      "⮞ Processus métabolique en cours...",
+      "⮞ Activité des ondes cérébrales légèrement augmentée...",
+      "⮞ Mémoire et cognition activées...",
+      "⮞ ...",
+      "⮞ La circulation nutritive se poursuit."
+    ],
+    ja: [
+      "⮞ 生体注入システムを起動中...",
+      "⮞ グルコース、アミノ酸、ビタミンB、C、Dを含む溶液...",
+      "⮞ 脳の血管に純粋な酸素を注入中...",
+      "⮞ 液体は後頭部から小脳を通って流れる...",
+      "⮞ 流量は255ml/分で安定 — 頭蓋内圧を維持...",
+      "⮞ 代謝交換プロセスが始まる...",
+      "⮞ 脳波活動がわずかに増加...",
+      "⮞ 記憶と認知機能が活性化...",
+      "⮞ ...",
+      "⮞ 栄養循環が続いています。"
+    ],
+    zh: [
+      "⮞ 启动生物液输注系统...",
+      "⮞ 溶液含有葡萄糖、氨基酸、维生素B、C、D...",
+      "⮞ 注入纯氧进入脑部血管...",
+      "⮞ 液体从枕部流经小脑...",
+      "⮞ 流速稳定为255ml/分钟 — 维持颅内压...",
+      "⮞ 代谢交换过程开始...",
+      "⮞ 脑电波活动略有增加...",
+      "⮞ 记忆与认知功能被激活...",
+      "⮞ ...",
+      "⮞ 营养液循环持续进行。"
+    ],
+    ko: [
+      "⮞ 생물학적 수액 주입 시스템 시작...",
+      "⮞ 포도당, 아미노산, 비타민 B, C, D 포함된 용액...",
+      "⮞ 뇌혈관에 순수 산소 주입...",
+      "⮞ 액체는 후두부에서 소뇌를 통해 흐름...",
+      "⮞ 유속은 255ml/분으로 안정 — 두개내압 유지...",
+      "⮞ 대사 교환 과정 시작됨...",
+      "⮞ 뇌파 활동이 약간 증가함...",
+      "⮞ 기억력 및 인지 기능 활성화...",
+      "⮞ ...",
+      "⮞ 영양 순환이 계속됨."
+    ]
+  };
 
-  const fullText = lines.join("\n");
   const textElement = document.getElementById("text");
-  const langSelect = document.getElementById("langSelect");
+  const langConsole = document.getElementById("langConsole");
 
-  // Hiển thị toàn bộ console ngay lập tức
-  textElement.textContent = fullText;
-
-  // Lấy voice tương ứng ngôn ngữ
-  function getVoiceForLang(langCode) {
-    const voices = speechSynthesis.getVoices();
-    return voices.find(v => v.lang.toLowerCase().startsWith(langCode)) ||
-           voices.find(v => v.lang.toLowerCase().includes(langCode)) ||
-           voices[0];
+  function updateConsole() {
+    const lang = langConsole.value;
+    textElement.textContent = data[lang].join("\n");
   }
 
-  // Đọc nội dung
+  langConsole.addEventListener("change", updateConsole);
+  updateConsole();
+
+  function getEnglishVoice() {
+    const voices = speechSynthesis.getVoices();
+    return voices.find(v => v.lang.startsWith('en')) || voices[0];
+  }
+
   function speak(text) {
-    const langCode = langSelect.value;
-    const voice = getVoiceForLang(langCode);
+    const voice = getEnglishVoice();
     if (!voice) return;
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.voice = voice;
     utterance.lang = voice.lang;
     utterance.rate = 1;
     utterance.pitch = 1;
-    speechSynthesis.cancel(); // tránh lặp
+    speechSynthesis.cancel();
     speechSynthesis.speak(utterance);
   }
 
   function trySpeak() {
+    const englishText = data["en"].join("\n");
     if (speechSynthesis.getVoices().length > 0) {
-      speak(fullText);
+      speak(englishText);
     } else {
       setTimeout(trySpeak, 500);
     }
   }
 
-  // Load voice lần đầu khi browser sẵn sàng
-  window.speechSynthesis.onvoiceschanged = () => {
-    // Cập nhật ngay để tránh delay
-    trySpeak();
-  };
+  window.speechSynthesis.onvoiceschanged = trySpeak;
 </script>
 
 </body>
