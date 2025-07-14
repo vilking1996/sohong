@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nuôi não 3D</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: black;
+      color: #00ffcc;
+      font-family: "Courier New", monospace;
+    }
+
+    #viewer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 255px;
+      border: none;
+      width: 100%;
+      height: calc(100% - 0px);
+    }
+
+    #console {
+      pointer-events: none;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 255px;
+      background-color: transparent;
+      border-top: 2px solid #0ff;
+      padding: 10px;
+      box-sizing: border-box;
+      font-size: 12px;
+      line-height: 1.5;
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+
+    #controls {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 999;
+      display: flex;
+      gap: 10px;
+    }
+
+    select, button {
+      font-family: monospace;
+      font-size: 14px;
+      padding: 5px;
+      background-color: transparent;
+      color: #0ff;
+      border: 1px solid #0ff;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0ff;
+      color: #111;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Controls -->
+<div id="controls">
+  <select id="langSelect">
+    <option value="vi">Tiếng Việt</option>
+    <option value="en">English</option>
+    <option value="fr">Français</option>
+    <option value="ja">日本語 (Japanese)</option>
+    <option value="zh">中文 (Chinese)</option>
+    <option value="ko">한국어 (Korean)</option>
+    <option value="de">Deutsch</option>
+    <option value="it">Italiano</option>
+    <option value="ru">Русский (Russian)</option>
+    <option value="es">Español</option>
+  </select>
+  <button onclick="trySpeak()">Đọc Console</button>
+</div>
+
+<!-- 3D Viewer -->
+<iframe id="viewer" title="The brain inside the Skull" 
+  allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" 
+  allow="autoplay; fullscreen; xr-spatial-tracking" 
+  xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share 
+  src="https://sketchfab.com/models/33be3c2d8cc04c62a2ccc50aeb291dc7/embed">
+</iframe>
+
+<!-- Console -->
+<div id="console"><pre id="text"></pre></div>
+
+<script>
+  const lines = [
+    "⮞ Hệ thống bắt đầu truyền dịch sinh học...",
+    "⮞ Dung dịch chứa Glucose, Amino Acid, Vitamin B, C, D...",
+    "⮞ Bổ sung khí Oxy tinh khiết vào mạch truyền...",
+    "⮞ Dòng dung dịch lưu thông từ vùng chẩm qua tiểu não...",
+    "⮞ Dòng chảy ổn định 255ml/phút — duy trì áp lực nội sọ...",
+    "⮞ Quá trình trao đổi chất bắt đầu...",
+    "⮞ Sóng điện não tăng nhẹ...",
+    "⮞ Chức năng ghi nhớ và tư duy được kích hoạt...",
+    "⮞ ...",
+    "⮞ Chu trình truyền dung dịch tiếp tục tuần hoàn."
+  ];
+
+  const fullText = lines.join("\n");
+  const textElement = document.getElementById("text");
+  const langSelect = document.getElementById("langSelect");
+
+  // Hiển thị toàn bộ console ngay lập tức
+  textElement.textContent = fullText;
+
+  // Lấy voice tương ứng ngôn ngữ
+  function getVoiceForLang(langCode) {
+    const voices = speechSynthesis.getVoices();
+    return voices.find(v => v.lang.toLowerCase().startsWith(langCode)) ||
+           voices.find(v => v.lang.toLowerCase().includes(langCode)) ||
+           voices[0];
+  }
+
+  // Đọc nội dung
+  function speak(text) {
+    const langCode = langSelect.value;
+    const voice = getVoiceForLang(langCode);
+    if (!voice) return;
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.voice = voice;
+    utterance.lang = voice.lang;
+    utterance.rate = 1;
+    utterance.pitch = 1;
+    speechSynthesis.cancel(); // tránh lặp
+    speechSynthesis.speak(utterance);
+  }
+
+  function trySpeak() {
+    if (speechSynthesis.getVoices().length > 0) {
+      speak(fullText);
+    } else {
+      setTimeout(trySpeak, 500);
+    }
+  }
+
+  // Load voice lần đầu khi browser sẵn sàng
+  window.speechSynthesis.onvoiceschanged = () => {
+    // Cập nhật ngay để tránh delay
+    trySpeak();
+  };
+</script>
+
+</body>
+</html>
