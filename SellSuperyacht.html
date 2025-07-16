@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Bán Siêu Du Thuyền</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+    #map {
+      height: 100%;
+      width: 100%;
+    }
+
+    /* Hiệu ứng popup */
+    .leaflet-popup-content-wrapper {
+      background-color: black !important;
+      border: 2px solid #0ff;
+      box-shadow: 0 0 15px #0ff;
+      animation: pulse 2s infinite, electric-border 1.5s linear infinite;
+      border-radius: 10px;
+    }
+
+    .leaflet-popup-content {
+      color: white;
+      text-align: justify;
+      font-family: Arial, sans-serif;
+      padding: 5px;
+    }
+
+    .leaflet-popup-tip {
+      background: black;
+    }
+
+    /* Nhấp nhô */
+    @keyframes pulse {
+      0% { box-shadow: 0 0 10px #0ff; }
+      50% { box-shadow: 0 0 20px #0ff; }
+      100% { box-shadow: 0 0 10px #0ff; }
+    }
+
+    /* Viền điện chạy */
+    @keyframes electric-border {
+      0% { border-color: #0ff; }
+      25% { border-color: #0f0; }
+      50% { border-color: #f0f; }
+      75% { border-color: #ff0; }
+      100% { border-color: #0ff; }
+    }
+
+    iframe {
+      width: 100%;
+      max-width: 300px;
+      height: 170px;
+      border: none;
+      margin-top: 10px;
+    }
+
+    .popup-content {
+      width: 300px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+  const map = L.map('map').setView([16.5, 107.5], 6);
+
+  const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap'
+  }).addTo(map);
+
+  const satellite = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+    subdomains: ['mt0','mt1','mt2','mt3'],
+    maxZoom: 20,
+    attribution: '© Google Satellite'
+  });
+
+  L.control.layers({ "Bản đồ": osm, "Vệ tinh": satellite }).addTo(map);
+
+  const yachts = [
+    {
+      name: "Yacht Aviva",
+      price: "124,177,255.24 USD",
+      lat: 40.88208,
+      lon: 9.6839,
+      video: "https://www.youtube.com/embed/RcnXuqZJPzY"
+    },
+    {
+      name: "Eclipse",
+      price: "124,177,255.24 USD",
+      lat: 36.84205,
+      lon: 28.2856,
+      video: "https://www.youtube.com/embed/apycuPvHEG8"
+    },
+    {
+      name: "Amadea",
+      price: "124,177,255.24 USD",
+      lat: 32.71807,
+      lon: -117.1761,
+      video: "https://www.youtube.com/embed/F1BWq8ErtWY"
+    }
+  ];
+
+  yachts.forEach(yacht => {
+    const marker = L.marker([yacht.lat, yacht.lon]).addTo(map);
+    marker.bindPopup(`
+      <div class="popup-content">
+        <div style="text-align:center; font-weight:bold; font-size:16px;">${yacht.name}</div>
+        <div style="text-align:center; margin: 6px 0;">💰 Giá bán: <strong>${yacht.price}</strong></div>
+        <iframe src="${yacht.video}" allowfullscreen></iframe>
+      </div>
+    `);
+  });
+</script>
+
+</body>
+</html>
