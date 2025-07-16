@@ -107,8 +107,8 @@
 
     .gps-button {
       position: absolute;
-      bottom: 575px;
-      left: 617px;
+      bottom: 255px;
+      left: 275px;
       padding: 4px 10px;
       font-size: 12px;
       background: black;
@@ -120,13 +120,22 @@
 
     .gps-coordinates {
       position: absolute;
-      bottom: 255px;
-      left: 575px;
+      bottom: 417px;
+      left: 107px;
       font-size: 12px;
       color: #3a2c0d;
       font-style: italic;
       display: none;
     }
+    .visa-logo {
+  position: absolute;
+  bottom: 148px; /* ngay dưới hình ảnh passport */
+  right: 5px;
+  width: 75px;
+  height: 25px;
+  background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/1024px-Visa_Inc._logo.svg.png') center/contain no-repeat;
+  opacity: 0.9;
+}
 
     .passport-image {
       position: absolute;
@@ -168,7 +177,7 @@
       <div class="passport-title">PASSPORT</div>
       <div class="passport">
         <p><label>Full Name "Họ Tên":</label> Lê Minh Vũ </p>
-        <p><label>Nationality "Quốc tịch":</label> Việt Nam </p>
+        <p><label>Nationality "Quốc tịch":</label>🇻🇳Việt Nam🇻🇳</p>
         <p><label>ID:</label> DV-177255 - C6061185</p>
         <p><label>Date of issue "Ngày cấp":</label> 13/07/2025</p>
         <p><label>Place of issue "Nơi cấp":</label> Việt Nam </p>
@@ -179,6 +188,7 @@
       <button class="gps-button" onclick="showGPS()">Check GPS</button>
       <div class="gps-coordinates" id="gps-coord">Đang lấy vị trí...</div>
       <div class="passport-image"></div>
+      <div class="visa-logo"></div>
     </div>
   </div>
 
