@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Web Bán Cơm Tấm - Hủ Tiếu Bà Nga</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Leaflet & QRCode -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <style>
+    html, body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: url('https://assets.grab.com/wp-content/uploads/sites/11/2020/07/23185907/ryanfoodaholic_110108520_178434243659726_4807773460731335269_n.jpg') no-repeat center center fixed;
+      background-size: 157%;
+    }
+    #map {
+      height: 50vh;
+      width: 100%;
+    }
+    #order {
+      background: rgba(255, 255, 255, 0.17);
+      padding: 20px;
+      text-align: center;
+    }
+    #qrcode {
+      position: relative;
+      margin: 20px auto;
+      width: 200px;
+      height: 200px;
+    }
+    #qrcode canvas {
+      width: 200px !important;
+      height: 200px !important;
+    }
+    #center-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: transparent;
+      padding: 2px 4px;
+      font-weight: bold;
+      font-size: 12px;
+      color: black;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<div id="order">
+  
+  
+  
+  <h2>
+  Đặt món 
+  (<a href="tel:0941499278" style="text-decoration: none; color: green;">
+    📞 0941 499 278
+  </a>)
+</h2>
+  
+  
+  
+  <label>Cơm Tấm (30k): <input type="number" id="comTam" value="0" min="0"></label><br><br>
+  <label>Hủ Tiếu (25k): <input type="number" id="huTieu" value="0" min="0"></label><br><br>
+  <label>🐟Cá Nướng🔥(25k): <input type="number" id="caNuong" value="0" min="0"></label><br><br>
+  <div id="total">Tổng: 0₫</div>
+  <div id="coords">Tọa độ: chưa chọn</div>
+  <div id="timestamp">Thời gian: chưa có</div><br>
+  <button onclick="createInvoice()">Tạo QR Hóa Đơn</button>
+
+  <div id="qrcode">
+    <div id="center-text">Ben177 Stormwind255</div>
+  </div>
+</div>
+
+<script>
+  let lat = null, lng = null;
+  let marker;
+
+  const map = L.map('map').setView([10.762622, 106.660172], 13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap'
+  }).addTo(map);
+
+  map.on('click', function(e) {
+    lat = e.latlng.lat;
+    lng = e.latlng.lng;
+
+    if (marker) map.removeLayer(marker);
+    marker = L.marker([lat, lng]).addTo(map).bindPopup("Giao tại đây").openPopup();
+
+    document.getElementById("coords").innerText =
+      `Tọa độ: ${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+  });
+
+  function formatVND(v) {
+    return v.toLocaleString('vi-VN') + '₫';
+  }
+
+  function getCurrentTimestamp() {
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    const hh = String(now.getHours()).padStart(2, '0');
+    const mi = String(now.getMinutes()).padStart(2, '0');
+    const ss = String(now.getSeconds()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
+  }
+
+  function createInvoice() {
+    const com = parseInt(document.getElementById('comTam').value) || 0;
+const hu = parseInt(document.getElementById('huTieu').value) || 0;
+const ca = parseInt(document.getElementById('caNuong').value) || 0;
+const total = com * 30000 + hu * 25000 + ca * 25000;
+
+    document.getElementById("total").innerText = "Tổng: " + formatVND(total);
+
+    if (lat === null || lng === null) {
+      alert("Vui lòng chọn vị trí giao hàng trên bản đồ!");
+      return;
+    }
+
+    const timestamp = getCurrentTimestamp();
+    document.getElementById("timestamp").innerText = `Thời gian: ${timestamp}`;
+
+    const shortContent = `ComTam=${com};HuTieu=${hu};CaNuong=${ca};Tong=${total};Lat=${lat.toFixed(5)};Lng=${lng.toFixed(5)};Time=${timestamp};Ben=Ben177`;
+
+    const qrcodeEl = document.getElementById("qrcode");
+    qrcodeEl.innerHTML = '<div id="center-text">Ben177 Stormwind255</div>';
+
+    new QRCode(qrcodeEl, {
+      text: shortContent,
+      width: 200,
+      height: 200,
+      colorDark: "#000000",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.M
+    });
+
+    // Thêm lại dòng chữ giữa QR
+    const centerText = document.createElement("div");
+    centerText.id = "center-text";
+    centerText.innerText = "Ben177 Stormwind255";
+    qrcodeEl.appendChild(centerText);
+  }
+</script>
+
+
+
+
+
+<style>
+  #hotline {
+    position: fixed; /* hoặc absolute nếu bạn muốn đặt trong 1 khung cụ thể */
+    bottom: 700px;     /* chỉnh vị trí theo nhu cầu */
+    right: 20px;
+    z-index: 9999;
+    padding: 12px 20px;
+    background: black;
+    color: #00ff00;
+    border: 3px solid #00ffcc;
+    border-radius: 12px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    animation: blink 1s infinite, glow 1.5s infinite alternate;
+    box-shadow: 0 0 10px #00ffee, 0 0 20px #00ffee, 0 0 30px #00ffee;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  @keyframes glow {
+    from {
+      box-shadow: 0 0 10px #00ffee, 0 0 20px #00ffee;
+    }
+    to {
+      box-shadow: 0 0 20px #00ffee, 0 0 40px #00ffee;
+    }
+  }
+</style>
+
+<a href="tel:0915373047" id="hotline">
+  📞0915373047🐟🔥
+</a>
+
+</body>
+</html>
