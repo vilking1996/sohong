@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Vòng Quay May Mắn</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Arial', sans-serif;
+      color: white;
+      text-align: center;
+    }
+
+    .wheel-container {
+      position: relative;
+      margin: 20px auto;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 6px double hotpink;
+      animation: pulse 2s infinite;
+      background: rgba(0,0,0,0.7);
+    }
+
+    .wheel-number {
+      position: absolute;
+      transform-origin: 50% 150px;
+      width: 100%;
+      text-align: center;
+      font-size: 12px;
+      color: #fff;
+      text-shadow: 0 0 3px hotpink, 0 0 5px cyan;
+    }
+
+    .btn-container {
+      margin-top: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 18px;
+      background: hotpink;
+      border: none;
+      border-radius: 12px;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 8px white;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+      background: rgba(0,0,0,0.6);
+      padding: 15px;
+      border-radius: 12px;
+      display: inline-block;
+      backdrop-filter: blur(5px);
+    }
+
+    #receipt {
+      margin: 20px auto;
+      padding: 15px;
+      max-width: 360px;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.4);
+      border: 2px dashed hotpink;
+      backdrop-filter: blur(3px);
+      text-align: center;
+      position: relative;
+    }
+
+    .selfie {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 15px auto 0;
+      border: 3px solid hotpink;
+      display: none;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 15px hotpink; }
+      50% { box-shadow: 0 0 35px cyan; }
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🎉 Vòng Quay May Mắn 🎉</h2>
+
+  <div class="wheel-container" id="wheel"></div>
+
+  <div class="btn-container">
+    <button onclick="spinWheel()">Quay</button>
+    <button onclick="uploadImage()">📁 Tải Ảnh</button>
+    <input type="file" id="fileInput" accept="image/*">
+  </div>
+
+  <div id="result"></div>
+
+  <div id="receipt">
+    <h3>🧾 +84 915373047 </h3>
+    <img id="selfie" class="selfie" src="" alt="Ảnh Selfie">
+  </div>
+
+  <script>
+    const wheel = document.getElementById('wheel');
+    const resultEl = document.getElementById('result');
+    const selfieImg = document.getElementById('selfie');
+    const fileInput = document.getElementById('fileInput');
+
+    // Tạo 255 số trên vòng quay
+    for (let i = 0; i < 255; i++) {
+      const angle = (360 / 255) * i;
+      const numberEl = document.createElement('div');
+      numberEl.className = 'wheel-number';
+      numberEl.style.transform = `rotate(${angle}deg) translateY(10px)`;
+      numberEl.textContent = i + 1;
+      wheel.appendChild(numberEl);
+    }
+
+    // Lấy key ngày hôm nay
+    function getTodayKey() {
+      const today = new Date();
+      return `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+    }
+
+    // Lấy số lượt quay trong ngày
+    function getSpinCount() {
+      const key = getTodayKey();
+      const saved = JSON.parse(localStorage.getItem('spinData')) || {};
+      return saved[key] || 0;
+    }
+
+    // Tăng lượt quay
+    function incrementSpinCount() {
+      const key = getTodayKey();
+      const saved = JSON.parse(localStorage.getItem('spinData')) || {};
+      saved[key] = (saved[key] || 0) + 1;
+      localStorage.setItem('spinData', JSON.stringify(saved));
+    }
+
+    function spinWheel() {
+      const spins = getSpinCount();
+      if (spins >= 5) {
+        alert("🚫 Bạn đã hết lượt quay hôm nay (tối đa 5 lần). Vui lòng quay lại vào ngày mai.");
+        return;
+      }
+
+      incrementSpinCount();
+
+      const luckyNumber = Math.floor(Math.random() * 255) + 1;
+      const reward = luckyNumber <= 177
+        ? 24000
+        : Math.floor(Math.random() * (255177124 - 124177255 + 1)) + 124177255;
+      const timeStr = new Date().toLocaleString('vi-VN');
+
+      const rotateTo = 360 * 5 + (360 / 255) * (255 - luckyNumber);
+      wheel.style.transition = 'transform 4s ease-out';
+      wheel.style.transform = `rotate(${rotateTo}deg)`;
+
+      setTimeout(() => {
+        const rewardStr = reward.toLocaleString('vi-VN');
+        resultEl.innerHTML = `🎯 Số trúng: <b>${luckyNumber}</b><br>💰 Tiền thưởng: <b>${rewardStr} VNĐ</b><br>🕒 Thời gian: <b>${timeStr}</b>`;
+      }, 4200);
+    }
+
+    function uploadImage() {
+      fileInput.click();
+    }
+
+    fileInput.addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        selfieImg.src = e.target.result;
+        selfieImg.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    });
+  </script>
+</body>
+</html>
