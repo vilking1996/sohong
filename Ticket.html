@@ -102,15 +102,15 @@
   <div class="wheel-container" id="wheel"></div>
 
   <div class="btn-container">
-    <button onclick="spinWheel()">Quay</button>
-    <button onclick="uploadImage()">📁 Tải Ảnh</button>
+    <button onclick="spinWheel()">🎰Quay🎰</button>
+    <button onclick="uploadImage()">📁 Tải Ảnh 📸</button>
     <input type="file" id="fileInput" accept="image/*">
   </div>
 
   <div id="result"></div>
 
   <div id="receipt">
-    <h3>🧾 +84 915373047 </h3>
+    <h3>🧾 +84 915373047 📲 </h3>
     <img id="selfie" class="selfie" src="" alt="Ảnh Selfie">
   </div>
 
@@ -163,7 +163,7 @@
       const luckyNumber = Math.floor(Math.random() * 255) + 1;
       const reward = luckyNumber <= 177
         ? 24000
-        : Math.floor(Math.random() * (255177124 - 124177255 + 1)) + 124177255;
+        : Math.floor(Math.random() * (24177255 - 12177255 + 1)) + 12177255;
       const timeStr = new Date().toLocaleString('vi-VN');
 
       const rotateTo = 360 * 5 + (360 / 255) * (255 - luckyNumber);
