@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no" />
+<title>Hợp đồng cho vay Stormwind</title>
+<style>
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    font-family: Arial, sans-serif;
+    background: #f0f0f0;
+  }
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  #contract {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    box-sizing: border-box;
+    padding: 30px 20px;
+    background-image: url('https://cdn.mobilecity.vn/mobilecity-vn/images/2024/04/hinh-nen-may-man-tai-loc-cay-tre-1.jpg.webp');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  #contract-content {
+    flex: 1;
+    overflow-y: auto;
+  }
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #004a99;
+    font-weight: 700;
+  }
+  p {
+    margin-bottom: 12px;
+    text-align: justify;
+  }
+  .loan-info strong {
+    color: #0078d4;
+    font-weight: 600;
+  }
+  label {
+    margin-top: 20px;
+    font-weight: bold;
+    color: #0078d4;
+    display: block;
+  }
+  #signature-pad {
+    border: 2px solid #0078d4;
+    border-radius: 8px;
+    width: 100%;
+    height: 150px;
+    touch-action: none;
+  }
+  #clearSignature {
+    margin-top: 8px;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .photo-buttons {
+    margin-top: 20px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .photo-buttons button {
+    flex: 1 1 30%;
+    padding: 12px;
+    font-size: 16px;
+    cursor: pointer;
+    border: 2px solid #0078d4;
+    border-radius: 8px;
+    background-color: transparent;
+    color: #0078d4;
+    transition: background-color 0.3s ease;
+  }
+  .photo-buttons button:hover {
+    background-color: #0078d4;
+    color: white;
+  }
+  .photo-previews {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .photo-previews img {
+    max-width: 30vw;
+    max-height: 20vh;
+    border: 1px solid #0078d4;
+    border-radius: 6px;
+    object-fit: contain;
+    box-shadow: 0 2px 6px rgba(0,120,212,0.3);
+  }
+  #savePrintButtons {
+    margin-top: 25px;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+  }
+  #savePrintButtons button {
+    padding: 14px 35px;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 8px;
+    border: none;
+    color: pink;
+    background-color: black;
+    box-shadow: 0 4px 8px rgba(0,120,212,0.5);
+    transition: background-color 0.3s ease;
+  }
+  #savePrintButtons button:hover {
+    background-color: #005a9e;
+  }
+  #video {
+    display: none;
+  }
+  /* In ấn */
+  @media print {
+  body, html {
+    margin: 0;
+    padding: 0;
+    height: auto;
+  }
+  #contract {
+    position: static !important;
+    width: 210mm !important;
+    height: auto !important;
+    max-width: none;
+    overflow: visible !important; /* quan trọng: cho in toàn bộ */
+    padding: 40px 50px;
+    box-shadow: none;
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/4a/Blank_A4_Paper.jpg');
+    background-size: cover;
+    background-position: center;
+    color: black;
+    font-size: 14pt;
+    line-height: 1.6;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  /* Ẩn các nút khi in */
+  .photo-buttons, #savePrintButtons, #clearSignature {
+    display: none !important;
+  }
+  /* Ảnh hiển thị khi in */
+  .photo-previews img {
+    max-width: 180px;
+    max-height: 120px;
+  }
+}
+</style>
+</head>
+<body>
+
+<div id="contract" role="document" aria-describedby="contractDesc">
+  <div id="contract-content">
+    <h2>HỢP ĐỒNG THỎA THUẬN CHO VAY</h2>
+    <p class="loan-info">Số tiền vay: <strong><span id="loanAmountStormwind">124.177.255</span> Stormwind vn₫</strong></p>
+    <p class="loan-info">Tương đương với: <strong><span id="loanAmountVNĐ">124.177.255</span> VNĐ</strong></p>
+
+    <p id="contractDesc">
+      Hợp đồng này được lập giữa bên cho vay và bên vay theo các điều khoản sau đây, được điều chỉnh và bảo vệ bởi pháp luật Việt Nam.
+    </p>
+
+    <p>
+      <strong>1. Khoản vay và giá trị quy đổi:</strong><br>
+      Số tiền vay được thể hiện bằng đơn vị Stormwind vn₫ có giá trị quy đổi tương đương tại Ngân hàng Vietcombank theo tỷ giá hiện hành là <em>1 VNĐ cho 1 Stormwind vn₫</em>. Giá trị quy đổi sẽ được xác nhận tại thời điểm ký kết hợp đồng.
+    </p>
+    <p>
+      <strong>2. Thời hạn và lãi suất:</strong><br>
+      Thời hạn vay là <em>177 tuần</em>. Lãi suất được áp dụng là <em>10%/năm</em> trên tổng số tiền vay.
+    </p>
+    <p>
+      <strong>3. Phí dịch vụ:</strong><br>
+      Phí dịch vụ được tính bằng <em>5%</em> tổng số tiền vay.
+    </p>
+    <p>
+      <strong>4. Quyền và nghĩa vụ:</strong><br>
+      Bên vay cam kết hoàn trả đầy đủ số tiền vay, lãi suất và phí dịch vụ đúng thời hạn. Bên cho vay có quyền yêu cầu bên vay thanh toán theo quy định của hợp đồng và pháp luật.
+    </p>
+    <p>
+      <strong>5. Luật pháp áp dụng:</strong><br>
+      Hợp đồng này tuân theo Luật Dân sự Việt Nam và các văn bản hướng dẫn liên quan.
+    </p>
+    <p>
+      <strong>6. Các điều khoản bổ sung:</strong><br>
+      Hai bên cam kết thực hiện nghiêm túc hợp đồng, mọi tranh chấp phát sinh sẽ được giải quyết thông qua thương lượng hoặc cơ quan pháp luật có thẩm quyền.
+    </p>
+    <p>
+      Bên vay đồng ý các điều khoản trên và ký tên xác nhận dưới đây.
+    </p>
+
+    <label for="signature-pad">Ký tên người vay:</label>
+    <canvas id="signature-pad" aria-label="Ký tên người vay"></canvas>
+    <button id="clearSignature" type="button">Xóa ký tên</button>
+
+    <div class="photo-buttons">
+      <button id="btnSelfie" type="button">Chụp ảnh người vay</button>
+      <button id="btnCCCDFront" type="button">Chụp mặt trước CCCD</button>
+      <button id="btnCCCDBack" type="button">Chụp mặt sau CCCD</button>
+    </div>
+
+    <div class="photo-previews" aria-live="polite" aria-atomic="true">
+      <img id="selfiePreview" alt="Ảnh selfie người vay" src="" style="display:none" />
+      <img id="cccdFrontPreview" alt="Ảnh mặt trước CCCD" src="" style="display:none" />
+      <img id="cccdBackPreview" alt="Ảnh mặt sau CCCD" src="" style="display:none" />
+    </div>
+
+    <div id="savePrintButtons">
+      <button id="btnSavePDF" type="button">Lưu PDF</button>
+      <button id="btnPrint" type="button">In hợp đồng</button>
+    </div>
+  </div>
+</div>
+
+<!-- Ẩn video và canvas chụp ảnh -->
+<video id="video" autoplay playsinline></video>
+<canvas id="captureCanvas" style="display:none;"></canvas>
+
+<!-- jsPDF + html2canvas CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script>
+  // Tham chiếu phần tử
+  const btnSelfie = document.getElementById('btnSelfie');
+  const btnCCCDFront = document.getElementById('btnCCCDFront');
+  const btnCCCDBack = document.getElementById('btnCCCDBack');
+
+  const selfiePreview = document.getElementById('selfiePreview');
+  const cccdFrontPreview = document.getElementById('cccdFrontPreview');
+  const cccdBackPreview = document.getElementById('cccdBackPreview');
+
+  const video = document.getElementById('video');
+  const captureCanvas = document.getElementById('captureCanvas');
+  const ctxCapture = captureCanvas.getContext('2d');
+
+  async function openCameraAndCapture(imgPreview) {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+      video.srcObject = stream;
+      video.style.display = "block";
+
+      await new Promise(resolve => {
+        video.onloadedmetadata = () => resolve();
+      });
+
+      const w = video.videoWidth;
+      const h = video.videoHeight;
+      captureCanvas.width = w;
+      captureCanvas.height = h;
+
+      setTimeout(() => {
+        ctxCapture.drawImage(video, 0, 0, w, h);
+        const dataUrl = captureCanvas.toDataURL("image/png");
+        imgPreview.src = dataUrl;
+        imgPreview.style.display = "block";
+
+        // Dừng camera
+        stream.getTracks().forEach(track => track.stop());
+        video.style.display = "none";
+      }, 1000);
+
+    } catch (err) {
+      alert("Không thể mở camera: " + err.message);
+    }
+  }
+
+  btnSelfie.onclick = () => openCameraAndCapture(selfiePreview);
+  btnCCCDFront.onclick = () => openCameraAndCapture(cccdFrontPreview);
+  btnCCCDBack.onclick = () => openCameraAndCapture(cccdBackPreview);
+
+  // Ký tên canvas
+  const canvasSig = document.getElementById('signature-pad');
+  const ctxSig = canvasSig.getContext('2d');
+  let drawing = false;
+  let lastX = 0, lastY = 0;
+
+  function resizeCanvas() {
+    const ratio = window.devicePixelRatio || 1;
+    canvasSig.width = canvasSig.clientWidth * ratio;
+    canvasSig.height = canvasSig.clientHeight * ratio;
+    ctxSig.scale(ratio, ratio);
+    ctxSig.lineCap = 'round';
+    ctxSig.lineJoin = 'round';
+    ctxSig.strokeStyle = '#0078d4';
+    ctxSig.lineWidth = 2;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  function startDraw(e) {
+    e.preventDefault();
+    drawing = true;
+    const rect = canvasSig.getBoundingClientRect();
+    lastX = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+    lastY = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+  }
+  function draw(e) {
+    if (!drawing) return;
+    e.preventDefault();
+    const rect = canvasSig.getBoundingClientRect();
+    const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+    const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+    ctxSig.beginPath();
+    ctxSig.moveTo(lastX, lastY);
+    ctxSig.lineTo(x, y);
+    ctxSig.stroke();
+    lastX = x;
+    lastY = y;
+  }
+  function endDraw(e) {
+    e.preventDefault();
+    drawing = false;
+  }
+  canvasSig.addEventListener('mousedown', startDraw);
+  canvasSig.addEventListener('touchstart', startDraw);
+  canvasSig.addEventListener('mousemove', draw);
+  canvasSig.addEventListener('touchmove', draw);
+  canvasSig.addEventListener('mouseup', endDraw);
+  canvasSig.addEventListener('touchend', endDraw);
+  canvasSig.addEventListener('touchcancel', endDraw);
+
+  document.getElementById('clearSignature').addEventListener('click', () => {
+    ctxSig.clearRect(0, 0, canvasSig.width, canvasSig.height);
+  });
+
+  // Lưu PDF
+  document.getElementById('btnSavePDF').addEventListener('click', async () => {
+    const { jsPDF } = window.jspdf;
+
+    // Ẩn video và canvas capture lúc chụp để ko bị in vào PDF
+    video.style.display = 'none';
+    captureCanvas.style.display = 'none';
+
+    const contract = document.getElementById('contract');
+    // Sử dụng html2canvas để chụp ảnh contract với ảnh nền và chữ ký
+    const canvas = await html2canvas(contract, { scale: 2, useCORS: true });
+
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'pt',
+      format: [canvas.width, canvas.height]
+    });
+
+    pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+
+    pdf.save('hopdong_cho_vay.pdf');
+  });
+
+  // In hợp đồng
+  document.getElementById('btnPrint').addEventListener('click', () => {
+    window.print();
+  });
+</script>
+
+</body>
+</html>
