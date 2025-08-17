@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Camping Travel — Mobile</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+  :root{
+    --brand:#0ea5e9;
+    --accent:#22c55e;
+    --dark:#0b1020;
+    --ticket-bg:url('https://images.unsplash.com/photo-1520974735194-5f39dbb0b4a0?q=80&w=1200&auto=format&fit=crop'); /* TICKET_BG_URL: thay bằng link nền vé của bạn */
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;background:#0a0f1a;color:#fff;-webkit-font-smoothing:antialiased; font-family: system-ui,Segoe UI,Roboto,Helvetica,Arial}
+  body{display:flex;flex-direction:column}
+  /* Khu vực bản đồ trên cùng */
+  #map{height:46vh;width:100%;position:relative;z-index:1;border-bottom:1px solid rgba(255,255,255,.08)}
+  /* Popup phát sáng */
+  .glow-popup{
+    padding:6px;border-radius:12px;background:rgba(8,12,24,.9);
+    box-shadow:0 0 18px rgba(34,197,94,.35), inset 0 0 18px rgba(14,165,233,.25);
+    border:1px solid rgba(255,255,255,.12);
+    animation:blink 2.4s ease-in-out infinite;
+  }
+  .glow-popup h4{margin:0 0 6px;font-size:16px;color:#fff;text-shadow:0 0 8px rgba(34,197,94,.6)}
+  .glow-popup p{margin:0 0 8px;font-size:13px;line-height:1.35;color:#e5f8ff}
+  .glow-popup img{width:100%;height:auto;border-radius:10px;border:1px solid rgba(255,255,255,.15)}
+  @keyframes blink{
+    0%,100%{box-shadow:0 0 12px rgba(34,197,94,.25), inset 0 0 12px rgba(14,165,233,.18)}
+    50%{box-shadow:0 0 22px rgba(34,197,94,.55), inset 0 0 22px rgba(14,165,233,.35)}
+  }
+  /* Cảnh hoạt họa giữa trang */
+  .scene{position:relative;height:34vh;overflow:hidden}
+  .sky{
+    position:absolute;inset:0;background:linear-gradient(#081226,#0a1e3d 55%, #0b223f 56%, #0b243f);
+  }
+  .stars::before,.stars::after{
+    content:"";position:absolute;inset:0;background:
+      radial-gradient(2px 2px at 20% 30%,#fff,transparent 60%),
+      radial-gradient(2px 2px at 70% 40%,#fff,transparent 60%),
+      radial-gradient(2px 2px at 35% 60%,#fff,transparent 60%),
+      radial-gradient(1.5px 1.5px at 80% 20%,#dff,transparent 60%);
+    opacity:.7;animation:twinkle 4s infinite alternate;
+  }
+  @keyframes twinkle{from{opacity:.35} to{opacity:.9}}
+  .ocean{
+    position:absolute;left:0;right:0;bottom:0;height:38%;
+    background:linear-gradient(#0c335f,#0a274b);
+    overflow:hidden;
+    box-shadow:0 -8px 24px rgba(0,0,0,.35) inset;
+  }
+  .wave{
+    position:absolute;left:-50%;right:-50%;height:18%;
+    border-radius:50%;
+    top:-10%;
+    background:rgba(255,255,255,.12);
+    filter:blur(2px);
+    animation:surf 8s linear infinite;
+  }
+  .wave:nth-child(2){top:10%;opacity:.6;animation-duration:11s}
+  .wave:nth-child(3){top:30%;opacity:.35;animation-duration:14s}
+  @keyframes surf{to{transform:translateX(50%)}}
+
+  .mountain{
+    position:absolute;bottom:20%;left:50%;transform:translateX(-50%);
+    width:60vw;max-width:520px;height:26vh;min-height:140px;
+  }
+  .peak{
+    position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+    width:74%;height:100%;
+    background:linear-gradient(135deg,#2e3d57,#1a263b 40%,#0e182a);
+    clip-path:polygon(50% 0, 100% 85%, 80% 100%, 20% 100%, 0 85%);
+    box-shadow:0 20px 40px rgba(0,0,0,.6);
+  }
+  .cave{
+    position:absolute;bottom:8%;left:52%;transform:translateX(-50%);
+    width:34%;height:38%;background:radial-gradient(circle at 50% 60%, #0b0f1a 0, #05070c 65%, rgba(0,0,0,.9) 70%);
+    border-radius:50%/60%;
+    box-shadow:0 0 20px rgba(0,0,0,.65) inset, 0 -6px 18px rgba(0,0,0,.35);
+  }
+  .beach{
+    position:absolute;bottom:36%;left:0;right:0;height:6%;
+    background:linear-gradient(#d1b790,#c8a87a);filter:brightness(.9);
+  }
+  .tree{
+    position:absolute;bottom:36%;width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-bottom:26px solid #1e7a3c;
+    animation: sway 3.5s ease-in-out infinite;
+  }
+  .tree::after{
+    content:"";position:absolute;left:-3px;bottom:-34px;width:6px;height:12px;background:#5b3a1f;border-radius:2px;
+  }
+  .tree.t1{left:12%}.tree.t2{left:20%;animation-duration:4.2s}.tree.t3{left:28%}
+  .tree.t4{left:72%}.tree.t5{left:80%;animation-duration:3.8s}.tree.t6{left:88%}
+  @keyframes sway{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+
+  /* Thanh đáy + nút */
+  .bar{
+    position:sticky;bottom:0;left:0;right:0;z-index:3;
+    background:linear-gradient(180deg,rgba(8,12,24,.2),rgba(8,12,24,.8) 30%, rgba(8,12,24,1));
+    backdrop-filter:blur(10px);
+    border-top:1px solid rgba(255,255,255,.08);
+    padding:12px 14px;
+  }
+  .row{display:flex;gap:10px;align-items:center}
+  .row input[type="url"]{flex:1;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#fff}
+  .btn{
+    appearance:none;border:0;border-radius:14px;padding:12px 18px;font-weight:700;
+    background:linear-gradient(135deg,var(--accent),#16a34a);
+    color:#081225;box-shadow:0 8px 20px rgba(34,197,94,.35);cursor:pointer
+  }
+  .btn:active{transform:translateY(1px)}
+
+  /* Modal tạo vé */
+  .modal{position:fixed;inset:0;top:57px;background:rgba(0,0,0,);display:none;align-items:center;justify-content:center;padding:14px;z-index:50}
+  .card{
+    width:100%;max-width:460px;background:transparent;border:1px solid rgba(255,255,255,.12);border-radius:16px;
+    box-shadow:0 12px 40px rgba(0,0,0,.45);padding:14px
+  }
+  .card h3{margin:4px 0 10px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .field{display:flex;flex-direction:column;gap:6px}
+  .field input{padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:#fff}
+  .muted{font-size:12px;color:#bfe8ff}
+  .actions{display:flex;gap:8px;justify-content:space-between;margin-top:10px}
+
+  /* Vé/hoá đơn */
+  .ticket-wrap{margin-top:12px}
+  .ticket{
+    position:relative;background:var(--ticket-bg);background-size:cover;background-position:center;
+    border-radius:20px; padding:14px; color:#081225;
+    filter:drop-shadow(0 14px 40px rgba(0,0,0,.45));
+    -webkit-print-color-adjust:exact; print-color-adjust:exact; /* Hỗ trợ in nền */
+  }
+  .ticket::before, .ticket::after{
+    /* Rãnh xé dạng chấm và vết khuyết tròn hai bên */
+    content:""; position:absolute; left:50%; transform:translateX(-50%);
+    width:92%; height:0; top:64%; border-top:2px dashed rgba(8,18,37,.35);
+    background:
+      radial-gradient(circle at left center, transparent 0 9px, rgba(0,0,0,.25) 10px 10px, transparent 11px) left center / 22px 22px no-repeat,
+      radial-gradient(circle at right center, transparent 0 9px, rgba(0,0,0,.25) 10px 10px, transparent 11px) right center / 22px 22px no-repeat;
+  }
+  .brandline{display:flex;justify-content:space-between;align-items:center}
+  .brand{font-weight:800;letter-spacing:.5px}
+  .price{font-weight:800;font-size:20px}
+  .row2{display:flex;gap:10px;margin-top:8px;align-items:flex-start}
+  .col{flex:1;background:rgba(255,255,255,.85);border-radius:12px;padding:10px}
+  .col h4{margin:0 0 6px}
+  .sm{font-size:12px}
+  .avatar{
+    width:86px;height:86px;border-radius:12px;background:#fff;border:2px solid rgba(0,0,0,.2);overflow:hidden;flex:0 0 auto
+  }
+  .avatar img{width:100%;height:100%;object-fit:cover}
+  .total{margin-top:12px;background:rgba(255,255,255,.92);padding:10px;border-radius:12px;font-weight:800;display:flex;justify-content:space-between}
+  .print-btn{margin-top:10px}
+
+  /* Camera overlay */
+  .cam{position:fixed;inset:0;background:#000d;display:none;align-items:center;justify-content:center;flex-direction:column;gap:10px;z-index:60}
+  .cam video{width:90vw;max-width:420px;border-radius:12px}
+  .cam .row{gap:10px}
+
+  /* In ấn */
+  @page{size:A4; margin:10mm}
+  @media print {
+  body * {
+    display: none !important;
+  }
+  #ticketPrint, #ticketPrint * {
+    display: block !important;
+  }
+  #ticketPrint {
+    position: static !important;
+    width: 100% !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- BẢN ĐỒ -->
+<div id="map"></div>
+
+<!-- CẢNH HOẠT HỌA -->
+<div class="scene">
+  <div class="sky stars"></div>
+  <div class="mountain">
+    <div class="peak"></div>
+    <div class="cave"></div>
+  </div>
+  <div class="beach"></div>
+  <div class="ocean">
+    <div class="wave"></div><div class="wave"></div><div class="wave"></div>
+  </div>
+  <div class="tree t1"></div><div class="tree t2"></div><div class="tree t3"></div>
+  <div class="tree t4"></div><div class="tree t5"></div><div class="tree t6"></div>
+</div>
+
+<!-- THANH ĐÁY + BOOK -->
+
+  <div class="row">
+    <button class="btn" style="flex:1" onclick="openModal()">BOOK Travel</button>
+  </div>
+</div>
+
+<!-- MODAL TẠO VÉ -->
+<div class="modal" id="modal">
+  <div class="card">
+    <h3>Đặt vé Camping (bao ăn ở) +84 915373047</h3>
+    <div class="grid">
+      <div class="field">
+        <label>Ngày đi</label>
+        <input type="date" id="startDate"/>
+      </div>
+      <div class="field">
+        <label>Ngày về</label>
+        <input type="date" id="endDate"/>
+      </div>
+      <div class="field">
+        <label>Số người</label>
+        <input type="number" id="people" min="1" value="2" />
+      </div>
+      <div class="field">
+        <label>Tọa độ (tự động)</label>
+        <input type="text" id="coords" readonly/>
+      </div>
+    </div>
+    <div class="muted">+84 915373047</div>
+    <div class="actions">
+      <button class="btn" onclick="captureSelfie()">Chụp khuôn mặt</button>
+      <div style="display:flex;gap:8px">
+        <button class="btn" style="background:#334155;color:#e5f0ff" onclick="closeModal()">Đóng</button>
+        <button class="btn" onclick="generateTicket()">Tạo vé</button>
+      </div>
+    </div>
+    <div class="ticket-wrap" id="ticketWrap" style="display:none">
+      <div class="ticket">
+        <div class="brandline">
+          <div class="brand">HANG ÉN CAMP — Beach & Forest</div>
+          <div class="price"><span id="unitPrice">177.255</span>đ/ngày/người</div>
+        </div>
+        <div class="row2">
+          <div class="avatar"><img id="selfie" alt="Ảnh khách" /></div>
+          <div class="col">
+            <h4>Thông tin vé</h4>
+            <div class="sm">Tên vé: <b>BOOKING CAMP — All inclusive</b></div>
+            <div class="sm">Ngày đi: <b id="vStart"></b></div>
+            <div class="sm">Ngày về: <b id="vEnd"></b></div>
+            <div class="sm">Số ngày: <b id="vDays"></b></div>
+            <div class="sm">Số người: <b id="vPeople"></b></div>
+          </div>
+          <div class="col">
+            <h4>Vị trí</h4>
+            <div class="sm">Tọa độ: <b id="vCoords"></b></div>
+            <div class="sm">Chế độ bản đồ: <b id="vLayer">—</b></div>
+            <div class="sm">Ghi chú: gần hang núi sát bờ biển, rừng bao quanh. +84 915373047</div>
+          </div>
+        </div>
+        <div class="total">
+          <div>TỔNG TIỀN</div>
+          <div id="vTotal">—</div>
+        </div>
+      </div>
+      <button class="btn print-btn" onclick="window.print()">In vé</button>
+    </div>
+  </div>
+</div>
+
+<!-- CAMERA OVERLAY -->
+<div class="cam" id="cam">
+  <video id="video" autoplay playsinline></video>
+  <div class="row">
+    <button class="btn" onclick="snap()">Chụp</button>
+    <button class="btn" style="background:#334155;color:#e5f0ff" onclick="stopCam()">Đóng</button>
+  </div>
+  <canvas id="canvas" style="display:none"></canvas>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  // ====== CẤU HÌNH ẢNH POPUP & TICKET ======
+  let GOOGLE_DRIVE_IMAGE_URL = "https://upload.wikimedia.org/wikipedia/commons/f/f5/Ly_Son_Islands_%2814817868968%29.jpg"; // Thay bằng link drive uc?export=view&id=...
+  const TICKET_BG_URL = getComputedStyle(document.documentElement).getPropertyValue('--ticket-bg');
+
+  // ====== BẢN ĐỒ LEAFLET ======
+  const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 19, attribution: '&copy; OSM'});
+  const esri = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {maxZoom: 19, attribution:'&copy; Esri'});
+  const map = L.map('map', {
+    center: [14.666712, 109.079696], // Ví dụ gần Nha Trang
+    zoom: 12,
+    layers: [esri]
+  });
+  const baseLayers = {
+    "Vệ tinh": esri,
+    "Bản đồ": osm
+  };
+  L.control.layers(baseLayers, null, {position:'topright', collapsed:true}).addTo(map);
+
+  // Marker kéo thả
+  const marker = L.marker([14.666712, 109.079696], {draggable:true}).addTo(map);
+  let currentLayerName = "Vệ tinh";
+
+  function popupHTML(){
+    return `
+      <div class="glow-popup">
+        <h4>Hang Én Camping — Beach & Forest</h4>
+        <p>Trải nghiệm cắm trại bao ăn ở: núi có hang sát bờ biển, rừng bao quanh. Hoàng hôn tuyệt đẹp!</p>
+        <img src="${GOOGLE_DRIVE_IMAGE_URL}" alt="Giới thiệu"/>
+      </div>
+    `;
+  }
+  marker.bindPopup(popupHTML(), {autoClose:false, closeButton:true}).openPopup();
+
+  // Cập nhật tọa độ vào form
+  function updateCoords(){
+    const latlng = marker.getLatLng();
+    const s = latlng.lat.toFixed(6)+", "+latlng.lng.toFixed(6);
+    const input = document.getElementById('coords');
+    if(input) input.value = s;
+  }
+  updateCoords();
+  marker.on('dragend', updateCoords);
+
+  // Theo dõi đổi lớp nền để ghi vào vé
+  map.on('baselayerchange', function(e){
+    currentLayerName = e.name;
+  });
+
+  // Áp dụng link ảnh Google Drive vào popup
+  function applyDriveImage(){
+    const val = document.getElementById('imgLink').value.trim();
+    if(val){
+      GOOGLE_DRIVE_IMAGE_URL = val;
+      marker.setPopupContent(popupHTML());
+      marker.openPopup();
+    }
+  }
+
+  // ====== MODAL ======
+  const modal = document.getElementById('modal');
+  function openModal(){ 
+    updateCoords();
+    // gợi ý ngày: hôm nay và +1
+    const sd = document.getElementById('startDate'), ed = document.getElementById('endDate');
+    const today = new Date(); today.setHours(0,0,0,0);
+    const tomorrow = new Date(today.getTime()+86400000);
+    sd.valueAsDate = sd.value ? sd.valueAsDate : today;
+    ed.valueAsDate = ed.value ? ed.valueAsDate : tomorrow;
+    document.getElementById('vLayer').textContent = currentLayerName;
+    modal.style.display='flex';
+  }
+  function closeModal(){ modal.style.display='none' }
+
+  // ====== SELFIE CAMERA ======
+  const cam = document.getElementById('cam');
+const video = document.getElementById('video');
+const canvas = document.getElementById('canvas');
+let stream = null;
+
+async function captureSelfie(){
+  try {
+    cam.style.display='flex';
+    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio:false });
+    video.srcObject = stream;
+
+    // Đợi video sẵn sàng
+    await new Promise(resolve => {
+      video.onloadedmetadata = () => {
+        video.play();
+        resolve();
+      };
+    });
+
+  } catch(err) {
+    alert("Không mở được camera: " + err.message);
+  }
+}
+
+function stopCam(){
+  if(stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; }
+  cam.style.display='none';
+}
+
+function snap(){
+  if(video.videoWidth === 0 || video.videoHeight === 0){
+    alert("Camera chưa sẵn sàng, thử lại sau 1 giây");
+    return;
+  }
+
+  const w = video.videoWidth, h = video.videoHeight;
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(video, 0, 0, w, h);
+  const url = canvas.toDataURL('image/jpeg', 0.9);
+  document.getElementById('selfie').src = url;
+  stopCam();
+}
+
+  // ====== TẠO VÉ ======
+  function formatVND(n){
+    return n.toLocaleString('vi-VN');
+  }
+  function daysBetween(a,b){
+    const A = new Date(a), B = new Date(b);
+    if(isNaN(A) || isNaN(B)) return 1;
+    const diff = Math.ceil((B - A) / 86400000);
+    return Math.max(1, diff); // ít nhất 1 ngày
+  }
+  function generateTicket(){
+    const sd = document.getElementById('startDate').value;
+    const ed = document.getElementById('endDate').value;
+    const ppl = Math.max(1, parseInt(document.getElementById('people').value || "1", 10));
+    const d = daysBetween(sd, ed);
+    const unit = 177255; // 177k/ngày/người
+
+    document.getElementById('vStart').textContent = sd || "—";
+    document.getElementById('vEnd').textContent = ed || "—";
+    document.getElementById('vDays').textContent = d;
+    document.getElementById('vPeople').textContent = ppl;
+    document.getElementById('vCoords').textContent = document.getElementById('coords').value || "—";
+    document.getElementById('vLayer').textContent = currentLayerName;
+    document.getElementById('vTotal').textContent = formatVND(unit * d * ppl) + " đ";
+
+    // Hiển thị khung vé
+    document.getElementById('ticketWrap').style.display='block';
+  }
+
+  // Đóng modal khi click nền tối
+  modal.addEventListener('click', (e)=>{ if(e.target===modal) closeModal() });
+
+  // Mở popup mặc định lần đầu để người dùng thấy ảnh
+  setTimeout(()=>marker.openPopup(), 500);
+  
+  
+  
+  function printTicket(){
+  window.print();
+}
+</script>
+</body>
+</html>
