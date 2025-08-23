@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>โฉนดที่ดิน</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: pink;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: 'Sarabun', sans-serif;
+    }
+
+    .paper-container {
+      width: 95vw;
+      max-width: 600px;
+      aspect-ratio: 1 / 1.41; /* Khổ A4 */
+      background: url('https://wallpapercave.com/wp/wp13105561.jpg') no-repeat center/cover;
+      color: green;
+      border: 5px solid black;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+      padding: 20px;
+      box-sizing: border-box;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      animation: paperGlow 5s infinite ease-in-out;
+    }
+
+    @keyframes paperGlow {
+      0%, 100% { box-shadow: 0 0 10px #000; }
+      50% { box-shadow: 0 0 25px #222; }
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 5px;
+    }
+
+    .logo img {
+      width: 60px;
+    }
+
+    .title {
+      text-align: center;
+      font-size: 1.4em;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .content {
+      flex: 1;
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      font-size: 0.9em;
+    }
+
+    .content-left,
+    .content-right {
+      width: 48%;
+    }
+
+    .signature-block {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    canvas {
+      border: 1px solid #aaa;
+      background: transparent;
+    }
+
+    .stamp {
+      width: 80px;
+      position: absolute;
+      bottom: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1;
+    }
+
+    .timestamp {
+      text-align: center;
+      margin-top: 5px;
+      font-size: 0.8em;
+    }
+
+    .map {
+      margin-top: 10px;
+      height: 200px;
+      border: 2px solid black;
+    }
+    
+    
+    
+  </style>
+</head>
+<body>
+
+  <div class="paper-container">
+    <div class="logo">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Garuda_Emblem_of_Thailand_%28Royal_Warrant%29.svg/800px-Garuda_Emblem_of_Thailand_%28Royal_Warrant%29.svg.png" alt="Garuda">
+    </div>
+    <div class="title">โฉนดที่ดิน</div>
+
+    <div class="content">
+      <div class="content-left">
+        <p>ชื่อเจ้าของ: วรชัย คุ้มสุวรรณ</p>
+        <p>เลขที่ดิน: 177/255</p>
+        <p>ตำบล: Ko Kwang</p>
+        <p>อำเภอ: Ko Kwang</p>
+        <p>จังหวัด: Surat Thani</p>
+        <p>ขนาด: Private Island</p>
+      </div>
+      <div class="content-right">
+        <p>รหัสที่ดิน: TH-8971-2025</p>
+        <p>แผนที่: แปลงที่ 5</p>
+        <p>ละติจูด: 9.313185°</p>
+        <p>ลองจิจูด: 99.914310°</p>
+        <p>ใช้ประโยชน์: Island</p>
+      </div>
+    </div>
+
+    <div class="signature-block">
+      <canvas id="signature" width="200" height="100"></canvas>
+    </div>
+    <img id="stamp" class="stamp" src="https://i.imgur.com/fVWqvYX.png" alt="Stamp">
+
+    <div class="timestamp">
+      ออกรายงานเมื่อ: <span id="now"></span>
+    </div>
+
+    <div id="map" class="map"></div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+  <script>
+    // Hiển thị thời gian
+    document.getElementById("now").innerText = new Date().toLocaleString("th-TH");
+
+    // Canvas ký tên bằng cảm ứng
+    const canvas = document.getElementById('signature');
+    const ctx = canvas.getContext('2d');
+    ctx.strokeStyle = 'blue'; // Đổi màu nét vẽ
+    ctx.lineWidth = 2; // (Tùy chọn) chỉnh độ dày nét vẽ
+    
+    let drawing = false;
+
+    canvas.addEventListener('mousedown', e => {
+      drawing = true;
+      ctx.moveTo(e.offsetX, e.offsetY);
+    });
+
+    canvas.addEventListener('mousemove', e => {
+      if (drawing) {
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.stroke();
+      }
+    });
+
+    canvas.addEventListener('mouseup', () => drawing = false);
+    canvas.addEventListener('mouseout', () => drawing = false);
+
+    canvas.addEventListener('touchstart', e => {
+      e.preventDefault();
+      const rect = canvas.getBoundingClientRect();
+      const touch = e.touches[0];
+      ctx.beginPath();
+      ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
+      drawing = true;
+    });
+
+    canvas.addEventListener('touchmove', e => {
+      e.preventDefault();
+      if (!drawing) return;
+      const rect = canvas.getBoundingClientRect();
+      const touch = e.touches[0];
+      ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
+      ctx.stroke();
+    });
+
+    canvas.addEventListener('touchend', () => drawing = false);
+
+    // Leaflet Map
+    const map = L.map('map').setView([13.7563, 100.5018], 13);
+    const tilesNormal = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+    const tilesSat = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+      subdomains:['mt0','mt1','mt2','mt3']
+    });
+
+    tilesNormal.addTo(map);
+
+    const layerControl = L.control.layers({
+      "แผนที่ถนน": tilesNormal,
+      "แผนที่ดาวเทียม": tilesSat
+    }).addTo(map);
+    
+    
+    const allMarkers = []; // <--- Thêm dòng này
+
+    map.on('click', function(e) {
+  const lat = e.latlng.lat.toFixed(5);
+  const lng = e.latlng.lng.toFixed(5);
+
+  // Tạo marker
+  const marker = L.marker([lat, lng]).addTo(map);
+
+  // Tạo popup riêng biệt
+  const popup = L.popup({
+    closeOnClick: false,
+    autoClose: false
+  })
+  .setLatLng([lat, lng])
+  .setContent(`พิกัด: ${lat}, ${lng}`)
+  .addTo(map); // Thêm popup vào bản đồ, không gắn với marker
+
+  // Lưu marker vào mảng để sau này fitBounds
+  allMarkers.push(marker);
+
+  // Căn lại bản đồ sao cho thấy hết tất cả marker
+  const group = new L.featureGroup(allMarkers);
+  map.fitBounds(group.getBounds());
+});
+  </script>
+</body>
+</html>
