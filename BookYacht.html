@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Book Travel — Yacht Rental (Mobile)</title>
+  <style>
+    :root{
+      --brand:#00d1b2;
+      --dark:#0b0f14;
+      --paper:#fffef7;
+      --ink:#1b1f23;
+      --accent:#5eead4;
+      --danger:#ef4444;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;}
+    body{
+      margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color:#fff; background:#000; overflow-x:hidden;
+      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    }
+
+    /* --- Fullscreen YouTube background --- */
+    .video-bg{position:fixed; inset:0; z-index:-1; overflow:hidden; background:#000}
+    .video-bg iframe{
+      position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+      /* Cover technique for 16:9 iframe */
+      width:100vw; height:56.25vw; /* 100 * 9 / 16 */
+      min-height:100vh; min-width:177.77vh; /* 100 * 16 / 9 */
+      border:0; pointer-events:none;
+    }
+
+    /* Gradient overlay for readability */
+    .scrim{position:fixed; inset:0; background:radial-gradient(1200px 600px at 50% 80%, rgba(0,0,0,.0), rgba(0,0,0,.7)); z-index:0}
+
+    /* Centered call-to-action */
+    .center{position:fixed; inset:0; display:grid; place-items:center; color:blue; z-index:1; padding:24px}
+    .brand-title{font-weight:700; letter-spacing:.04em; text-align:center; margin-bottom:18px; text-shadow:0 2px 14px rgba(0,0,0,.6)}
+    .book-btn{
+      background:transparent; margin-left:75px;
+      color:#06231f; font-weight:800; border:0; padding:16px 22px; border-radius:999px; font-size:18px;
+      box-shadow:0 10px 30px rgba(0, 209, 178, .45);
+      transform:translateZ(0);
+    }
+    .book-btn:active{transform:scale(.98)}
+
+    /* Modal/Card */
+    .modal{position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:20; padding:18px}
+    .modal.active{display:flex}
+    .overlay{position:absolute; inset:0; background:rgba(0,0,0,.6); backdrop-filter:blur(6px)}
+    .card{
+      position:relative; width:min(720px, 100%); max-height:92vh; overflow:auto;
+      background:rgba(9,12,16,.85); border:1px solid rgba(255,255,255,.08);
+      border-radius:20px; padding:16px; box-shadow:0 20px 70px rgba(0,0,0,.5);
+    }
+
+    .grid{display:grid; gap:12px}
+    .grid.cols-2{grid-template-columns:1fr 1fr}
+    @media (max-width:640px){ .grid.cols-2{grid-template-columns:1fr} }
+
+    label{font-size:12px; opacity:.9}
+    input, select, textarea{
+      width:100%; background:#0e1620; color:#e8f5f3; border:1px solid rgba(255,255,255,.12);
+      border-radius:12px; padding:12px 14px; font-size:14px; outline:none;
+    }
+    input:focus, select:focus, textarea:focus{border-color:var(--accent); box-shadow:0 0 0 3px rgba(94,234,212,.18)}
+
+    .row{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+    .spacer{height:6px}
+
+    .actions{display:flex; gap:8px; justify-content:space-between; align-items:center; margin-top:8px}
+    .btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; border:0; border-radius:12px; padding:12px 14px; font-weight:700}
+    .btn.primary{background:linear-gradient(135deg, var(--brand), var(--accent)); color:#05322c}
+    .btn.secondary{background:#101923; color:#d7fffb; border:1px solid rgba(255,255,255,.12)}
+    .btn.danger{background:var(--danger); color:white}
+
+    .muted{opacity:.8; font-size:13px}
+
+    /* Receipt */
+    .receipt{
+      background:var(--paper); color:var(--ink); border-radius:18px; padding:14px; border:1px dashed #c6c1a8;
+      box-shadow:inset 0 0 0 6px rgba(0,0,0,.02), 0 12px 30px rgba(0,0,0,.35);
+    }
+    .receipt h3{margin:4px 0 10px 0}
+    .pair{display:flex; justify-content:space-between; gap:8px; padding:6px 0; border-bottom:1px dashed #e3dcc2}
+    .pair:last-child{border-bottom:0}
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
+    .stamp{display:inline-block; padding:6px 10px; border:2px solid #0ea5e9; color:#0ea5e9; border-radius:8px; transform:rotate(-3deg); font-weight:900}
+
+    .photo-box{display:grid; place-items:center; background:#0b1520; border:1px dashed #2b3b4f; border-radius:12px; padding:10px; min-height:107px}
+    .photo-box img{max-width:89%; border-radius:10px}
+
+    .print-tip{font-size:12px; opacity:.8}
+
+    /* Print rules — keep backgrounds in Chrome */
+    @media print{
+      body{background:#000; -webkit-print-color-adjust: exact; print-color-adjust: exact;}
+      .video-bg, .scrim, .center, .overlay, .btn.secondary.hide-on-print{display:none !important}
+      .modal{position:static; display:block}
+      .card{background:#0b0f14; border-color:#0b0f14; box-shadow:none; max-height:none}
+      .receipt{box-shadow:none}
+      .page-break{page-break-before:always}
+    }
+  </style>
+</head>
+<body>
+  <!-- Fullscreen YouTube background (replace VIDEO_ID as you like) -->
+  <div class="video-bg" aria-hidden="true">
+    <iframe
+      <iframe
+  
+  id="bgVideo"
+  src="https://www.youtube.com/embed/mrhacHYujtM?autoplay=1&mute=1&controls=0&loop=1&playlist=mrhacHYujtM"
+  frameborder="0"
+  allow="autoplay; fullscreen; picture-in-picture">
+
+
+    ></iframe>
+  </div>
+  <div class="scrim" aria-hidden="true"></div>
+
+  <!-- Centered CTA -->
+  <div class="center">
+    <div>
+      <div class="brand-title">
+        <div style="font-size:14px; opacity:.9; letter-spacing:.35em">AZIMUT CHARTER</div>
+        <div style="font-size:28px">Luxury Yacht — Ben177</div>
+      </div>
+      <button class="book-btn" id="openBtn">Book Travel</button>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal" id="modal">
+    <div class="overlay" id="closeOverlay" aria-label="Close"></div>
+    <div class="card">
+      <div class="row" style="justify-content:space-between">
+        <h2 style="margin:6px 0">Đặt Thuê Du Thuyền Azimut 64</h2>
+        <button class="btn secondary hide-on-print" id="closeBtn" aria-label="Đóng">Đóng</button>
+      </div>
+
+      <div class="grid cols-2" style="margin-top:8px">
+        <div class="grid">
+          <div>
+            <label>Tên khách</label>
+            <input id="name" placeholder="Nguyễn Văn A" autocomplete="name" />
+          </div>
+          <div>
+            <label>Điện thoại</label>
+            <input id="phone" placeholder="09xxxxxxxx" inputmode="tel" autocomplete="tel" />
+          </div>
+          <div class="grid cols-2">
+            <div>
+              <label>Ngày bắt đầu</label>
+              <input type="date" id="dateStart" />
+            </div>
+            <div>
+              <label>Ngày kết thúc</label>
+              <input type="date" id="dateEnd" />
+            </div>
+          </div>
+          <div class="grid cols-2">
+            <div>
+              <label>Số ngày (tự tính)</label>
+              <input id="days" readonly />
+            </div>
+            <div>
+              <label>Đơn giá</label>
+              <input id="rate" value="1710" readonly />
+            </div>
+          </div>
+          <div>
+            <label>Ghi chú</label>
+            <textarea id="note" rows="2" placeholder="Yêu cầu đặc biệt (nếu có)"></textarea>
+          </div>
+          <div class="spacer"></div>
+          <div>
+            <label>Chụp ảnh (bắt buộc) — sẽ hiển thị trên hóa đơn</label>
+            <input type="file" id="photo" accept="image/*" capture="environment" />
+            <div class="photo-box" id="photoBox"><span class="muted">Chưa có ảnh — vui lòng chụp hoặc chọn ảnh</span></div>
+          </div>
+        </div>
+
+        <!-- Receipt preview -->
+        <div class="receipt" id="receipt">
+          <div class="row" style="justify-content:space-between; align-items:flex-start">
+            <h3>HÓA ĐƠN THUÊ Azimut 64</h3>
+            <span class="stamp">PENDING</span>
+          </div>
+          <div class="pair"><span>Khách</span><strong id="rName">—</strong></div>
+          <div class="pair"><span>Điện thoại</span><strong id="rPhone">—</strong></div>
+          <div class="pair"><span>Thời gian</span><strong id="rDates">—</strong></div>
+          <div class="pair"><span>Số ngày</span><strong id="rDays" class="mono">0</strong></div>
+          <div class="pair"><span>Đơn giá</span><strong id="rRate" class="mono">$1,710 / ngày</strong></div>
+          <div class="pair"><span>Tổng tiền</span><strong id="rTotal" class="mono">$0</strong></div>
+          <div class="pair"><span>Ghi chú</span><strong id="rNote">—</strong></div>
+          <div style="margin-top:10px">
+            <div class="muted" style="margin-bottom:6px">Ảnh khách / xác nhận hiện trường:</div>
+            <div class="photo-box"><img id="rPhoto" alt="Ảnh khách"/></div>
+          </div>
+          <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center">
+            <div class="muted">Mã đơn: <span id="rId" class="mono"></span></div>
+            <div class="muted">Ngày tạo: <span id="rCreated" class="mono"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn secondary hide-on-print" id="genBtn">Tạo hóa đơn</button>
+        <div class="row" style="gap:8px">
+          <button class="btn primary hide-on-print" id="printBtn" disabled>In PDF</button>
+          <button class="btn danger hide-on-print" id="resetBtn">Làm mới</button>
+        </div>
+      </div>
+
+      <div class="print-tip muted" style="margin-top:8px">
+        +84 915373047 <strong>Vule18456@gmail.com</strong>.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const USD_PER_DAY = 1710;
+
+    const el = id => document.getElementById(id);
+    const nameI = el('name');
+    const phoneI = el('phone');
+    const dsI = el('dateStart');
+    const deI = el('dateEnd');
+    const daysI = el('days');
+    const rateI = el('rate');
+    const noteI = el('note');
+    const photoI = el('photo');
+
+    const rName = el('rName');
+    const rPhone = el('rPhone');
+    const rDates = el('rDates');
+    const rDays = el('rDays');
+    const rRate = el('rRate');
+    const rTotal = el('rTotal');
+    const rNote = el('rNote');
+    const rPhoto = el('rPhoto');
+    const rId = el('rId');
+    const rCreated = el('rCreated');
+
+    const photoBox = el('photoBox');
+
+    // Modal controls
+    const modal = el('modal');
+    const openBtn = el('openBtn');
+    const closeBtn = el('closeBtn');
+    const closeOverlay = el('closeOverlay');
+    const genBtn = el('genBtn');
+    const printBtn = el('printBtn');
+    const resetBtn = el('resetBtn');
+
+    openBtn.addEventListener('click', () => modal.classList.add('active'));
+    closeBtn.addEventListener('click', () => modal.classList.remove('active'));
+    closeOverlay.addEventListener('click', () => modal.classList.remove('active'));
+
+    // Helpers
+    const fmtUSD = n => new Intl.NumberFormat('en-US', {style:'currency', currency:'USD', maximumFractionDigits:0}).format(n);
+    const isoDate = d => d.toISOString().slice(0,10);
+
+    // Defaults: start today, end tomorrow
+    const today = new Date();
+    const tomorrow = new Date(Date.now() + 86400000);
+    dsI.value = isoDate(today);
+    deI.value = isoDate(tomorrow);
+    rateI.value = USD_PER_DAY;
+
+    function computeDays(){
+      const s = new Date(dsI.value);
+      const e = new Date(deI.value);
+      if(isNaN(s) || isNaN(e)) return 0;
+      let diff = (e - s) / 86400000; // days
+      if (diff < 0) diff = 0;
+      // If same day or partial, count as 1 day
+      const days = Math.max(1, Math.ceil(diff));
+      return days;
+    }
+
+    function updateDaysAndTotal(){
+      const d = computeDays();
+      daysI.value = d;
+      rDays.textContent = d;
+      rRate.textContent = `${fmtUSD(USD_PER_DAY)} / ngày`;
+      rTotal.textContent = fmtUSD(d * USD_PER_DAY);
+      rDates.textContent = `${dsI.value || '—'} → ${deI.value || '—'}`;
+    }
+
+    [dsI, deI].forEach(elm => elm.addEventListener('change', updateDaysAndTotal));
+    updateDaysAndTotal();
+
+    // Photo handling (required)
+    let photoDataURL = '';
+    photoI.addEventListener('change', async (e) => {
+      const file = e.target.files && e.target.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        photoDataURL = reader.result;
+        photoBox.innerHTML = '';
+        const img = new Image();
+        img.src = photoDataURL;
+        img.alt = 'Ảnh khách';
+        img.onload = () => { /* ensure ready */ };
+        photoBox.appendChild(img);
+      };
+      reader.readAsDataURL(file);
+    });
+
+    function makeId(){
+      const t = Date.now().toString(36);
+      const r = Math.random().toString(36).slice(2,8).toUpperCase();
+      return `AZ-${t}-${r}`;
+    }
+
+    function generateReceipt(){
+      // validations
+      const errs = [];
+      if(!nameI.value.trim()) errs.push('Vui lòng nhập Tên khách');
+      if(!phoneI.value.trim()) errs.push('Vui lòng nhập Điện thoại');
+      if(!dsI.value || !deI.value) errs.push('Vui lòng chọn ngày bắt đầu/kết thúc');
+      if(!photoDataURL) errs.push('Vui lòng chụp hoặc chọn Ảnh (bắt buộc)');
+      if(errs.length){
+        alert(errs.join('\n')); return;
+      }
+
+      // push to receipt
+      rName.textContent = nameI.value.trim();
+      rPhone.textContent = phoneI.value.trim();
+      rNote.textContent = noteI.value.trim() || '—';
+      rPhoto.src = photoDataURL;
+      rId.textContent = makeId();
+      rCreated.textContent = new Date().toLocaleString();
+
+      // update stamp
+      const stamp = document.querySelector('.stamp');
+      stamp.textContent = 'CONFIRMED';
+      stamp.style.borderColor = '#22c55e';
+      stamp.style.color = '#22c55e';
+
+      // enable print
+      printBtn.disabled = false;
+    }
+
+    genBtn.addEventListener('click', generateReceipt);
+    printBtn.addEventListener('click', () => {
+      if(!photoDataURL){
+        alert('Cần có ảnh trên hóa đơn trước khi in.');
+        return;
+      }
+      window.print();
+    });
+
+    resetBtn.addEventListener('click', () => {
+      nameI.value=''; phoneI.value=''; noteI.value='';
+      dsI.value = isoDate(today); deI.value = isoDate(tomorrow);
+      updateDaysAndTotal();
+      photoI.value=''; photoDataURL='';
+      photoBox.innerHTML = '<span class="muted">Chưa có ảnh — vui lòng chụp hoặc chọn ảnh</span>';
+      rName.textContent='—'; rPhone.textContent='—'; rNote.textContent='—'; rPhoto.removeAttribute('src');
+      rId.textContent=''; rCreated.textContent='';
+      const stamp = document.querySelector('.stamp');
+      stamp.textContent = 'PENDING'; stamp.style.borderColor = '#0ea5e9'; stamp.style.color = '#0ea5e9';
+      printBtn.disabled = true;
+    });
+  </script>
+  
+  
+  
+  
+  
+</body>
+</html>
+
