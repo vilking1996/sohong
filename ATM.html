@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATM Hoạt Họa - Tờ tiền SVG + QR Logo</title>
+<style>
+  :root{--atm-w:360px;--atm-h:640px;--bill-w:300px;--bill-h:120px}
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:url('https://media-csdl.hungyentourism.com.vn/resources/portal/Images/HYN/manhdh.hyn/ATM/atm_vietcombank,_van_cao_-_doi_can,_ha_noi_001_636831355962665300.jpg');
+    background-size:cover;background-position:center;
+    display:flex;align-items:center;justify-content:center;height:100vh;font-family:Inter,Arial,Helvetica
+  }
+  .atm{width:var(--atm-w);height:var(--atm-h);background:transparent;border-radius:18px;padding:18px;position:relative;box-shadow:0 18px 40px rgba(0,0,0,.35);color:#fff}
+  .screen{height:140px;background:linear-gradient(180deg,#071127,#0b2740);border-radius:12px;padding:12px;display:flex;flex-direction:column;justify-content:center;align-items:center}
+  .screen h1{margin:0;font-size:18px;color:#bfe8d6}
+  .controls{margin-top:12px;display:flex;gap:8px;align-items:center}
+  input[type=number]{flex:1;padding:8px;border-radius:8px;border:0;font-size:16px}
+  button{padding:10px 12px;border-radius:8px;border:0;background:#06b58b;color:black;font-weight:700;cursor:pointer}
+
+  .slot-area{height:260px;display:flex;align-items:center;justify-content:center;position:relative}
+  .slot-frame{width:100%;height:48px;background:pink;border-radius:8px;position:absolute;bottom:68px;left:0px;top:125%;right:30px;box-shadow:inset 0 3px 8px rgba(0,0,0,.6)}
+
+  .stacked{position:absolute;left:50%;top:189%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none}
+  .bill-item{width:var(--bill-w);height:var(--bill-h);transform-origin:center center}
+  .bill-svg{width:100%;height:100%;display:block;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.45)}
+
+  /* receipt */
+  .receipt{position:absolute;left:50%;top:162px;transform:translateX(-50%);width:88%;background:#fff;color:#0b2b2f;border-radius:8px;padding:12px;display:none;z-index:60;box-shadow:0 8px 26px rgba(0,0,0,.3)}
+  .receipt h3{margin:0 0 8px 0}
+  .receipt .row{display:flex;gap:10px;align-items:center}
+  /* Chỉ style ảnh chân dung, KHÔNG đụng ảnh QR */
+  .receipt .owner-photo{width:96px;height:72px;object-fit:cover;border-radius:6px}
+  .receipt .meta{flex:1}
+  .receipt .actions{margin-top:8px;display:flex;gap:8px;justify-content:flex-end}
+  .print-btn{padding:8px 12px;border-radius:8px;border:0;background:#0b6b5f;color:#fff;cursor:pointer}
+
+  /* QR + logo giữa */
+  #qrcode-wrapper{position:relative;width:180px;height:180px;margin:10px auto 0}
+  #qrcode{width:100%;height:100%}
+  /* Ngăn mọi CSS khác làm méo/cắt QR */
+  #qrcode img, #qrcode canvas{
+    width:100% !important; height:100% !important;
+    border-radius:0 !important; image-rendering:pixelated;
+  }
+  #qr-logo{
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    width:44px;height:44px;         /* ~24% cạnh QR */
+    background:black;border-radius:8px;padding:4px;
+    box-shadow:0 0 0 4px #fff;      /* viền trắng tránh che module */
+    pointer-events:none;            /* không cản trở quét/click */
+  }
+
+  /* camera overlay */
+  .overlay{position:fixed;inset:0;background:rgba(1,6,12,.6);display:none;align-items:center;justify-content:center;z-index:80}
+  .cam-card{width:92vw;max-width:420px;height:78vh;background:#071322;border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px}
+  video{width:100%;height:60%;object-fit:cover;border-radius:8px;background:#000}
+  .capture-row{display:flex;gap:8px;justify-content:center}
+  .capture-row button{padding:10px 12px;border-radius:8px;border:0;background:#06b58b;color:#fff}
+
+  @media(max-width:420px){:root{--atm-w:320px;--atm-h:700px;--bill-w:280px;--bill-h:110px}}
+
+  @media print {
+    body {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      background: url('https://media-csdl.hungyentourism.com.vn/resources/portal/Images/HYN/manhdh.hyn/ATM/atm_vietcombank,_van_cao_-_doi_can,_ha_noi_001_636831355962665300.jpg') no-repeat center center fixed !important;
+      background-size: cover !important;
+    }
+    .bill-item {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="atm" id="atm">
+    <div class="screen">
+      <h1>Ngân hàng Vietcombank</h1>
+      <div class="controls" style="width:100%;margin-top:10px;">
+        <input id="amount" type="number" placeholder="Nhập số tiền (ví dụ 500000)" />
+        <button id="withdrawBtn">Rút</button>
+      </div>
+    </div>
+
+    <div class="slot-area">
+      <div class="slot-frame" aria-hidden="true"></div>
+      <div class="stacked" id="stacked"></div>
+    </div>
+
+    <div class="receipt" id="receipt">
+      <div class="row">
+        <img id="ownerPhoto" class="owner-photo" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='240'><rect width='100%' height='100%' fill='%23f5f7f8'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23033' font-size='18'>Chưa có ảnh</text></svg>" alt="photo" />
+        <div class="meta">
+          <h3>Biên lai giao dịch</h3>
+          <div id="receiptAmount">Số tiền: —</div>
+          <div id="receiptTime">Thời gian: —</div>
+          <div id="receiptTxn">Mã: —</div>
+        </div>
+      </div>
+
+      <!-- QR + logo giữa -->
+      <div id="qrcode-wrapper">
+        <div id="qrcode"></div>
+        <img id="qr-logo" alt="Vietcombank logo"
+             src="https://upload.wikimedia.org/wikipedia/vi/8/85/Vietcombank_Logo.png">
+      </div>
+
+      <div class="actions">
+        <button class="print-btn" id="printBtn">In PDF</button>
+        <button class="print-btn" id="closeReceipt" style="background:#888">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- camera overlay -->
+  <div class="overlay" id="overlay">
+    <div class="cam-card">
+      <video id="video" autoplay playsinline></video>
+      <div class="capture-row">
+        <button id="snap">Chụp</button>
+        <button id="closeCam">Hủy</button>
+      </div>
+    </div>
+  </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+const stacked = document.getElementById('stacked');
+const withdrawBtn = document.getElementById('withdrawBtn');
+const amountInput = document.getElementById('amount');
+let selectedAmount = 0;
+
+/* ===== Bills SVG ===== */
+function createBillSVG(denom){
+  const ns = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(ns,'svg');
+  svg.setAttribute('class','bill-item'); svg.setAttribute('width','300'); svg.setAttribute('height','120'); svg.setAttribute('viewBox','0 0 300 120');
+  const defs = document.createElementNS(ns,'defs');
+  const grad = document.createElementNS(ns,'linearGradient'); grad.setAttribute('id','g'+Math.random().toString(36).slice(2,8)); grad.setAttribute('x1','0%'); grad.setAttribute('x2','100%');
+  const stop1 = document.createElementNS(ns,'stop'); stop1.setAttribute('offset','0%'); stop1.setAttribute('stop-color','#dffbf1');
+  const stop2 = document.createElementNS(ns,'stop'); stop2.setAttribute('offset','100%'); stop2.setAttribute('stop-color','#9fe9c9');
+  grad.appendChild(stop1); grad.appendChild(stop2); defs.appendChild(grad); svg.appendChild(defs);
+  const rect = document.createElementNS(ns,'rect'); rect.setAttribute('x','4'); rect.setAttribute('y','4'); rect.setAttribute('rx','12'); rect.setAttribute('ry','12'); rect.setAttribute('width','292'); rect.setAttribute('height','112'); rect.setAttribute('fill','url(#'+grad.id+')'); rect.setAttribute('stroke','#2a9d8f'); rect.setAttribute('stroke-width','4'); svg.appendChild(rect);
+  const pattern = document.createElementNS(ns,'circle'); pattern.setAttribute('cx','260'); pattern.setAttribute('cy','30'); pattern.setAttribute('r','18'); pattern.setAttribute('fill','#ffffff22'); svg.appendChild(pattern);
+  const portraitGroup = document.createElementNS(ns,'g'); portraitGroup.setAttribute('transform','translate(24,20)');
+  const face = document.createElementNS(ns,'circle'); face.setAttribute('cx','36'); face.setAttribute('cy','36'); face.setAttribute('r','28'); face.setAttribute('fill','#f5f0e6'); face.setAttribute('stroke','#c1b7aa'); face.setAttribute('stroke-width','1'); portraitGroup.appendChild(face);
+  const eyeL = document.createElementNS(ns,'circle'); eyeL.setAttribute('cx','26'); eyeL.setAttribute('cy','34'); eyeL.setAttribute('r','3'); eyeL.setAttribute('fill','#222'); portraitGroup.appendChild(eyeL);
+  const eyeR = document.createElementNS(ns,'circle'); eyeR.setAttribute('cx','46'); eyeR.setAttribute('cy','34'); eyeR.setAttribute('r','3'); eyeR.setAttribute('fill','#222'); portraitGroup.appendChild(eyeR);
+  const smile = document.createElementNS(ns,'path'); smile.setAttribute('d','M26 46 Q36 56 46 46'); smile.setAttribute('stroke','#333'); smile.setAttribute('stroke-width','2'); smile.setAttribute('fill','none'); portraitGroup.appendChild(smile); svg.appendChild(portraitGroup);
+  const denomText = document.createElementNS(ns,'text'); denomText.setAttribute('x','160'); denomText.setAttribute('y','70'); denomText.setAttribute('font-size','28'); denomText.setAttribute('font-weight','700'); denomText.setAttribute('fill','#0b3d2e'); denomText.textContent = denom + ' ₫'; svg.appendChild(denomText);
+  const bank = document.createElementNS(ns,'text'); bank.setAttribute('x','160'); bank.setAttribute('y','96'); bank.setAttribute('font-size','12'); bank.setAttribute('fill','#074'); bank.textContent = 'Bank Vietcombank'; svg.appendChild(bank);
+  return svg;
+}
+
+function showStack(amount){  
+  stacked.innerHTML = '';  
+  const denom = 500000;  
+  const count = Math.min(17, Math.max(1, Math.ceil(amount / denom)));  
+  for(let i = 0; i < count; i++){  
+      const el = document.createElement('div');  
+      el.className = 'bill-item';  
+      el.style.position = 'absolute';  
+      el.style.left = '50%';  
+      el.style.bottom = `${i * 2}px`;  
+      el.style.transform = `translateX(-50%) rotate(${Math.random()*4-2}deg)`;  
+      el.style.zIndex = i;  
+      const svg = createBillSVG(denom.toLocaleString('vi-VN'));  
+      svg.classList.add('bill-svg');  
+      el.appendChild(svg);  
+      stacked.appendChild(el);  
+  }  
+}  
+
+withdrawBtn.addEventListener('click', ()=>{
+  const amt = parseInt(amountInput.value,10);
+  if(!amt || amt <=0){alert('Nhập số tiền hợp lệ');return}
+  selectedAmount = amt;
+  showStack(amt);
+  setTimeout(()=>{
+    stacked.style.transition = 'transform 1s cubic-bezier(.2,.9,.2,1)';
+    stacked.style.transform = 'translate(-50%,-30%) scale(1)';
+    setTimeout(()=>{ openCamera(); }, 1200);
+  },200);
+});
+
+/* ===== Camera + Receipt + QR ===== */
+let stream = null;
+
+function openCamera(){
+  const overlay = document.getElementById('overlay');
+  const video = document.getElementById('video');
+  overlay.style.display = 'flex';
+  navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:false}).then(s=>{
+    stream = s;
+    video.srcObject = s;
+    video.play();
+  }).catch(err=>{
+    console.error(err);
+    alert('Không thể mở camera: ' + (err.message || err));
+    overlay.style.display='none';
+    showReceiptPlaceholder();
+  });
+}
+
+function generateQRCode(dataObj){
+  const qrContainer = document.getElementById('qrcode');
+  qrContainer.innerHTML = ''; // clear cũ
+  new QRCode(qrContainer, {
+    text: JSON.stringify(dataObj),
+    width: 177,
+    height: 177,
+    correctLevel: QRCode.CorrectLevel.H
+  });
+}
+
+function getVietnamTimeString(){
+  return new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' });
+}
+
+function showReceiptPlaceholder(){
+  const now = new Date();
+  const txn = 'TX' + Date.now().toString(36).toUpperCase().slice(-8);
+  const vnTime = getVietnamTimeString();
+
+  document.getElementById('receiptAmount').textContent = selectedAmount.toLocaleString('vi-VN') + ' VND';
+  document.getElementById('receiptTime').textContent = vnTime;
+  document.getElementById('receiptTxn').textContent = 'Mã: ' + txn;
+
+  generateQRCode({ amount: selectedAmount, time: vnTime, txn: txn });
+  document.getElementById('receipt').style.display = 'block';
+}
+
+document.getElementById('snap').addEventListener('click', ()=>{
+  const video = document.getElementById('video');
+  const canvas = document.createElement('canvas');
+  canvas.width = video.videoWidth || 640;
+  canvas.height = video.videoHeight || 480;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+  const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+
+  if(stream) stream.getTracks().forEach(t=>t.stop());
+  document.getElementById('overlay').style.display = 'none';
+
+  const txn = 'TX' + Date.now().toString(36).toUpperCase().slice(-8);
+  const vnTime = getVietnamTimeString();
+
+  document.getElementById('ownerPhoto').src = dataUrl;
+  document.getElementById('receiptAmount').textContent = selectedAmount.toLocaleString('vi-VN') + ' VND';
+  document.getElementById('receiptTime').textContent = vnTime;
+  document.getElementById('receiptTxn').textContent = 'Mã: ' + txn;
+
+  generateQRCode({ amount: selectedAmount, time: vnTime, txn: txn });
+  document.getElementById('receipt').style.display = 'block';
+});
+
+document.getElementById('closeCam').addEventListener('click', ()=>{
+  if(stream) stream.getTracks().forEach(t=>t.stop());
+  document.getElementById('overlay').style.display = 'none';
+  showReceiptPlaceholder();
+});
+
+/* In PDF (có nền) */
+document.getElementById('printBtn').addEventListener('click', async () => {
+  const { jsPDF } = window.jspdf;
+  const atmElement = document.getElementById('atm');
+  const canvas = await html2canvas(atmElement, { scale: 2, useCORS: true, backgroundColor: null });
+  const imgData = canvas.toDataURL('image/png');
+  const pdf = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
+  const pdfWidth = pdf.internal.pageSize.getWidth();
+  const pdfHeight = pdf.internal.pageSize.getHeight();
+  const imgProps = canvas.width / canvas.height;
+  let width, height;
+  if (canvas.width > canvas.height) { width = pdfWidth; height = pdfWidth / imgProps; }
+  else { height = pdfHeight; width = pdfHeight * imgProps; }
+  const x = (pdfWidth - width) / 2;
+  const y = (pdfHeight - height) / 2;
+  pdf.addImage(imgData, 'PNG', x, y, width, height);
+  pdf.save('ATM-VIETCOMBANK.pdf');
+});
+</script>
+
+
+
+
+<audio id="moneySound" src="https://tiengdong.com/tieng-dem-tien-bang-may?utm_source=copylink&utm_medium=share_button&utm_campaign=shared_from_tiengdong.com&utm_content=vi-15h12-16-08-2025" preload="auto"></audio>
+
+<script>
+  const rutBtn = document.getElementById('withdrawBtn');
+  if (rutBtn) {
+    rutBtn.addEventListener('click', () => {
+      const sound = document.getElementById('moneySound');
+      if (sound) {
+        sound.currentTime = 0; // tua về đầu nếu bấm nhiều lần
+        sound.play().catch(err => console.warn('Không phát được âm thanh:', err));
+      }
+    });
+  }
+</script>
+
+</body>
+</html>
