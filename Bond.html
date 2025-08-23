@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Trái Phiếu Cao Ốc</title>
+<style>
+  html,body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #0b0f14;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Times New Roman', serif;
+  }
+  body::before, body::after {
+    content: "";
+    position: fixed;
+    width: 200%;
+    height: 200%;
+    top: -50%;
+    left: -50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.2) 2%, transparent 70%);
+    animation: sparkle 8s linear infinite;
+    pointer-events: none;
+  }
+  body::after {
+    animation-delay: 4s;
+  }
+  @keyframes sparkle {
+    0% {transform: translate(0,0);}
+    50% {transform: translate(10%,10%);}
+    100% {transform: translate(0,0);}
+  }
+
+  .bond {
+    width: 84vw;
+    height: 84vh;
+    background: linear-gradient(135deg, #f7f1df 0%, #f1e5c2 100%);
+    border-radius: 24px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 38px rgba(255,255,255,0.5);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-image: url('https://png.pngtree.com/thumb_back/fh260/background/20210818/pngtree-gradient-green-forest-mobile-wallpaper-background-image_763173.jpg'); /* Một họa tiết nhẹ (nếu cần) */
+    background-size: cover;
+  }
+
+  .bond-header {
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .bond-header h1 {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #3b2b12;
+    margin: 0;
+  }
+  .bond-header h2 {
+    font-size: 1rem;
+    color: #6a5a38;
+    margin: 4px 0 0;
+  }
+
+  .info-section {
+    font-size: 0.9rem;
+    margin: 8px 0;
+    color: black;
+    text-align: left;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+  .info-section strong {
+    color: pink;
+  }
+
+  .img-row {
+    display: flex;
+    justify-content: space-around;
+    margin: 10px 0;
+  }
+  .issuer-img,
+  .buyer-img {
+    width: 90px;
+    height: 90px;
+    border-radius: 14px;
+    object-fit: cover;
+    border: 2px solid #a17b;
+    cursor: pointer;
+    background: #fff;
+  }
+
+  .buyer-info {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 8px;
+  }
+  .buyer-info input {
+    width: 45%;
+    padding: 6px;
+    font-size: 0.9rem;
+    border: 1px solid #bfa45a;
+    border-radius: 6px;
+    text-align: center;
+  }
+
+  .project img {
+    width: 100%;
+    height: 30vh;
+    object-fit: cover;
+    border-radius: 14px;
+    margin-top: 8px;
+    cursor: pointer;
+    border: 2px solid #a17a;
+    background: #fff;
+  }
+
+  .seal {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 3px solid #d4af3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: green;
+    font-weight: 800;
+    letter-spacing: .05em;
+    transform: rotate(-10deg);
+    background: rgba(124,177,255,.17);
+    font-size: 0.8rem;
+    box-shadow: inset 0 0 12px rgba(212,175,55,0.5);
+  }
+
+  .terms {
+    font-size: 0.8rem;
+    color: blue;
+    text-align: justify;
+    margin-top: 6px;
+  }
+
+  .print-btn {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    padding: 8px 14px;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    border: none;
+    background: #bfa45a;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  /* Đảm bảo in giữ nền và layout đẹp */
+ @media print {
+  /* Ẩn hiệu ứng lung linh để không che nội dung */
+  body::before,
+  body::after {
+    display: none !important;
+  }
+
+  body {
+    background: #0b0f14 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .bond {
+    box-shadow: none !important;
+    page-break-inside: avoid;
+    background: linear-gradient(135deg, #f7f1df 0%, #f1e5c2 100%) !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    color-adjust: exact;
+  }
+
+  /* Ẩn nút in */
+  .print-btn {
+    display: none !important;
+  }
+}
+</style>
+</head>
+<body>
+<section class="bond">
+  <div class="bond-header">
+    <h1>Stormwind</h1>
+    <h2>BOND</h2>
+  </div>
+
+  <div class="info-section">
+    <div><strong>Mã trái phiếu:</strong> HOME-2025</div>
+    <div><strong>Mệnh giá:</strong> 124.177.255 VNĐ</div>
+    <div><strong>Kỳ hạn:</strong> 24 tháng</div>
+    <div><strong>Lãi suất:</strong> 10,5%/năm</div>
+    <div><strong>Ngày phát hành:</strong> 01/09/2025</div>
+    <div><strong>Ngày đáo hạn:</strong> 01/09/2027</div>
+  </div>
+
+  <div class="img-row">
+    <img id="issuerPreview" class="issuer-img" src="" alt="Ảnh người phát hành" title="Nhấn để tải ảnh phát hành">
+    <img id="buyerPhoto" class="buyer-img" src="" alt="Ảnh người mua" title="Nhấn để tải ảnh người mua">
+  </div>
+
+  <div class="buyer-info">
+    <input type="text" id="buyerName" placeholder="Nhập tên người mua">
+    <input type="text" id="buyerID" placeholder="Nhập CCCD">
+  </div>
+
+  <div class="terms">
+    Trái phiếu này xác nhận quyền sở hữu hợp pháp của người mua đối với giá trị mệnh giá và quyền lợi lãi suất được quy định. Người mua có trách nhiệm cung cấp thông tin chính xác. Công ty cam kết thanh toán gốc và lãi đúng hạn theo quy định hiện hành.
+  </div>
+
+  <div class="project">
+    <img id="projectImage" src="" alt="Ảnh dự án" title="Nhấn để tải ảnh dự án">
+  </div>
+
+  <div class="seal">TRÁI PHIẾU</div>
+  <button class="print-btn" onclick="window.print()">In PDF</button>
+</section>
+
+<!-- Hidden inputs -->
+<input type="file" id="issuerUpload" accept="image/*" style="display:none">
+<input type="file" id="buyerUpload" accept="image/*" style="display:none">
+<input type="file" id="projectUpload" accept="image/*" style="display:none">
+
+<script>
+// Chọn các phần tử
+const issuerInput = document.getElementById('issuerUpload');
+const buyerInput = document.getElementById('buyerUpload');
+const projectInput = document.getElementById('projectUpload');
+
+const issuerPreview = document.getElementById('issuerPreview');
+const buyerPhoto = document.getElementById('buyerPhoto');
+const projectImage = document.getElementById('projectImage');
+
+// Click đổi ảnh
+issuerPreview.addEventListener('click', () => issuerInput.click());
+buyerPhoto.addEventListener('click', () => buyerInput.click());
+projectImage.addEventListener('click', () => projectInput.click());
+
+// Hàm xử lý upload ảnh
+function handleUpload(input, imgElement, storageKey) {
+  input.addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      imgElement.src = reader.result;
+      localStorage.setItem(storageKey, reader.result);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+handleUpload(issuerInput, issuerPreview, 'issuerImg');
+handleUpload(buyerInput, buyerPhoto, 'buyerImg');
+handleUpload(projectInput, projectImage, 'projectImg');
+
+// Nhập tên & CCCD
+const buyerNameInput = document.getElementById('buyerName');
+const buyerIDInput = document.getElementById('buyerID');
+
+buyerNameInput.addEventListener('input', () => localStorage.setItem('buyerName', buyerNameInput.value));
+buyerIDInput.addEventListener('input', () => localStorage.setItem('buyerID', buyerIDInput.value));
+
+// Load lại dữ liệu khi mở trang
+window.addEventListener('load', () => {
+  if (localStorage.getItem('issuerImg')) issuerPreview.src = localStorage.getItem('issuerImg');
+  if (localStorage.getItem('buyerImg')) buyerPhoto.src = localStorage.getItem('buyerImg');
+  if (localStorage.getItem('projectImg')) projectImage.src = localStorage.getItem('projectImg');
+  if (localStorage.getItem('buyerName')) buyerNameInput.value = localStorage.getItem('buyerName');
+  if (localStorage.getItem('buyerID')) buyerIDInput.value = localStorage.getItem('buyerID');
+});
+</script>
+</body>
+</html>
