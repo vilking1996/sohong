@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>Cavet ôtô - Fullscreen (Mobile)</title>
+  <style>
+    :root{
+      --bg-url:url('https://png.pngtree.com/thumb_back/fw800/background/20220804/pngtree-vietnam-dongshan-bronze-drum-pattern-beautiful-background-image_1440064.jpg');
+      --seal-red:#c22;
+    }
+    html,body{height:100%;margin:0;font-family:Inter,system-ui}
+    body{background-image:var(--bg-url);background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center}
+    .wrapper{width:95vw;height:95vh;padding:10px;display:flex;flex-direction:column}
+    .cavet{flex:1;backdrop-filter:blur(2px) saturate(1.02);background:rgba(255,255,255,0.17);
+      border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.25);overflow:hidden;
+      display:flex;flex-direction:column;position:relative}
+    header{padding:10px 12px;border-bottom:1px solid rgba(0,0,0,0.06);display:flex;align-items:center;justify-content:space-between}
+    .leftHead{display:flex;align-items:center;gap:10px}
+    header img{height:42px;border-radius:6px}
+    header h1{font-size:15px;margin:0;color:#222}
+    .content{padding:12px;flex:1;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .field{padding:10px;border-radius:8px;border:1px dashed rgba(0,0,0,0.06)}
+    .label{font-size:12px;color:#666;margin-bottom:4px}
+    .value{font-size:14px;color:#111;font-weight:700}
+    .full-row{grid-column:1/-1}
+    .sig-wrap{grid-column:1/-1;padding:8px;border-radius:8px;border:1px dashed rgba(0,0,0,0.06);min-height:100px;display:flex;flex-direction:column}
+    .sig-canvas{width:100%;height:90px;background:transparent}
+    .note{font-size:12px;color:#444;margin-top:6px}
+    .small{font-size:12px;color:#333}
+    .seal{position:absolute;right:18px;bottom:18px;width:170px;height:170px;pointer-events:none}
+    /* QR code */
+    #qrcode{position:absolute;top:76px;right:10px;background:#fff;padding:4px;border-radius:6px}
+    
+    #plate {
+  font-size: 25px;       /* chỉnh số to hơn */
+  font-weight: 900;
+  text-align: center;
+  letter-spacing: 3px;   /* giãn chữ nhìn giống biển số */
+  padding: 6px 12px;
+  border-radius: 8px;
+  display: inline-block;
+}
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="cavet" id="cavet">
+
+      <header>
+        <div class="leftHead">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/f/fb/Quoc_Huy_Viet_Nam_Chuan.png" alt="logo">
+          <div>
+            <h1>☆GIẤY CHỨNG NHẬN ĐĂNG KÝ XE OTO☆</h1>
+          </div>
+        </div>
+      </header>
+
+      <div class="content">
+        <div class="field full-row">
+          <div class="label">Số đăng ký / Biển số</div>
+          <div class="value" id="plate">Ben-177</div>
+        </div>
+
+        <div class="field">
+          <div class="label">Chủ xe</div>
+          <div class="value" id="owner">Lê Minh Vũ</div>
+        </div>
+        <div class="field">
+          <div class="label">Địa chỉ</div>
+          <div class="value" id="address">96/7/10 Huỳnh Việt Thanh, Phường Long An, Tỉnh Tây Ninh</div>
+        </div>
+
+        <div class="field">
+          <div class="label">Nhãn hiệu</div>
+          <div class="value" id="make">MG</div>
+        </div>
+        <div class="field">
+          <div class="label">Loại</div>
+          <div class="value" id="type">Xe con 4 chỗ</div>
+        </div>
+
+        <div class="field">
+          <div class="label">Màu sơn</div>
+          <div class="value" id="color">Lông Chuột</div>
+        </div>
+        <div class="field">
+          <div class="label">Năm sản xuất</div>
+          <div class="value" id="year">2025</div>
+        </div>
+
+        <div class="field">
+          <div class="label">Số khung</div>
+          <div class="value small" id="vin">RL8BF1A12746450</div>
+        </div>
+        <div class="field">
+          <div class="label">Số máy</div>
+          <div class="value small" id="engine">4A2-82715356</div>
+        </div>
+
+        <div class="field full-row">
+          <div class="label">Ngày đăng ký</div>
+          <div class="value" id="regdate">07/09/2025</div>
+        </div>
+
+        <div class="sig-wrap full-row">
+          <div class="label">Chữ ký</div>
+          <canvas id="sig" class="sig-canvas"></canvas>
+          <div class="note"></div>
+        </div>
+      </div>
+
+      
+      <!-- Complex seal: double ring, anti-forgery floral repeats, centered 5-blade pink rotor, centered curved text -->
+      <svg class="seal" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <!-- circle path for text -->
+          <path id="outerCirclePath" d="M100,100 m-78,0 a78,78 0 1,0 156,0 a78,78 0 1,0 -156,0"/>
+          <!-- inner decorative petal used many times -->
+          <g id="petal">
+            <path d="M0,-6 C4,-4 6,0 4,6 C2,10 -2,12 -6,8 C-9,5 -8,-2 -4,-6 Z" transform="translate(0,-40)"/>
+          </g>
+          <!-- small ticks for extra complexity -->
+          <g id="tick">
+            <rect x="-0.6" y="-78" width="1.2" height="6" rx="0.6" ry="0.6"/>
+          </g>
+        </defs>
+
+        <!-- outer double ring -->
+        <circle cx="100" cy="100" r="78" fill="none" stroke="var(--seal-red)" stroke-width="6"/>
+        <circle cx="100" cy="100" r="68" fill="none" stroke="var(--seal-red)" stroke-width="2" opacity="0.9"/>
+
+        <!-- anti-forgery repeated petal ring (rotated many times) -->
+        <g transform="translate(100,100)">
+          <!-- 36 petals with slight scale variation -->
+          <g id="petalRing">
+            <!-- generate with multiple use elements -->
+            <use href="#petal" transform="rotate(0) scale(1)" fill="none" stroke="var(--seal-red)" stroke-width="0.9"/>
+            <use href="#petal" transform="rotate(10) scale(0.98)" fill="none" stroke="var(--seal-red)" stroke-width="0.9"/>
+            <use href="#petal" transform="rotate(20) scale(1.02)" fill="none" stroke="var(--seal-red)" stroke-width="0.9"/>
+            <use href="#petal" transform="rotate(30) scale(0.99)" fill="none" stroke="var(--seal-red)" stroke-width="0.9"/>
+            <use href="#petal" transform="rotate(40) scale(1)" fill="none" stroke="var(--seal-red)" stroke-width="0.9"/>
+            <use href="#petal" transform="rotate(50) scale(1.01)" fill="none" stroke="var(--seal-red)" stroke-width="0.9"/>
+            <use href="#petal" transform="rotate(60) scale(0.97)" fill="none" stroke="var(--seal-red)" stroke-width="0.9"/>
+            <use href="#petal" transform="rotate(70) scale(1.03)" fill="none" stroke="var(--seal-red)" stroke-width="0.9"/>
+            <use href="#petal" transform="rotate(80) scale(1)" fill="none" stroke="var(--seal-red)" stroke-width="0.9"/>
+            <use href="#petal" transform="rotate(90) scale(1)" fill="none" stroke="var(--seal-red)" stroke-width="0.9"/>
+            <use href="#petal" transform="rotate(100) scale(1.02)" fill="none" stroke="var(--seal-red)" stroke-width="0.9"/>
+            <use href="#petal" transform="rotate(110) scale(0.98)" fill="none" stroke="var(--seal-red)" stroke-width="0.9"/>
+            <use href="#petal" transform="rotate(120) scale(1)" fill="none" stroke="var(--seal-red)" stroke-width="0.9"/>
+            <use href="#petal" transform="rotate(130) scale(0.99)" fill="none" stroke="var(--seal-red)" stroke-width="0.9"/>
+            <use href="#petal" transform="rotate(140) scale(1.01)" fill="none" stroke="var(--seal-red)" stroke-width="0.9"/>
+            <use href="#petal" transform="rotate(150) scale(1)" fill="none" stroke="var(--seal-red)" stroke-width="0.9"/>
+            <use href="#petal" transform="rotate(160) scale(0.97)" fill="none" stroke="var(--seal-red)" stroke-width="0.9"/>
+            <use href="#petal" transform="rotate(170) scale(1.03)" fill="none" stroke="var(--seal-red)" stroke-width="0.9"/>
+            <use href="#petal" transform="rotate(180) scale(1)" fill="none" stroke="var(--seal-red)" stroke-width="0.9"/>
+            <use href="#petal" transform="rotate(190) scale(1.02)" fill="none" stroke="var(--seal-red)" stroke-width="0.9"/>
+            <use href="#petal" transform="rotate(200) scale(0.98)" fill="none" stroke="var(--seal-red)" stroke-width="0.9"/>
+            <use href="#petal" transform="rotate(210) scale(1)" fill="none" stroke="var(--seal-red)" stroke-width="0.9"/>
+            <use href="#petal" transform="rotate(220) scale(1.01)" fill="none" stroke="var(--seal-red)" stroke-width="0.9"/>
+            <use href="#petal" transform="rotate(230) scale(0.99)" fill="none" stroke="var(--seal-red)" stroke-width="0.9"/>
+            <use href="#petal" transform="rotate(240) scale(1)" fill="none" stroke="var(--seal-red)" stroke-width="0.9"/>
+            <use href="#petal" transform="rotate(250) scale(1.02)" fill="none" stroke="var(--seal-red)" stroke-width="0.9"/>
+            <use href="#petal" transform="rotate(260) scale(0.98)" fill="none" stroke="var(--seal-red)" stroke-width="0.9"/>
+            <use href="#petal" transform="rotate(270) scale(1)" fill="none" stroke="var(--seal-red)" stroke-width="0.9"/>
+            <use href="#petal" transform="rotate(280) scale(1.01)" fill="none" stroke="var(--seal-red)" stroke-width="0.9"/>
+            <use href="#petal" transform="rotate(290) scale(0.99)" fill="none" stroke="var(--seal-red)" stroke-width="0.9"/>
+            <use href="#petal" transform="rotate(300) scale(1)" fill="none" stroke="var(--seal-red)" stroke-width="0.9"/>
+            <use href="#petal" transform="rotate(310) scale(1.03)" fill="none" stroke="var(--seal-red)" stroke-width="0.9"/>
+            <use href="#petal" transform="rotate(320) scale(0.97)" fill="none" stroke="var(--seal-red)" stroke-width="0.9"/>
+            <use href="#petal" transform="rotate(330) scale(1.02)" fill="none" stroke="var(--seal-red)" stroke-width="0.9"/>
+            <use href="#petal" transform="rotate(340) scale(1)" fill="none" stroke="var(--seal-red)" stroke-width="0.9"/>
+          </g>
+
+          <!-- small ticks for more complexity -->
+          <g id="ticks" opacity="0.9" fill="var(--seal-red)">
+            <use href="#tick" transform="rotate(0)"/>
+            <use href="#tick" transform="rotate(12)"/>
+            <use href="#tick" transform="rotate(24)"/>
+            <use href="#tick" transform="rotate(36)"/>
+            <use href="#tick" transform="rotate(48)"/>
+            <use href="#tick" transform="rotate(60)"/>
+            <use href="#tick" transform="rotate(72)"/>
+            <use href="#tick" transform="rotate(84)"/>
+            <use href="#tick" transform="rotate(96)"/>
+            <use href="#tick" transform="rotate(108)"/>
+            <use href="#tick" transform="rotate(120)"/>
+            <use href="#tick" transform="rotate(132)"/>
+            <use href="#tick" transform="rotate(144)"/>
+            <use href="#tick" transform="rotate(156)"/>
+            <use href="#tick" transform="rotate(168)"/>
+            <use href="#tick" transform="rotate(180)"/>
+            <use href="#tick" transform="rotate(192)"/>
+            <use href="#tick" transform="rotate(204)"/>
+            <use href="#tick" transform="rotate(216)"/>
+            <use href="#tick" transform="rotate(228)"/>
+            <use href="#tick" transform="rotate(240)"/>
+            <use href="#tick" transform="rotate(252)"/>
+            <use href="#tick" transform="rotate(264)"/>
+            <use href="#tick" transform="rotate(276)"/>
+            <use href="#tick" transform="rotate(288)"/>
+            <use href="#tick" transform="rotate(300)"/>
+            <use href="#tick" transform="rotate(312)"/>
+            <use href="#tick" transform="rotate(324)"/>
+            <use href="#tick" transform="rotate(336)"/>
+          </g>
+        </g>
+
+        <!-- center rotor: 5-blade pink prop -->
+        <g transform="translate(100,100)">
+          <!-- central circle -->
+          <circle r="16" fill="var(--blade-pink)" opacity="0.95"/>
+          <!-- blades: 5 blades rotated evenly, thick and rounded -->
+          <g fill="var(--blade-pink)">
+            <path d="M0,2 C28,10 36,34 6,44 C-10,49 -34,36 -30,14 C-24,-6 6,-6 0,2 Z" transform="rotate(0) scale(0.45)"/>
+            <path d="M0,2 C28,10 36,34 6,44 C-10,49 -34,36 -30,14 C-24,-6 6,-6 0,2 Z" transform="rotate(72) scale(0.45)"/>
+            <path d="M0,2 C28,10 36,34 6,44 C-10,49 -34,36 -30,14 C-24,-6 6,-6 0,2 Z" transform="rotate(144) scale(0.45)"/>
+            <path d="M0,2 C28,10 36,34 6,44 C-10,49 -34,36 -30,14 C-24,-6 6,-6 0,2 Z" transform="rotate(216) scale(0.45)"/>
+            <path d="M0,2 C28,10 36,34 6,44 C-10,49 -34,36 -30,14 C-24,-6 6,-6 0,2 Z" transform="rotate(288) scale(0.45)"/>
+          </g>
+        </g>
+
+        <!-- centered curved text (startOffset 50% to center) -->
+        <text fill="var(--seal-red)" font-size="12" font-weight="700">
+          <textPath href="#outerCirclePath" startOffset="50%" text-anchor="middle">☩  CÔNG AN VIỆT NAM  ☩</textPath>
+        </text>
+
+        <!-- stamped mark center -->
+        <text x="100" y="108" font-size="18" font-weight="800" fill="var(--seal-red)" text-anchor="middle">ĐÃ KÝ</text>
+      </svg>
+
+      <!-- QR code -->
+      <div id="qrcode"></div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script>
+    // Vẽ chữ ký kiểu "ngệt ngoặc"
+    const sigCanvas = document.getElementById('sig');
+    const ctx = sigCanvas.getContext('2d');
+    function drawSignature(){
+      const dpr = window.devicePixelRatio || 1;
+      sigCanvas.width = sigCanvas.clientWidth * dpr;
+      sigCanvas.height = sigCanvas.clientHeight * dpr;
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+      ctx.clearRect(0,0,sigCanvas.width,sigCanvas.height);
+
+      ctx.strokeStyle = "#111";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(20, 60);
+      ctx.bezierCurveTo(60, 10, 120, 110, 200, 40);
+      ctx.bezierCurveTo(240, 10, 300, 80, sigCanvas.clientWidth-20, 50);
+      ctx.stroke();
+
+      ctx.font = "italic 75px cursive";
+      ctx.fillStyle = "#111";
+      ctx.fillText("Vũ Ben", 40, 70);
+    }
+    drawSignature();
+
+    // QR code chứa biển số
+    const plateNumber = document.getElementById("plate").innerText;
+    new QRCode(document.getElementById("qrcode"), {
+      text: plateNumber,
+      width: 80,
+      height: 80
+    });
+  </script>
+</body>
+</html>
