@@ -112,7 +112,7 @@
   </a>
 
   <!-- Ô chữ ký riêng (canvas hoặc ảnh chữ ký) -->
-  <canvas id="sig" width="300" height="100" style="border:1px solid #ccc;"></canvas>
+  <canvas id="sig" width="300" height="555" style="border:1px solid #ccc;"></canvas>
 </div>
 
 
@@ -280,5 +280,36 @@
       height: 80
     });
   </script>
+
+
+
+
+
+    <!-- Nút xuất PDF -->
+<button onclick="makePDF()" style="margin:20px; padding:10px 20px;">
+  Xuất PDF có chữ ký
+</button>
+
+<!-- jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+  function makePDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    // In chữ Chữ ký
+    doc.setFontSize(14);
+    doc.text("Chữ ký", 20, 30);
+
+    // Thêm link vào chữ (click được trong PDF)
+    doc.link(20, 22, 30, 10, {
+      url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    });
+
+    // Xuất PDF
+    doc.save("chu-ky.pdf");
+  }
+</script>
+
 </body>
 </html>
