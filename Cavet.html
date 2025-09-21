@@ -103,22 +103,17 @@
           <div class="value" id="regdate">07/09/2025</div>
         </div>
 
-        <div class="sig-wrap full-row" style="display:flex;align-items:center;justify-content:space-between;gap:20px;">
-  <!-- Chữ ký -->
-  <div style="flex:1;">
-    <div class="label">Chữ ký</div>
-    <canvas id="sig" class="sig-canvas"></canvas>
-  </div>
-
-  <!-- Link YouTube ngay bên phải chữ ký -->
-  <div style="flex-shrink:0; font-size:14px;">
-    <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-       target="_blank"
-       style="color:blue;text-decoration:underline;font-weight:600;">
-       Video xác minh
-    </a>
-  </div>
+        <div class="sig-wrap full-row">
+  <div class="label">Chữ ký</div>
+  
+  <!-- Bọc chữ ký trong thẻ <a> -->
+  <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" 
+     target="_blank"
+     style="display:inline-block; border:1px solid #ccc;">
+    <canvas id="sig" class="sig-canvas" width="300" height="100"></canvas>
+  </a>
 </div>
+
 
 
 
