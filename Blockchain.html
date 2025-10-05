@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>📦Blockchain Bitcoin Bank Ben🗃️</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: url('https://www.vietourist.com.vn/public/frontend/uploads/kceditor/images/mua-thu-trang-an-min.jpg');
+      background-size: cover;
+      overflow-x: hidden;
+      overflow-y: auto;
+      font-family: 'Segoe UI', sans-serif;
+      color: white;
+      perspective: 800px;
+    }
+
+    /* Ô tìm kiếm */
+    .search-bar {
+      position: fixed;
+      top: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+    }
+
+    .search-bar input {
+      padding: 10px 15px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      box-shadow: 0 0 10px cyan;
+      background: rgba(0, 0, 0, 0.7);
+      color: cyan;
+      width: 260px;
+      text-align: center;
+    }
+
+    .scene {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      transform-style: preserve-3d;
+      padding-top: 80px;
+      padding-bottom: 100px;
+    }
+
+    /* Container căn giữa tự động */
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 100px 150px;
+      width: 80%;
+      margin: 0 auto;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Khối Blockchain */
+    .block {
+      width: 150px;
+      height: 150px;
+      background: linear-gradient(145deg, #111, #1b1b22);
+      border: 2px solid cyan;
+      border-radius: 12px;
+      box-shadow: 0 0 25px rgba(0,255,255,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      transition: transform 0.4s, box-shadow 0.4s;
+      color: cyan;
+      font-weight: bold;
+      transform: translateZ(0);
+    }
+
+    .block:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 40px rgba(0,255,255,0.9);
+    }
+
+    /* Đường neon nối các khối */
+    .link {
+      position: absolute;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, cyan, transparent);
+      box-shadow: 0 0 10px cyan;
+      transform-origin: left center;
+      opacity: 0.5;
+      z-index: 1;
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.2; box-shadow: 0 0 5px cyan; }
+      50% { opacity: 1; box-shadow: 0 0 20px cyan; }
+    }
+
+    @media (max-width: 700px) {
+      .container {
+        flex-direction: column;
+        align-items: center;
+        gap: 60px;
+      }
+      .block {
+        width: 120px;
+        height: 120px;
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Ô tìm kiếm -->
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="🔍 Search Name..." oninput="filterBlocks()" />
+  </div>
+
+  <!-- Khung cảnh -->
+  <div class="scene">
+    <div class="container" id="blockContainer">
+      <!-- ⚡ Bạn có thể sửa trực tiếp các khối bên dưới, không bao giờ mất dữ liệu -->
+      <div class="block"><div><strong>Ben Stormwind</strong><br>💰 124,177,255.00💸</div></div>
+      <div class="block"><div><strong>Siêu Thị Coopmart TPHCM</strong><br>💰 177,255.24💸</div></div>
+      <div class="block"><div><strong>Walmart California</strong><br>💰 177,255.24💸</div></div>
+      <div class="block"><div><strong>Worachai Khumsuwan 1840100081607</strong><br>💰 177,255.24💸</div></div>
+      <div class="block"><div><strong>Kael Drakar</strong><br>💰 430,000đ</div></div>
+      <div class="block"><div><strong>Mira Light</strong><br>💰 210,000đ</div></div>
+      <div class="block"><div><strong>Eren Vale</strong><br>💰 990,000đ</div></div>
+      <div class="block"><div><strong>Nira Storm</strong><br>💰 750,000đ</div></div>
+      <div class="block"><div><strong>Zane Frost</strong><br>💰 610,000đ</div></div>
+      <div class="block"><div><strong>Sylvia Moon</strong><br>💰 1,240,000đ</div></div>
+      <div class="block"><div><strong>Draven Sun</strong><br>💰 870,000đ</div></div>
+      <div class="block"><div><strong>Orion Dark</strong><br>💰 550,000đ</div></div>
+      <div class="block"><div><strong>Elara Wind</strong><br>💰 970,000đ</div></div>
+      <div class="block"><div><strong>Kai Nova</strong><br>💰 690,000đ</div></div>
+      <div class="block"><div><strong>Seren Light</strong><br>💰 1,080,000đ</div></div>
+      <div class="block"><div><strong>Vex Storm</strong><br>💰 440,000đ</div></div>
+      <div class="block"><div><strong>Nova Star</strong><br>💰 660,000đ</div></div>
+      <div class="block"><div><strong>Talon Frost</strong><br>💰 870,000đ</div></div>
+      <div class="block"><div><strong>Lyra Moon</strong><br>💰 1,230,000đ</div></div>
+      <div class="block"><div><strong>Jace Flame</strong><br>💰 500,000đ</div></div>
+    </div>
+  </div>
+
+  <script>
+    const container = document.getElementById('blockContainer');
+    const blockElements = [...document.querySelectorAll('.block')];
+
+    // Hiệu ứng nối các khối
+    function createConnections() {
+      const scene = document.querySelector('.scene');
+      document.querySelectorAll('.link').forEach(l => l.remove());
+      const rects = blockElements.map(b => b.getBoundingClientRect());
+
+      rects.forEach((r, i) => {
+        if (i < rects.length - 1) {
+          const next = rects[i + 1];
+          const x1 = r.left + r.width / 2 + window.scrollX;
+          const y1 = r.top + r.height / 2 + window.scrollY;
+          const x2 = next.left + next.width / 2 + window.scrollX;
+          const y2 = next.top + next.height / 2 + window.scrollY;
+          const dx = x2 - x1;
+          const dy = y2 - y1;
+          const length = Math.sqrt(dx * dx + dy * dy);
+          const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+
+          const line = document.createElement('div');
+          line.className = 'link';
+          line.style.width = `${length}px`;
+          line.style.top = `${y1}px`;
+          line.style.left = `${x1}px`;
+          line.style.transform = `rotate(${angle}deg)`;
+          scene.appendChild(line);
+        }
+      });
+    }
+
+    window.addEventListener('load', createConnections);
+    window.addEventListener('resize', createConnections);
+    window.addEventListener('scroll', createConnections);
+
+    // Tìm kiếm khối theo tên
+    function filterBlocks() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      blockElements.forEach((block) => {
+        const name = block.textContent.toLowerCase();
+        block.style.display = name.includes(query) ? 'flex' : 'none';
+      });
+      setTimeout(createConnections, 300);
+    }
+  </script>
+</body>
+</html>
+
+
+
+      
