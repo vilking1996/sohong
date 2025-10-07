@@ -1,0 +1,29 @@
+name: Update Balance
+on:
+  repository_dispatch:
+    types: [update_balance]
+
+jobs:
+  update_balance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Update balance inside index.html
+        run: |
+          NAME="${{ github.event.client_payload.name }}"
+          BALANCE="${{ github.event.client_payload.balance }}"
+          FILE="index.html"
+
+          echo "Cập nhật số dư cho $NAME thành $BALANCE"
+
+          # Dòng HTML dạng: <div class="balance" data-name="BenStormwind">💰...💸</div>
+          sed -i "s|\(<div class=\"balance\" data-name=\"$NAME\">💰\)[^<]*\(💸</div>\)|\1${BALANCE//💰/}${BALANCE//💸/}\2|" "$FILE"
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add index.html
+          git commit -m "Update balance for ${{ github.event.client_payload.name }}"
+          git push
