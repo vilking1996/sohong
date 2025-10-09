@@ -1,29 +1,55 @@
-name: Update Balance
+name: 🪙 Update Blockchain Balance
+
 on:
   repository_dispatch:
     types: [update_balance]
 
 jobs:
-  update_balance:
+  update-balance:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
+      - name: 🧩 Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Update balance inside index.html
+      - name: 📦 Cập nhật số dư và lịch sử
         run: |
+          FILE="Blockchain.html"
           NAME="${{ github.event.client_payload.name }}"
-          BALANCE="${{ github.event.client_payload.balance }}"
-          FILE="index.html"
+          BAL="${{ github.event.client_payload.balance }}"
+          HISTORY_FILE=".github/tmp_history.json"
 
-          echo "Cập nhật số dư cho $NAME thành $BALANCE"
+          echo "🪙 Cập nhật tài khoản: $NAME"
+          echo "💰 Số dư mới: $BAL"
 
-          # Dòng HTML dạng: <div class="balance" data-name="BenStormwind">💰...💸</div>
-          sed -i "s|\(<div class=\"balance\" data-name=\"$NAME\">💰\)[^<]*\(💸</div>\)|\1${BALANCE//💰/}${BALANCE//💸/}\2|" "$FILE"
+          # Tạo file tạm chứa lịch sử
+          echo '${{ toJson(github.event.client_payload.history) }}' > $HISTORY_FILE
+          HISTORY_HTML=$(jq -r '.[] | "• " + .' $HISTORY_FILE | sed ':a;N;$!ba;s/\n/<br>/g')
 
-      - name: Commit and push changes
+          # Tìm và cập nhật trong Blockchain.html
+          if grep -q "data-name=\"$NAME\"" "$FILE"; then
+            echo "🔍 Tìm thấy $NAME trong Blockchain.html, tiến hành cập nhật..."
+            # Cập nhật phần số dư (chỉ thay trong khối có tên đó)
+            awk -v name="$NAME" -v bal="$BAL" -v hist="$HISTORY_HTML" '
+              BEGIN{RS="</div>"; ORS="</div>"}
+              $0 ~ "data-name=\"" name "\"" {
+                sub(/💰[^<]+💸/, "💰" bal "💸")
+                if ($0 !~ /data-history=/)
+                  sub(/data-name=\"" name "\"/, "data-name=\"" name "\" data-history=\"" hist "\"")
+                else
+                  sub(/data-history=\"[^\"]*\"/, "data-history=\"" hist "\"")
+              }
+              {print}
+            ' "$FILE" > tmp && mv tmp "$FILE"
+          else
+            echo "⚠️ Không tìm thấy khối có tên $NAME!"
+            exit 1
+          fi
+
+      - name: 💾 Commit & push
         run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
-          git add index.html
-          git commit -m "Update balance for ${{ github.event.client_payload.name }}"
+          git config user.name "Blockchain Bot"
+          git config user.email "bot@blockchain.local"
+          git add Blockchain.html
+          git commit -m "🔄 Update balance for ${{ github.event.client_payload.name }}"
           git push
