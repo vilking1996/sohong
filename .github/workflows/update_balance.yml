@@ -1,55 +1,72 @@
-name: 🪙 Update Blockchain Balance
+name: Nhận và cập nhật dữ liệu ví từ web offline
 
 on:
   repository_dispatch:
     types: [update_balance]
 
 jobs:
-  update-balance:
+  update_balance:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 🧩 Checkout repository
+      - name: 🔄 Checkout code
         uses: actions/checkout@v4
 
-      - name: 📦 Cập nhật số dư và lịch sử
+      - name: 📥 Đọc dữ liệu event
+        id: parse
         run: |
-          FILE="Blockchain.html"
-          NAME="${{ github.event.client_payload.name }}"
-          BAL="${{ github.event.client_payload.balance }}"
-          HISTORY_FILE=".github/tmp_history.json"
+          echo "📩 Nhận dữ liệu sự kiện từ web offline..."
+          echo "NAME=$(jq -r '.client_payload.name' $GITHUB_EVENT_PATH)" >> $GITHUB_ENV
+          echo "BALANCE=$(jq -r '.client_payload.balance' $GITHUB_EVENT_PATH)" >> $GITHUB_ENV
+          echo "HASH=$(jq -r '.client_payload.hash' $GITHUB_EVENT_PATH)" >> $GITHUB_ENV
+          echo "HISTORY=$(jq -c '.client_payload.history' $GITHUB_EVENT_PATH)" >> $GITHUB_ENV
 
-          echo "🪙 Cập nhật tài khoản: $NAME"
-          echo "💰 Số dư mới: $BAL"
-
-          # Tạo file tạm chứa lịch sử
-          echo '${{ toJson(github.event.client_payload.history) }}' > $HISTORY_FILE
-          HISTORY_HTML=$(jq -r '.[] | "• " + .' $HISTORY_FILE | sed ':a;N;$!ba;s/\n/<br>/g')
-
-          # Tìm và cập nhật trong Blockchain.html
-          if grep -q "data-name=\"$NAME\"" "$FILE"; then
-            echo "🔍 Tìm thấy $NAME trong Blockchain.html, tiến hành cập nhật..."
-            # Cập nhật phần số dư (chỉ thay trong khối có tên đó)
-            awk -v name="$NAME" -v bal="$BAL" -v hist="$HISTORY_HTML" '
-              BEGIN{RS="</div>"; ORS="</div>"}
-              $0 ~ "data-name=\"" name "\"" {
-                sub(/💰[^<]+💸/, "💰" bal "💸")
-                if ($0 !~ /data-history=/)
-                  sub(/data-name=\"" name "\"/, "data-name=\"" name "\" data-history=\"" hist "\"")
-                else
-                  sub(/data-history=\"[^\"]*\"/, "data-history=\"" hist "\"")
-              }
-              {print}
-            ' "$FILE" > tmp && mv tmp "$FILE"
-          else
-            echo "⚠️ Không tìm thấy khối có tên $NAME!"
+      - name: ✅ Kiểm tra hash hợp lệ
+        run: |
+          if [ "$HASH" != "a1b2c3d4e5" ]; then
+            echo "❌ Hash sai, hủy cập nhật."
             exit 1
           fi
+          echo "✅ Hash hợp lệ, tiếp tục..."
 
-      - name: 💾 Commit & push
+      - name: 🧩 Cập nhật Blockchain.html cho block đúng tên
         run: |
-          git config user.name "Blockchain Bot"
-          git config user.email "bot@blockchain.local"
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+
+          # Tạo HTML lịch sử
+          HISTORY_HTML=$(echo "$HISTORY" | jq -r '.[] | 
+            "<li style=\"margin-bottom:10px;line-height:1.4em;\">" +
+            (if .note then "ℹ️ " + .note + "<br>" else "" end) +
+            (if .type == "send" then "🔻 Chuyển " else "🔼 Nhận " end) +
+            (.amount|tostring) + 
+            (if .type == "send" then " cho " else " từ " end) +
+            (.partner // "ẩn danh") + 
+            " bởi " + "'"$NAME"'" +
+            " lúc " + (.time // "??") + 
+            " 📍(" + (.location // "??") + ")" + 
+            " | TX:" + ((.tx // "")[:12]) + "…" +
+            " | Số dư: " + (.balance|tostring) + 
+            "</li>"' | tr '\n' ' ')
+
+          # Update chỉ block có data-name="$NAME"
+          awk -v name="$NAME" -v balance="$BALANCE" -v history="$HISTORY_HTML" '
+            BEGIN{RS=""; ORS="\n\n"}
+            {
+              if ($0 ~ "data-name=\""name"\"") {
+                # Giữ icon đầu/cuối 💰...💸
+                gsub(/(💰)[0-9,]+\.[0-9]+(💸)/,"\\1"balance"\\2")
+                # Update popup lịch sử
+                gsub(/data-history=.*/,"data-history='\''"history"'\''")
+              }
+              print
+            }
+          ' Blockchain.html > tmp.html && mv tmp.html Blockchain.html
+
           git add Blockchain.html
-          git commit -m "🔄 Update balance for ${{ github.event.client_payload.name }}"
+          git commit -m "🔄 Cập nhật số dư và lịch sử cho $NAME ($BALANCE)" || echo "Không có thay đổi"
           git push
+
+      - name: ✅ Log kết quả
+        run: |
+          echo "Đã cập nhật ví $NAME với số dư 💲$BALANCE🪙"
