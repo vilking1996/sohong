@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+0<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
@@ -17,26 +17,35 @@
       perspective: 800px;
     }
 
-    /* Ô tìm kiếm */
+
+
+    /* Thanh tìm kiếm cố định */
     .search-bar {
       position: fixed;
       top: 15px;
       left: 50%;
       transform: translateX(-50%);
-      z-index: 1000;
+      z-index: 2000;
+      backdrop-filter: blur(10px);
     }
 
     .search-bar input {
-      padding: 10px 15px;
+      padding: 10px 20px;
       font-size: 16px;
-      border-radius: 8px;
+      border-radius: 10px;
       border: none;
       outline: none;
-      box-shadow: 0 0 10px cyan;
-      background: rgba(0, 0, 0, 0.7);
+      box-shadow: 0 0 15px cyan;
+      background: rgba(0, 0, 0, 0.8);
       color: cyan;
-      width: 260px;
+      width: 280px;
       text-align: center;
+      transition: box-shadow 0.4s, background 0.4s;
+    }
+
+    .search-bar input:focus {
+      box-shadow: 0 0 25px #00ffff, 0 0 50px cyan inset;
+      background: rgba(0, 0, 0, 0.9);
     }
 
     .scene {
@@ -44,18 +53,17 @@
       width: 100%;
       min-height: 100vh;
       transform-style: preserve-3d;
-      padding-top: 80px;
-      padding-bottom: 100px;
+      padding-top: 100px;
+      padding-bottom: 200px;
     }
 
-    /* Container căn giữa tự động */
     .container {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       align-items: flex-start;
       gap: 100px 150px;
-      width: 80%;
+      width: 85%;
       margin: 0 auto;
       position: relative;
       z-index: 10;
@@ -68,20 +76,47 @@
       background: linear-gradient(145deg, #111, #1b1b22);
       border: 2px solid cyan;
       border-radius: 12px;
-      box-shadow: 0 0 25px rgba(0,255,255,0.4);
+      box-shadow: 0 0 20px rgba(0,255,255,0.4);
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
-      transition: transform 0.4s, box-shadow 0.4s;
+      transition: transform 0.4s, box-shadow 0.4s, background 0.4s;
       color: cyan;
       font-weight: bold;
-      transform: translateZ(0);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Hiệu ứng ánh sáng di chuyển khi hover hoặc tìm kiếm */
+    .block::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(from 0deg, transparent 0%, rgba(0,255,255,0.5) 10%, transparent 20%);
+      animation: spin 5s linear infinite;
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    .block:hover::before,
+    .block.highlight::before {
+      opacity: 1;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
 
     .block:hover {
       transform: scale(1.1);
       box-shadow: 0 0 40px rgba(0,255,255,0.9);
+      background: linear-gradient(145deg, #0f0f12, #1a1a25);
     }
 
     /* Đường neon nối các khối */
@@ -97,7 +132,7 @@
     }
 
     @keyframes pulse {
-      0%, 100% { opacity: 0.2; box-shadow: 0 0 5px cyan; }
+      0%, 100% { opacity: 0.3; box-shadow: 0 0 5px cyan; }
       50% { opacity: 1; box-shadow: 0 0 20px cyan; }
     }
 
@@ -116,48 +151,43 @@
   </style>
 </head>
 <body>
-  <!-- Ô tìm kiếm -->
+  <!-- Thanh tìm kiếm -->
   <div class="search-bar">
     <input type="text" id="searchInput" placeholder="🔍 Search Name..." oninput="filterBlocks()" />
   </div>
 
-  <!-- Khung cảnh -->
-  <div class="scene">
-    <div class="container" id="blockContainer">
-      <!-- ⚡ Bạn có thể sửa trực tiếp các khối bên dưới, không bao giờ mất dữ liệu -->
-      <div class="block"><div><strong>Ben Stormwind 124177255</strong><br>💰5,124,177,255.10💸</div></div>
-      <div class="block"><div><strong>Siêu Thị Coopmart TPHCM</strong><br>💰177,255.24💸</div></div>
-      <div class="block"><div><strong>Walmart California</strong><br>💰177,255.24💸</div></div>
-      <div class="block"><div><strong>Worachai Khumsuwan 1840100081607</strong><br>💰177,255.24💸</div></div>
-      <div class="block"><div><strong>hahaha</strong><br>💰 5.10💸</div></div>
-      <div class="block"><div><strong>Mira Light</strong><br>💰 210,000đ</div></div>
-      <div class="block"><div><strong>Eren Vale</strong><br>💰 990,000đ</div></div>
-      <div class="block"><div><strong>Nira Storm</strong><br>💰 750,000đ</div></div>
-      <div class="block"><div><strong>Zane Frost</strong><br>💰 610,000đ</div></div>
-      <div class="block"><div><strong>Sylvia Moon</strong><br>💰 1,240,000đ</div></div>
-      <div class="block"><div><strong>Draven Sun</strong><br>💰 870,000đ</div></div>
-      <div class="block"><div><strong>Orion Dark</strong><br>💰 550,000đ</div></div>
-      <div class="block"><div><strong>Elara Wind</strong><br>💰 970,000đ</div></div>
-      <div class="block"><div><strong>Kai Nova</strong><br>💰 690,000đ</div></div>
-      <div class="block"><div><strong>Seren Light</strong><br>💰 1,080,000đ</div></div>
-      <div class="block"><div><strong>Vex Storm</strong><br>💰 440,000đ</div></div>
-      <div class="block"><div><strong>Nova Star</strong><br>💰 660,000đ</div></div>
-      <div class="block"><div><strong>Talon Frost</strong><br>💰 870,000đ</div></div>
-      <div class="block"><div><strong>Lyra Moon</strong><br>💰 1,230,000đ</div></div>
-      <div class="block"><div><strong>Jace Flame</strong><br>💰 500,000đ</div></div>
+  <div class="scene" id="blockContainer">
+    <div class="container">
+      <div class="block" data-name="Ben Stormwind"><strong>Ben Stormwind 124177255</strong><div class="balance">💰5,124,177,255.10💸</div></div>
+      <div class="block" data-name="Siêu Thị Coopmart TPHCM"><strong>Siêu Thị Coopmart TPHCM</strong><div class="balance">💰177,255.24💸</div></div>
+      <div class="block" data-name="Walmart California"><strong>Walmart California</strong><div class="balance">💰177,255.24💸</div></div>
+      <div class="block" data-name="Ragnar Ice"><strong>Ragnar Ice</strong><div class="balance">💰1,050,000đ</div></div>
+      <div class="block" data-name="Kael Drakar"><strong>Kael Drakar</strong><div class="balance">💰430,000đ</div></div>
+      <div class="block" data-name="Mira Light"><strong>Mira Light</strong><div class="balance">💰210,000đ</div></div>
+      <div class="block" data-name="Eren Vale"><strong>Eren Vale</strong><div class="balance">💰990,000đ</div></div>
+      <div class="block" data-name="Nira Storm"><strong>Nira Storm</strong><div class="balance">💰750,000đ</div></div>
+      <div class="block" data-name="Zane Frost"><strong>Zane Frost</strong><div class="balance">💰610,000đ</div></div>
+      <div class="block" data-name="Sylvia Moon"><strong>Sylvia Moon</strong><div class="balance">💰1,240,000đ</div></div>
+      <div class="block" data-name="Draven Sun"><strong>Draven Sun</strong><div class="balance">💰870,000đ</div></div>
+      <div class="block" data-name="Orion Dark"><strong>Orion Dark</strong><div class="balance">💰550,000đ</div></div>
+      <div class="block" data-name="Elara Wind"><strong>Elara Wind</strong><div class="balance">💰970,000đ</div></div>
+      <div class="block" data-name="Kai Nova"><strong>Kai Nova</strong><div class="balance">💰690,000đ</div></div>
+      <div class="block" data-name="Seren Light"><strong>Seren Light</strong><div class="balance">💰1,080,000đ</div></div>
+      <div class="block" data-name="Vex Storm"><strong>Vex Storm</strong><div class="balance">💰440,000đ</div></div>
+      <div class="block" data-name="Nova Star"><strong>Nova Star</strong><div class="balance">💰660,000đ</div></div>
+      <div class="block" data-name="Talon Frost"><strong>Talon Frost</strong><div class="balance">💰870,000đ</div></div>
+      <div class="block" data-name="Lyra Moon"><strong>Lyra Moon</strong><div class="balance">💰1,230,000đ</div></div>
+      <div class="block" data-name="Jace Flame"><strong>Jace Flame</strong><div class="balance">💰500,000đ</div></div>
     </div>
   </div>
 
   <script>
-    const container = document.getElementById('blockContainer');
-    const blockElements = [...document.querySelectorAll('.block')];
+    const blocks = [...document.querySelectorAll('.block')];
+    const scene = document.querySelector('.scene');
 
-    // Hiệu ứng nối các khối
     function createConnections() {
-      const scene = document.querySelector('.scene');
       document.querySelectorAll('.link').forEach(l => l.remove());
-      const rects = blockElements.map(b => b.getBoundingClientRect());
-
+      const rects = blocks.map(b => b.getBoundingClientRect());
       rects.forEach((r, i) => {
         if (i < rects.length - 1) {
           const next = rects[i + 1];
@@ -165,14 +195,12 @@
           const y1 = r.top + r.height / 2 + window.scrollY;
           const x2 = next.left + next.width / 2 + window.scrollX;
           const y2 = next.top + next.height / 2 + window.scrollY;
-          const dx = x2 - x1;
-          const dy = y2 - y1;
-          const length = Math.sqrt(dx * dx + dy * dy);
+          const dx = x2 - x1, dy = y2 - y1;
+          const len = Math.sqrt(dx*dx + dy*dy);
           const angle = Math.atan2(dy, dx) * 180 / Math.PI;
-
           const line = document.createElement('div');
           line.className = 'link';
-          line.style.width = `${length}px`;
+          line.style.width = `${len}px`;
           line.style.top = `${y1}px`;
           line.style.left = `${x1}px`;
           line.style.transform = `rotate(${angle}deg)`;
@@ -185,19 +213,97 @@
     window.addEventListener('resize', createConnections);
     window.addEventListener('scroll', createConnections);
 
-    // Tìm kiếm khối theo tên
+    // Tìm kiếm và làm sáng khối trùng khớp
     function filterBlocks() {
       const query = document.getElementById('searchInput').value.toLowerCase();
-      blockElements.forEach((block) => {
-        const name = block.textContent.toLowerCase();
-        block.style.display = name.includes(query) ? 'flex' : 'none';
+      blocks.forEach(block => {
+        const match = block.textContent.toLowerCase().includes(query);
+        block.style.display = match ? 'flex' : 'none';
+        block.classList.toggle('highlight', match && query !== "");
       });
       setTimeout(createConnections, 300);
     }
+
+
+
+
+
+    
+
+document.addEventListener("DOMContentLoaded", () => {
+  const blocks = document.querySelectorAll(".block");
+
+  blocks.forEach(block => {
+    const name = block.getAttribute("data-name");
+    const histData = block.getAttribute("data-history") || "⚠️ Chưa có giao dịch nào";
+    const balEl = block.querySelector(".balance");
+
+    // 1️⃣ Cập nhật số dư giữ icon 💰…💸
+    if (balEl) {
+      let balanceText = balEl.textContent || "💰0.00💸";
+      const iconStart = "💰"; // luôn dùng icon đầu
+      const iconEnd = "💸";   // luôn dùng icon cuối
+      const dataBalance = block.getAttribute("data-balance"); // workflow update
+      if (dataBalance) {
+        balEl.textContent = `${iconStart}${parseFloat(dataBalance).toLocaleString("en-US",{minimumFractionDigits:2})}${iconEnd}`;
+      }
+    }
+
+    // 2️⃣ Tạo icon mở popup lịch sử nếu chưa có
+    let icon = block.querySelector(".history-icon");
+    if (!icon && balEl) {
+      icon = document.createElement("span");
+      icon.className = "history-icon";
+      icon.innerHTML = " 🕓";
+      icon.style.cursor = "pointer";
+      balEl.insertAdjacentElement("afterend", icon);
+    }
+
+    // 3️⃣ Hàm hiển thị popup
+    function showPopup(historyHTML) {
+      const popup = document.createElement("div");
+      popup.innerHTML = `
+        <div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#0009;
+                    display:flex;align-items:center;justify-content:center;z-index:9999;">
+          <div style="background:#111;border:2px solid cyan;padding:20px;border-radius:12px;
+                      color:cyan;width:300px;text-align:left;">
+            <h3 style="text-align:center;">📜 Lịch sử: ${name}</h3>
+            <div>${historyHTML}</div>
+            <button onclick="this.parentElement.parentElement.remove()" 
+                    style="display:block;margin:15px auto;padding:8px 15px;border:none;
+                           background:cyan;color:black;border-radius:8px;">Đóng</button>
+          </div>
+        </div>`;
+      document.body.appendChild(popup);
+    }
+
+    // 4️⃣ Gắn sự kiện click
+    block.addEventListener("click", () => {
+      showPopup(histData);
+    });
+    if (icon) {
+      icon.addEventListener("click", (e) => {
+        e.stopPropagation(); // tránh mở popup 2 lần
+        showPopup(histData);
+      });
+    }
+  });
+});
+
+
+
+
+
   </script>
 </body>
 </html>
 
 
 
-      
+
+
+
+
+
+
+
