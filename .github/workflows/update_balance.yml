@@ -1,54 +1,15 @@
-name: Nhận và cập nhật dữ liệu ví từ web offline
-
-on:
-  repository_dispatch:
-    types: [update_balance]
-
-jobs:
-  update_balance:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: 🔄 Checkout code
-        uses: actions/checkout@v4
-
-      - name: 📥 Đọc dữ liệu event
-        id: parse
-        run: |
-          echo "📩 Nhận dữ liệu sự kiện từ web offline..."
-          NAME=$(jq -r '.client_payload.name' $GITHUB_EVENT_PATH)
-          BALANCE=$(jq -r '.client_payload.balance' $GITHUB_EVENT_PATH)
-          HASH=$(jq -r '.client_payload.hash' $GITHUB_EVENT_PATH)
-          HISTORY=$(jq -c '.client_payload.history' $GITHUB_EVENT_PATH)
-          echo "NAME=$NAME" >> $GITHUB_ENV
-          echo "BALANCE=$BALANCE" >> $GITHUB_ENV
-          echo "HASH=$HASH" >> $GITHUB_ENV
-          echo "$HISTORY" > history.json
-
-      - name: ✅ Kiểm tra hash hợp lệ
-        run: |
-          if [ "$HASH" != "a1b2c3d4e5" ]; then
-            echo "❌ Hash sai, hủy cập nhật."
-            exit 1
-          fi
-          echo "✅ Hash hợp lệ, tiếp tục..."
-
-      - name: 🧩 Cập nhật Blockchain.html cho block đúng tên
-        run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
-
-          HISTORY=$(jq -c . history.json)
-
-          sed -i "/data-name=\"$NAME\"/,/<\/div>/ {
-            s/💰[0-9,]\+\.[0-9]\+💸/💰$BALANCE💸/g
-            s/data-history='[^']*'/data-history='${HISTORY}'/g
-          }" Blockchain.html
-
-          git add Blockchain.html
-          git commit -m "🔄 Cập nhật số dư và lịch sử cho $NAME ($BALANCE)" || echo "Không có thay đổi"
-          git push
-
-      - name: ✅ Log kết quả
-        run: |
-          echo "Đã cập nhật ví $NAME với số dư 💲$BALANCE🪙"
+await fetch("https://api.github.com/repos/vilking1996/sohong/dispatches", {
+  method: "POST",
+  headers: {
+    "Accept": "application/vnd.github+json",
+    "Authorization": `Bearer ${webhookToken}`,
+  },
+  body: JSON.stringify({
+    event_type: "update_balance",
+    client_payload: {
+      name: acc.name,
+      balance: parseFloat(acc.balance).toLocaleString("en-US", {minimumFractionDigits:2}),
+      history: acc.history // toàn bộ lịch sử
+    }
+  })
+});
