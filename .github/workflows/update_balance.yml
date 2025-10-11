@@ -16,10 +16,14 @@ jobs:
         id: parse
         run: |
           echo "📩 Nhận dữ liệu sự kiện từ web offline..."
-          echo "NAME=$(jq -r '.client_payload.name' $GITHUB_EVENT_PATH)" >> $GITHUB_ENV
-          echo "BALANCE=$(jq -r '.client_payload.balance' $GITHUB_EVENT_PATH)" >> $GITHUB_ENV
-          echo "HASH=$(jq -r '.client_payload.hash' $GITHUB_EVENT_PATH)" >> $GITHUB_ENV
-          echo "HISTORY=$(jq -c '.client_payload.history' $GITHUB_EVENT_PATH)" >> $GITHUB_ENV
+          NAME=$(jq -r '.client_payload.name' $GITHUB_EVENT_PATH)
+          BALANCE=$(jq -r '.client_payload.balance' $GITHUB_EVENT_PATH)
+          HASH=$(jq -r '.client_payload.hash' $GITHUB_EVENT_PATH)
+          HISTORY=$(jq -c '.client_payload.history' $GITHUB_EVENT_PATH)
+          echo "NAME=$NAME" >> $GITHUB_ENV
+          echo "BALANCE=$BALANCE" >> $GITHUB_ENV
+          echo "HASH=$HASH" >> $GITHUB_ENV
+          echo "$HISTORY" > history.json
 
       - name: ✅ Kiểm tra hash hợp lệ
         run: |
@@ -34,34 +38,12 @@ jobs:
           git config user.name "github-actions"
           git config user.email "actions@github.com"
 
-          # Tạo HTML lịch sử
-          HISTORY_HTML=$(echo "$HISTORY" | jq -r '.[] | 
-            "<li style=\"margin-bottom:10px;line-height:1.4em;\">" +
-            (if .note then "ℹ️ " + .note + "<br>" else "" end) +
-            (if .type == "send" then "🔻 Chuyển " else "🔼 Nhận " end) +
-            (.amount|tostring) + 
-            (if .type == "send" then " cho " else " từ " end) +
-            (.partner // "ẩn danh") + 
-            " bởi " + "'"$NAME"'" +
-            " lúc " + (.time // "??") + 
-            " 📍(" + (.location // "??") + ")" + 
-            " | TX:" + ((.tx // "")[:12]) + "…" +
-            " | Số dư: " + (.balance|tostring) + 
-            "</li>"' | tr '\n' ' ')
+          HISTORY=$(jq -c . history.json)
 
-          # Update chỉ block có data-name="$NAME"
-          awk -v name="$NAME" -v balance="$BALANCE" -v history="$HISTORY_HTML" '
-            BEGIN{RS=""; ORS="\n\n"}
-            {
-              if ($0 ~ "data-name=\""name"\"") {
-                # Giữ icon đầu/cuối 💰...💸
-                gsub(/(💰)[0-9,]+\.[0-9]+(💸)/,"\\1"balance"\\2")
-                # Update popup lịch sử
-                gsub(/data-history=.*/,"data-history='\''"history"'\''")
-              }
-              print
-            }
-          ' Blockchain.html > tmp.html && mv tmp.html Blockchain.html
+          sed -i "/data-name=\"$NAME\"/,/<\/div>/ {
+            s/💰[0-9,]\+\.[0-9]\+💸/💰$BALANCE💸/g
+            s/data-history='[^']*'/data-history='${HISTORY}'/g
+          }" Blockchain.html
 
           git add Blockchain.html
           git commit -m "🔄 Cập nhật số dư và lịch sử cho $NAME ($BALANCE)" || echo "Không có thay đổi"
