@@ -156,6 +156,130 @@
     <input type="text" id="searchInput" placeholder="🔍 Search Name..." oninput="filterBlocks()" />
   </div>
 
+  <div class="burned-info">
+  <div class="burn-fire-bg"></div>
+  <div class="burn-text">
+    <span class="burn-title">🔥 <strong>Crypto Liquidity Burned:</strong></span>
+    <span id="burnedAmount" class="burn-number">💰1,667,810,000,000.00💸</span> 💵
+  </div>
+  <div class="coin-container" id="coinContainer"></div>
+</div>
+
+<style>
+  .burned-info {
+    position: relative;
+    text-align: center;
+    margin: 18px auto;
+    padding: 16px 25px;
+    border-radius: 22px;
+    background: radial-gradient(circle at center, rgba(255, 80, 0, 0.25), rgba(0, 0, 0, 0.85));
+    color: #ffd700;
+    font-weight: bold;
+    font-size: 1.3em;
+    box-shadow: 0 0 35px rgba(255, 100, 0, 0.8);
+    overflow: hidden;
+    width: fit-content;
+    animation: glowPulse 3s infinite;
+  }
+
+  @keyframes glowPulse {
+    0%,100% { box-shadow: 0 0 20px rgba(255, 120, 0, 0.7); }
+    50% { box-shadow: 0 0 45px rgba(255, 200, 0, 1); }
+  }
+
+  .burn-fire-bg {
+    position: absolute;
+    inset: 0;
+    background: 
+      repeating-linear-gradient(180deg, rgba(255, 140, 0, 0.15) 0%, rgba(255, 0, 0, 0.05) 50%, transparent 100%),
+      radial-gradient(circle at bottom, rgba(255, 120, 0, 0.3), transparent 70%);
+    animation: fireWave 2.5s infinite linear;
+    z-index: 0;
+  }
+
+  @keyframes fireWave {
+    from { background-position: 0 0, 0 0; }
+    to { background-position: 0 200px, 0 80px; }
+  }
+
+  .burn-text {
+    position: relative;
+    z-index: 2;
+    text-shadow: 0 0 12px #ffcc00, 0 0 25px #ff6600;
+  }
+
+  /* 🔥 Hiệu ứng cháy sáng lan qua dòng chữ */
+  .burn-title {
+    display: inline-block;
+    background: linear-gradient(90deg, #ff3, #ff9900, #ff3300, #ff3);
+    background-size: 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: burnFlow 4s infinite linear;
+    text-shadow: 0 0 15px rgba(255,200,0,0.8);
+  }
+
+  @keyframes burnFlow {
+    0% { background-position: 0%; }
+    100% { background-position: 300%; }
+  }
+
+  .burn-number {
+    color: #fffbe6;
+    text-shadow: 0 0 15px #ffcc00, 0 0 30px #ff6600, 0 0 50px #ff3300;
+    animation: numberPulse 1.6s infinite alternate ease-in-out;
+    display: inline-block;
+  }
+
+  @keyframes numberPulse {
+    0% { transform: scale(1); filter: brightness(1); }
+    50% { transform: scale(1.08); filter: brightness(1.4); }
+    100% { transform: scale(1); filter: brightness(1); }
+  }
+
+  .coin-container {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .coin {
+    position: absolute;
+    bottom: 0;
+    font-size: 22px;
+    opacity: 0.9;
+    animation: floatCoin 6s linear forwards;
+  }
+
+  @keyframes floatCoin {
+    0% { transform: translateY(0) scale(1); opacity: 1; }
+    50% { transform: translateY(-90px) scale(1.3); opacity: 0.9; }
+    100% { transform: translateY(-200px) scale(0.8); opacity: 0; }
+  }
+</style>
+
+<script>
+  const coinContainer = document.getElementById("coinContainer");
+
+  function spawnCoins(count = 35) {
+    for (let i = 0; i < count; i++) {
+      const coin = document.createElement("div");
+      coin.className = "coin";
+      coin.innerHTML = "🪙";
+      coin.style.left = Math.random() * 90 + "%";
+      coin.style.fontSize = (18 + Math.random() * 14) + "px";
+      coin.style.animationDelay = (Math.random() * 3) + "s";
+      coinContainer.appendChild(coin);
+      setTimeout(() => coin.remove(), 6000);
+    }
+  }
+
+  // Coin bay nhẹ nhàng, rải liên tục
+  spawnCoins(40);
+  setInterval(() => spawnCoins(15), 4000);
+</script>
+
   <div class="scene" id="blockContainer">
     <div class="container">
       <div class="block" data-name="Ben Stormwind"><strong>Ben Stormwind 124177255</strong><div class="balance">💰5,124,177,255.10💸</div></div>
