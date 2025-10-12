@@ -1,0 +1,33 @@
+name: Cập nhật block từ web offline
+
+on:
+  repository_dispatch:
+    types: [update_block_balance_history]
+
+jobs:
+  update_block:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 🔄 Update Blockchain.html
+        run: |
+          NAME="${{ github.event.client_payload.name }}"
+          BALANCE="${{ github.event.client_payload.balance }}"
+          HISTORY="${{ github.event.client_payload.history }}"
+
+          echo "📦 Cập nhật block cho $NAME"
+          FILE="Blockchain.html"
+
+          # Cập nhật số dư 💰...💸
+          sed -i "s|\(data-name=\"$NAME\"[^>]*💰\)[0-9,\.]\+\(💸\)|\1$BALANCE\2|" "$FILE"
+
+          # Cập nhật lịch sử (data-history)
+          ESCAPED=$(printf '%s' "$HISTORY" | sed "s/[&/\]/\\&/g")
+          sed -i "s|\(data-name=\"$NAME\"[^>]*data-history=\)\"[^\"]*\"|\1\"$ESCAPED\"|" "$FILE"
+
+          git config user.name "AutoSync"
+          git config user.email "auto@github.com"
+          git add "$FILE"
+          git commit -m "🔄 Update block $NAME ($BALANCE)"
+          git push
