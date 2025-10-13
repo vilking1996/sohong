@@ -1,0 +1,13 @@
+[
+  {
+    "user": "ben177",
+    "balance": 100,
+    "logs": [
+      {
+        "action": "deposit",
+        "amount": 50,
+        "time": "2025-10-12T23:00:00Z"
+      }
+    ]
+  }
+]
