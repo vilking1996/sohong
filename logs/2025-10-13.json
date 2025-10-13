@@ -7,6 +7,11 @@
         "action": "deposit",
         "amount": 50,
         "time": "2025-10-12T23:00:00Z"
+      },
+      {
+        "action": "deposit",
+        "amount": 50,
+        "time": "2025-10-12T24:00:00Z"
       }
     ]
   }
