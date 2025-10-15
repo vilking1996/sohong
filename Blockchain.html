@@ -426,81 +426,596 @@
       });
       setTimeout(createConnections, 300);
     }
+</script>
 
 
 
 
 
-    
 
-document.addEventListener("DOMContentLoaded", () => {
-  const blocks = document.querySelectorAll(".block");
 
-  blocks.forEach(block => {
-    const name = block.getAttribute("data-name");
-    const histData = block.getAttribute("data-history") || "⚠️ Chưa có giao dịch nào";
-    const balEl = block.querySelector(".balance");
 
-    // 1️⃣ Cập nhật số dư giữ icon 💰…💸
-    if (balEl) {
-      let balanceText = balEl.textContent || "💰0.00💸";
-      const iconStart = "💰"; // luôn dùng icon đầu
-      const iconEnd = "💸";   // luôn dùng icon cuối
-      const dataBalance = block.getAttribute("data-balance"); // workflow update
-      if (dataBalance) {
-        balEl.textContent = `${iconStart}${parseFloat(dataBalance).toLocaleString("en-US",{minimumFractionDigits:2})}${iconEnd}`;
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+.block {
+  position: relative;
+  overflow: visible;
+}
+
+/* 💡 Hiệu ứng đèn chớp đỏ-xanh cho block */
+@keyframes policeFlash {
+  0%, 100% { box-shadow: 0 0 25px red; border-color: red; }
+  50% { box-shadow: 0 0 25px blue; border-color: blue; }
+}
+.police-alert {
+  animation: policeFlash 1s infinite;
+  position: relative;
+}
+
+/* 🚓 Xe police 3D */
+.police-car {
+  position: absolute;
+  top: -45px;
+  left: -150px;
+  width: 110px;
+  height: 45px;
+  background: linear-gradient(180deg, #0a0a0a 0%, #1c1c1c 40%, #2d2d2d 100%);
+  border: 2px solid white;
+  border-radius: 12px 12px 6px 6px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.6);
+  overflow: visible;
+  animation: driveAcross 4s linear infinite;
+  z-index: 1000;
+  transform-origin: center;
+}
+
+/* 🎨 Phản chiếu bóng xe */
+.police-car::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.3), transparent);
+  filter: blur(3px);
+  transform: scaleY(0.8);
+}
+
+/* 🪟 Cửa kính */
+.police-car::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 10px;
+  width: 42px;
+  height: 16px;
+  background: linear-gradient(145deg, #cce4ff 0%, #9fc9ff 100%);
+  border-radius: 3px;
+  box-shadow: 50px 0 #cce4ff;
+}
+
+/* ⚫ Bánh xe */
+.police-car .wheel {
+  position: absolute;
+  bottom: -9px;
+  width: 16px;
+  height: 16px;
+  background: radial-gradient(circle at 30% 30%, #222 20%, #000 70%);
+  border: 2px solid #666;
+  border-radius: 50%;
+  animation: spinWheel 0.5s linear infinite;
+  z-index: 2;
+}
+.police-car .wheel.front { left: 14px; }
+.police-car .wheel.back { right: 14px; }
+
+/* 🔵🔴 Đèn trên nóc */
+.police-car .lights {
+  position: absolute;
+  top: -8px;
+  left: 40px;
+  width: 26px;
+  height: 8px;
+  border-radius: 3px;
+  animation: flashLights 0.4s infinite alternate;
+  box-shadow: 0 0 15px currentColor;
+}
+
+/* 💡 Đèn pha chiếu sáng */
+.police-car .headlight {
+  position: absolute;
+  top: 14px;
+  right: -18px;
+  width: 20px;
+  height: 12px;
+  background: radial-gradient(circle, rgba(255,255,200,0.8) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(2px);
+  animation: lightBeam 1s infinite alternate;
+}
+
+/* 🌫️ Chùm sáng mặt đất */
+.police-car .beam {
+  position: absolute;
+  top: 20px;
+  right: -80px;
+  width: 80px;
+  height: 20px;
+  background: radial-gradient(ellipse at left, rgba(255,255,180,0.6) 0%, transparent 80%);
+  transform: rotate(5deg);
+  filter: blur(3px);
+  opacity: 0.8;
+  animation: beamFlash 1s infinite alternate;
+}
+
+/* ⚙️ Hiệu ứng chạy ngang */
+@keyframes driveAcross {
+  0% { left: -150px; opacity: 0; transform: scale(0.9) rotate(-1deg); }
+  10% { opacity: 1; }
+  50% { left: 100%; opacity: 1; transform: scale(1) rotate(1deg); }
+  100% { left: 130%; opacity: 0; transform: scale(0.9) rotate(-1deg); }
+}
+
+/* 🔁 Bánh xe quay */
+@keyframes spinWheel {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 🔴🔵 Đèn trên nóc nhấp nháy */
+@keyframes flashLights {
+  0% { color: red; background: red; box-shadow: 0 0 15px red; }
+  100% { color: blue; background: blue; box-shadow: 0 0 15px blue; }
+}
+
+/* ✨ Đèn pha lung linh */
+@keyframes lightBeam {
+  0% { opacity: 0.7; }
+  100% { opacity: 1; filter: blur(3px); }
+}
+
+/* 🌟 Chùm sáng dao động */
+@keyframes beamFlash {
+  0% { opacity: 0.6; transform: rotate(3deg); }
+  100% { opacity: 0.9; transform: rotate(8deg); }
+}
+</style>
+
+
+<!-- 🔊 Âm thanh siren thay thế nguồn an toàn -->
+<audio id="siren-sound" 
+  <audio id="siren-sound" src="./police_siren.mp3" preload="auto"></audio> 
+  </audio>
+
+<script>
+function activatePoliceAlert(block) {
+  if (!block.classList.contains("police-alert")) {
+    block.classList.add("police-alert");
+
+    const car = document.createElement("div");
+    car.className = "police-car";
+
+    // Bánh xe
+    const frontWheel = document.createElement("div");
+    frontWheel.className = "wheel front";
+    const backWheel = document.createElement("div");
+    backWheel.className = "wheel back";
+
+    // Đèn trên nóc
+    const lights = document.createElement("div");
+    lights.className = "lights";
+
+    // Đèn pha và chùm sáng
+    const headlight = document.createElement("div");
+    headlight.className = "headlight";
+    const beam = document.createElement("div");
+    beam.className = "beam";
+
+    car.appendChild(frontWheel);
+    car.appendChild(backWheel);
+    car.appendChild(lights);
+    car.appendChild(headlight);
+    car.appendChild(beam);
+
+    block.appendChild(car);
+  }
+}
+
+
+
+async function syncGlobalAlerts() {
+  try {
+    const res = await fetch("https://raw.githubusercontent.com/vilking1996/sohong/main/logs/alert_state.json?t=" + Date.now());
+    if (!res.ok) throw new Error("Không đọc được alert_state.json");
+    const alerts = await res.json();
+
+    let hasAlert = false;
+    document.querySelectorAll(".block").forEach(block => {
+      const nameKey = "block-" + block.dataset.name.trim();
+      if (alerts.includes(nameKey)) {
+        activatePoliceAlert(block);
+        hasAlert = true;
       }
-    }
-
-    // 2️⃣ Tạo icon mở popup lịch sử nếu chưa có
-    let icon = block.querySelector(".history-icon");
-    if (!icon && balEl) {
-      icon = document.createElement("span");
-      icon.className = "history-icon";
-      icon.innerHTML = " 🕓";
-      icon.style.cursor = "pointer";
-      balEl.insertAdjacentElement("afterend", icon);
-    }
-
-    // 3️⃣ Hàm hiển thị popup
-    function showPopup(historyHTML) {
-      const popup = document.createElement("div");
-      popup.innerHTML = `
-        <div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#0009;
-                    display:flex;align-items:center;justify-content:center;z-index:9999;">
-          <div style="background:#111;border:2px solid cyan;padding:20px;border-radius:12px;
-                      color:cyan;width:300px;text-align:left;">
-            <h3 style="text-align:center;">📜 Lịch sử: ${name}</h3>
-            <div>${historyHTML}</div>
-            <button onclick="this.parentElement.parentElement.remove()" 
-                    style="display:block;margin:15px auto;padding:8px 15px;border:none;
-                           background:cyan;color:black;border-radius:8px;">Đóng</button>
-          </div>
-        </div>`;
-      document.body.appendChild(popup);
-    }
-
-    // 4️⃣ Gắn sự kiện click
-    block.addEventListener("click", () => {
-      showPopup(histData);
     });
-    if (icon) {
-      icon.addEventListener("click", (e) => {
-        e.stopPropagation(); // tránh mở popup 2 lần
-        showPopup(histData);
-      });
+
+    if (hasAlert) {
+      const siren = document.getElementById("siren-sound");
+      siren.loop = true;
+      siren.volume = 0.4;
+      if (siren.paused) siren.play().catch(()=>{});
     }
+  } catch (err) {
+    console.warn("⚠️ Lỗi đồng bộ cảnh báo:", err);
+  }
+}
+
+setInterval(syncGlobalAlerts, 5000);
+syncGlobalAlerts();
+</script>
+
+
+
+
+
+
+
+
+
+
+<script>
+const LOG_BASE_URL = "https://vilking1996.github.io/sohong/logs/";
+
+function getTodayDate() {
+  const now = new Date();
+  const vnTime = new Date(now.getTime() + 7 * 60 * 60 * 1000);
+  return vnTime.toISOString().split("T")[0];
+}
+
+function formatNumber(num) {
+  return Number(num).toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
   });
+}
+
+// 🌋 Tạo hiệu ứng lửa quanh số dư
+function createFireEffect(targetEl) {
+  const fire = document.createElement("div");
+  fire.className = "fire-effect";
+  targetEl.style.position = "relative";
+  targetEl.appendChild(fire);
+  setTimeout(() => fire.remove(), 2500);
+}
+
+// 🌟 Hiệu ứng tỏa sáng tổng thể block
+function createGlowEffect(el) {
+  const glow = document.createElement("div");
+  glow.className = "glow-ring";
+  el.style.position = "relative";
+  el.appendChild(glow);
+  setTimeout(() => glow.remove(), 2000);
+}
+
+// 🧱 Cập nhật block
+function updateBlock(userObj) {
+  const block = document.querySelector(`.block[data-name="${userObj.user}"]`);
+  if (!block) return;
+
+  const oldBalance = Number(block.dataset.balance || 0);
+  const newBalance = userObj.balance;
+  if (oldBalance !== newBalance) {
+    block.dataset.balance = newBalance;
+    const balanceDiv = block.querySelector(".balance");
+    if (balanceDiv) {
+      balanceDiv.textContent = `💰${formatNumber(newBalance)}💸`;
+      createFireEffect(balanceDiv);
+    }
+
+    createGlowEffect(block);
+    block.style.transition = "background-color 0.5s, box-shadow 1s";
+    block.style.backgroundColor = "#fff6cc";
+    block.style.boxShadow = "0 0 30px #ffa733, 0 0 50px #ff3300";
+    setTimeout(() => {
+      block.style.backgroundColor = "";
+      block.style.boxShadow = "";
+    }, 1000);
+  }
+
+  // 🧾 Logs — luôn lấy 100% dữ liệu thật từ JSON
+  let newLogs = "";
+  if (Array.isArray(userObj.logs)) {
+    newLogs = userObj.logs
+      .map(item => (typeof item === "string" ? item : JSON.stringify(item, null, 2)))
+      .join("\n");
+  } else if (typeof userObj.logs === "object" && userObj.logs !== null) {
+    newLogs = JSON.stringify(userObj.logs, null, 2);
+  } else {
+    newLogs = String(userObj.logs);
+  }
+
+  block.dataset.history = newLogs;
+  block.onclick = () => showLogsPopup(userObj.user, block.dataset.history);
+}
+
+// 📜 Popup  
+function showLogsPopup(user, logs) {
+  const overlay = document.createElement("div");
+  overlay.className = "magic-overlay";
+
+  const box = document.createElement("div");
+  box.className = "magic-popup";
+  box.innerHTML = `
+    <h3>📜 Lịch sử giao dịch - ${user}</h3>
+    <hr>
+    <div class="log-content">${logs.replace(/\n/g, "<br>")}</div>
+    <div class="magic-border"></div>
+  `;
+
+  overlay.onclick = e => {
+    if (e.target === overlay) overlay.remove();
+  };
+
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+
+  const border = box.querySelector(".magic-border");
+  for (let i = 0; i < 30; i++) {
+    const particle = document.createElement("span");
+    particle.className = "spark";
+    particle.style.animationDelay = `${i * 0.1}s`;
+    border.appendChild(particle);
+  }
+}
+
+// 📥 Đọc file JSON theo ngày hiện tại
+async function fetchAndUpdateBlocks() {
+  const today = getTodayDate();
+  const fileURL = `${LOG_BASE_URL}${today}.json`;
+  console.log("📁 Đang đọc:", fileURL);
+
+  try {
+    const res = await fetch(fileURL + `?t=${Date.now()}`);
+    if (!res.ok) return console.warn("❌ Không tìm thấy file JSON:", today);
+    const data = await res.json();
+    data.forEach(userObj => updateBlock(userObj));
+  } catch (e) {
+    console.error("❌ Lỗi khi fetch file JSON:", e);
+  }
+}
+
+setInterval(fetchAndUpdateBlocks, 5000);
+window.addEventListener("load", fetchAndUpdateBlocks);
+</script>
+
+<style>
+/* 🔥 Lửa quanh số dư */
+.fire-effect {
+  position: absolute;
+  inset: -4px;
+  border-radius: 8px;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.fire-effect::before,
+.fire-effect::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(255, 160, 0, 0.7), transparent 70%),
+              radial-gradient(circle, rgba(255, 60, 0, 0.6), transparent 80%);
+  mix-blend-mode: screen;
+  animation: flameMove 0.25s infinite alternate, flicker 0.15s infinite;
+  border-radius: 8px;
+}
+
+.fire-effect::after {
+  background: radial-gradient(circle, rgba(255, 255, 100, 0.7), transparent 70%);
+  opacity: 0.5;
+  animation-delay: 0.1s;
+}
+
+@keyframes flameMove {
+  0% { transform: translateY(2px) scale(1.03); }
+  100% { transform: translateY(-2px) scale(0.97); }
+}
+
+@keyframes flicker {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.5); }
+}
+
+/* 💫 Vòng sáng block */
+.glow-ring {
+  position: absolute;
+  inset: -5px;
+  border-radius: 10px;
+  pointer-events: none;
+  box-shadow:
+    0 0 15px 5px rgba(255, 160, 0, 0.6),
+    0 0 40px 10px rgba(255, 80, 0, 0.4),
+    0 0 80px 20px rgba(255, 30, 0, 0.2);
+  animation: pulse 1.5s ease-out forwards;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.4; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.05); }
+  100% { opacity: 0; transform: scale(1.2); }
+}
+
+/* 🌌 Popup tiên tộc */
+.magic-overlay {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.85));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.magic-popup {
+  position: relative;
+  background: linear-gradient(180deg, #fdfcfb, #e2b17);
+  border-radius: 20px;
+  padding: 25px;
+  max-width: 650px;
+  max-height: 75vh;
+  overflow-y: auto;
+  font-family: 'Papyrus', 'Cinzel', serif;
+  color: #222;
+  box-shadow: 0 0 40px #b0fff9, 0 0 80px #00e017;
+  animation: floatUp 0.6s ease-out forwards;
+}
+
+.magic-popup h3 {
+  text-align: center;
+  color: #008b8b;
+  text-shadow: 0 0 10px #00ffff;
+}
+
+.magic-popup hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #00ffff, transparent);
+  margin: 10px 0 15px;
+}
+
+.log-content {
+  font-family: monospace;
+  font-size: 13px;
+  white-space: pre-wrap;
+  color: pink;
+}
+
+.magic-border {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.spark {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: radial-gradient(circle, #00ffff, transparent);
+  border-radius: 50%;
+  animation: orbit 3s linear infinite;
+}
+
+@keyframes orbit {
+  0% { transform: rotate(0deg) translateX(320px) rotate(0deg); }
+  100% { transform: rotate(360deg) translateX(320px) rotate(-360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes floatUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+</style>
+<!-- ==== NEON / LASER HIGHLIGHT CHO BLOCK ==== -->
+<style>
+/* ✨ Neon tube chạy quanh block */
+.neon-tube {
+  position: absolute;
+  border: 2px solid cyan;
+  box-shadow: 0 0 10px cyan, 0 0 20px magenta, 0 0 30px yellow;
+  pointer-events: none;
+  border-radius: 4px;
+  z-index: 1000;
+  animation: pulse 1s infinite alternate;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 10px cyan, 0 0 20px magenta, 0 0 30px yellow; }
+  50% { box-shadow: 0 0 20px cyan, 0 0 40px magenta, 0 0 60px yellow; }
+  100% { box-shadow: 0 0 10px cyan, 0 0 20px magenta, 0 0 30px yellow; }
+}
+</style>
+
+<script>
+let neonTubes = [];
+
+// Tạo neon tube cho một block
+function createNeonForBlock(block) {
+  const rect = block.getBoundingClientRect();
+  const tube = document.createElement("div");
+  tube.className = "neon-tube";
+  tube.style.left = rect.left + "px";
+  tube.style.top = rect.top + "px";
+  tube.style.width = rect.width + "px";
+  tube.style.height = rect.height + "px";
+  document.body.appendChild(tube);
+  neonTubes.push({ tube, block });
+}
+
+// Xóa tất cả neon tube cũ
+function removeAllNeonTubes() {
+  neonTubes.forEach(item => item.tube.remove());
+  neonTubes = [];
+}
+
+// Cập nhật vị trí neon tube khi scroll hoặc resize
+function updateNeonPositions() {
+  neonTubes.forEach(item => {
+    const rect = item.block.getBoundingClientRect();
+    item.tube.style.left = rect.left + "px";
+    item.tube.style.top = rect.top + "px";
+    item.tube.style.width = rect.width + "px";
+    item.tube.style.height = rect.height + "px";
+  });
+}
+
+// Tìm kiếm và highlight block
+function filterBlocks() {
+  const query = document.getElementById('searchInput').value.toLowerCase();
+  removeAllNeonTubes();
+  blocks.forEach(block => {
+    const match = block.textContent.toLowerCase().includes(query);
+    block.style.display = match ? 'flex' : 'none';
+    block.classList.toggle('highlight', match && query !== "");
+    if (match) createNeonForBlock(block);
+  });
+  requestAnimationFrame(() => requestAnimationFrame(createConnections));
+}
+
+// Cập nhật neon khi scroll/resize
+window.addEventListener('scroll', updateNeonPositions);
+window.addEventListener('resize', updateNeonPositions);
+
+// Xóa neon khi search rỗng
+document.getElementById('searchInput').addEventListener('input', e => {
+  if (!e.target.value) removeAllNeonTubes();
 });
+</script>
 
 
 
 
-
-  </script>
 </body>
 </html>
-
 
 
 
