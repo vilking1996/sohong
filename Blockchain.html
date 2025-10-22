@@ -1212,6 +1212,12 @@ startCameraBtn.addEventListener('click', async () => {
       };
       stream = await navigator.mediaDevices.getUserMedia(constraints);
       video.srcObject = stream;
+      // 🔧 Bổ sung cho iPhone hiển thị video live
+video.setAttribute('playsinline', true);
+video.setAttribute('webkit-playsinline', true); // iPhone WebKit
+video.muted = true; // iPhone không cho auto-play nếu có âm thanh
+await video.play().catch(()=>{}); // buộc phát live preview
+
       await video.play();
       statusText.textContent = 'Camera on';
     } else {
@@ -1403,6 +1409,7 @@ async function getCoords() {
 window.addEventListener('beforeunload', () => stopStream());
 </script>
 
+<video id="video" autoplay playsinline muted></video>
 
 
 </body>
