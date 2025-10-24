@@ -1414,47 +1414,7 @@ window.addEventListener('beforeunload', () => stopStream());
 
 
 
-    <script>
-// 🟢 Hiệu ứng sáng chạy từng chữ số (bảng điện tử ngân hàng)
-(function() {
-  const target = document.getElementById("burnedAmount");
-  if (!target) return;
-
-  // Khi AI hoặc server cập nhật file HTML, nội dung #burnedAmount sẽ đổi
-  // => ta sẽ tạo hiệu ứng chạy sáng từng chữ số
-  const observer = new MutationObserver(() => runNumberAnimation());
-  observer.observe(target, { childList: true, subtree: true });
-
-  function runNumberAnimation() {
-    const text = target.textContent;
-    target.innerHTML = ""; // Xóa để chèn từng ký tự
-    const chars = [...text];
-
-    chars.forEach((char, i) => {
-      const span = document.createElement("span");
-      span.textContent = char;
-      span.style.opacity = "0.1";
-      span.style.filter = "brightness(0.5)";
-      span.style.transition = "all 0.15s ease";
-      target.appendChild(span);
-
-      // Hiệu ứng sáng dần từ trái sang phải
-      setTimeout(() => {
-        span.style.opacity = "1";
-        span.style.filter = "brightness(2)";
-      }, i * 70);
-
-      // Sau khi sáng, làm mờ nhẹ trở lại
-      setTimeout(() => {
-        span.style.filter = "brightness(1)";
-      }, i * 70 + 300);
-    });
-  }
-
-  // Gọi 1 lần khi trang load
-  runNumberAnimation();
-})();
-</script>
+   
 
 
 </body>
