@@ -1505,6 +1505,151 @@ setInterval(autoUpdateBurn, 5000);
 
 
 
+<!-- ⚙️ Nút nổi -->
+<div id="bgToggle" class="glow-button">
+  <img src="https://cdn-icons-png.flaticon.com/512/61/61457.png" alt="⚙️">
+  <div class="glow-ring"></div>
+</div>
+
+<!-- 🎬 Popup hiển thị YouTube -->
+<div id="videoPopup" style="
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.0);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+">
+  <div style="
+    position: relative;
+    max-width: 90%;
+    width: 800px;
+    aspect-ratio: 16/9;
+    background: #000;
+    border: 2px solid #00ffff60;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #00e5ff80;
+    overflow: hidden;
+  ">
+    <iframe id="youtubeFrame"
+      width="100%" height="100%"
+      style="border:0;"
+      src=""
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <button onclick="closePopup()" style="
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(0,0,0,0.0);
+      border: 1px solid #00e5ff;
+      color: #00ffff;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      font-size: 20px;
+    ">✖</button>
+  </div>
+</div>
+
+<style>
+/* 🌟 Hiệu ứng nút ⚙️ neon */
+.glow-button {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, rgba(0,255,255,0.1), rgba(0,0,0,0.0));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10000;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 20px rgba(0,255,255,0.4), inset 0 0 10px rgba(0,255,255,0.2);
+}
+.glow-button img {
+  width: 30px;
+  height: 30px;
+  filter: drop-shadow(0 0 4px #00ffff);
+  transition: transform 0.3s ease;
+}
+.glow-button:hover img {
+  transform: rotate(90deg) scale(1.1);
+  filter: drop-shadow(0 0 10px #00e5ff);
+}
+.glow-button:hover {
+  box-shadow: 0 0 30px #00ffff, 0 0 60px #00e5ff;
+  transform: scale(1.05);
+}
+.glow-ring {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border: 2px dashed #00e5ff80;
+  border-radius: 50%;
+  animation: spin 4s linear infinite;
+  pointer-events: none;
+  opacity: 0.5;
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+</style>
+
+<script>
+const bgToggle = document.getElementById('bgToggle');
+const videoPopup = document.getElementById('videoPopup');
+const youtubeFrame = document.getElementById('youtubeFrame');
+
+// 🌀 Thay bằng ID video YouTube của bạn
+const youtubeVideoId = "P_dT_a5jNV4"; // ví dụ
+
+// 🌀 Mở popup khi nhấn nút ⚙️
+bgToggle.addEventListener('click', () => {
+  videoPopup.style.display = 'flex';
+  youtubeFrame.src = `https://www.youtube.com/embed/${youtubeVideoId}?autoplay=1&rel=0&showinfo=0`;
+});
+
+// ❌ Đóng popup
+function closePopup() {
+  videoPopup.style.display = 'none';
+  youtubeFrame.src = ""; // dừng video
+}
+
+// ⛔ Nhấn ra ngoài video cũng đóng popup
+videoPopup.addEventListener('click', (e) => {
+  if (!e.target.closest('iframe') && !e.target.closest('button')) {
+    closePopup();
+  }
+});
+
+// ⚙️ Cho phép kéo thả nút ⚙️
+let isDragging = false, offsetX, offsetY;
+bgToggle.addEventListener('mousedown', (e) => {
+  isDragging = true;
+  offsetX = e.clientX - bgToggle.getBoundingClientRect().left;
+  offsetY = e.clientY - bgToggle.getBoundingClientRect().top;
+  e.preventDefault();
+});
+document.addEventListener('mousemove', (e) => {
+  if (!isDragging) return;
+  bgToggle.style.left = (e.clientX - offsetX) + 'px';
+  bgToggle.style.top = (e.clientY - offsetY) + 'px';
+  bgToggle.style.right = 'auto';
+});
+document.addEventListener('mouseup', () => { isDragging = false; });
+</script>
 
    
 
