@@ -1318,8 +1318,8 @@ captureBtn.addEventListener('click', async () => {
   ctx.shadowBlur = 6;
   ctx.fillStyle = '#bcdfff';
   ctx.font = `${Math.round(h * 0.03)}px "Segoe UI", sans-serif`;
-  const mm = 3.78; // 1 mm ≈ 3.78 px
-  ctx.fillText(coordsTxt, rightX - 17 * mm, h - infoH + margin + 12 * mm);
+  ctx.fillText(coordsTxt, rightX, h - infoH + margin);
+
 
 
   const gradLogo = ctx.createLinearGradient(rightX - 160, h - infoH + 60, rightX, h);
