@@ -1300,25 +1300,22 @@ captureBtn.addEventListener('click', async () => {
 
 
 
-  const mm = 3.78; // 1 mm ≈ 3.78 px
+  ctx.font = `${Math.round(h * 0.035)}px "Segoe UI", sans-serif`;
+  ctx.fillStyle = '#eaf3ff';
+  ctx.fillText(`Tên: ${name}`, leftX, y);
 
-// Dòng 1 — Tên
-ctx.font = `${Math.round(h * 0.035)}px "Segoe UI", sans-serif`;
-ctx.fillStyle = '#eaf3ff';
-ctx.fillText(`Tên: ${name}`, leftX, y + 7 * mm);
+  y += lineH;
+  ctx.font = `${Math.round(h * 0.03)}px "Segoe UI", sans-serif`;
+  ctx.fillStyle = '#d0e6ff';
+  ctx.fillText(`ID: ${id}`, leftX + 9, y);
 
-// Dòng 2 — ID
-y += lineH;
-ctx.font = `${Math.round(h * 0.03)}px "Segoe UI", sans-serif`;
-ctx.fillStyle = '#d0e6ff';
-ctx.fillText(`ID: ${id}`, leftX + 9, y + 7 * mm);
+  y += lineH;
+  ctx.font = `${Math.round(h * 0.027)}px monospace`;
+  ctx.fillStyle = '#bcdfff';
+  ctx.shadowBlur = 0;
+  ctx.fillText(timeTxt, leftX + 9, y);
 
-// Dòng 3 — Thời gian
-y += lineH;
-ctx.font = `${Math.round(h * 0.027)}px monospace`;
-ctx.fillStyle = '#bcdfff';
-ctx.shadowBlur = 0;
-ctx.fillText(timeTxt, leftX + 9, y + 7 * mm);
+
 
 
   // ===== Bên phải (tọa độ + logo) =====
