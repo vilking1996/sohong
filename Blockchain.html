@@ -1296,7 +1296,9 @@ captureBtn.addEventListener('click', async () => {
   ctx.shadowBlur = 6;
 
   const lineH = Math.round(h * 0.035) + 6;
-  let y = h - infoH + margin;
+  const mm = 3.78; // 1 mm ≈ 3.78 px
+  let y = h - infoH + margin + 7 * mm;
+
 
   ctx.font = `${Math.round(h * 0.035)}px "Segoe UI", sans-serif`;
   ctx.fillStyle = '#eaf3ff';
