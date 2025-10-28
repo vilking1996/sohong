@@ -1232,12 +1232,7 @@ async function startCamera(auto = false) {
 }
 
 startCameraBtn.addEventListener('click', () => startCamera());
-window.addEventListener('load', () => {
-  // 🚀 Tự bật camera selfie khi mở trên điện thoại
-  if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-    startCamera(true);
-  }
-});
+
 
 function stopStream() {
   if (!stream) return;
@@ -1323,7 +1318,7 @@ captureBtn.addEventListener('click', async () => {
   ctx.shadowBlur = 6;
   ctx.fillStyle = '#bcdfff';
   ctx.font = `${Math.round(h * 0.03)}px "Segoe UI", sans-serif`;
-  ctx.fillText(coordsTxt, rightX, h - infoH + margin);
+  ctx.fillText(coordsTxt, 5, h - 5);
 
   const gradLogo = ctx.createLinearGradient(rightX - 160, h - infoH + 60, rightX, h);
   gradLogo.addColorStop(0, '#4fd1ff');
@@ -1333,7 +1328,8 @@ captureBtn.addEventListener('click', async () => {
   ctx.shadowColor = 'rgba(0,180,255,0.7)';
   ctx.shadowBlur = 8;
   ctx.font = `${Math.round(h * 0.028)}px "Segoe UI", sans-serif`;
-  ctx.fillText(logoTxt, rightX, h - margin - 12);
+  const mm = 3.78; // 1 mm ≈ 3.78 px
+  ctx.fillText(logoTxt, rightX + 5 * mm, h - margin - 17 - 2 * mm);
   ctx.shadowBlur = 0;
   ctx.textAlign = 'left';
 
