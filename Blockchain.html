@@ -1200,6 +1200,13 @@ closeModal.addEventListener('click', close);
 cancelBtn.addEventListener('click', close);
 overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
 
+
+
+
+
+
+
+
 // ====== 🎥 CAMERA (auto selfie on mobile) ======
 async function startCamera(auto = false) {
   try {
@@ -1241,6 +1248,15 @@ function stopStream() {
   stream = null;
   video.srcObject = null;
 }
+
+
+
+
+
+
+
+
+
 
 // ====== 📸 Chụp ảnh + căn chỉnh văn bản đều đẹp ======
 captureBtn.addEventListener('click', async () => {
@@ -1431,6 +1447,20 @@ async function getCoords() {
 
 window.addEventListener('beforeunload', () => stopStream());
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
