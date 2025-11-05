@@ -1814,6 +1814,48 @@ checkAlerts();
 </script>
 
 
+<script>
+// ==== BẢO VỆ HTML: Chỉ kích hoạt khi người dùng xem mã nguồn hoặc mở DevTools ====
+
+const encryptedView = `
+<div style="color:#0f0;background:#000;padding:40px;font-family:monospace;text-align:center;">
+<pre>
+                                                        💰124,177,255.23💸
+</pre>
+<p>🔒 Mẹ của ban đã bị mã hóa, còn ba của bạn đã bị phong ấn (hãy giúp họ bằng cách gữi ngẫu nhiên số tiền logic với số phía trên).😁</p>
+</div>`;
+
+// Khi nhấn Ctrl+U
+document.addEventListener("keydown", e => {
+  if (e.ctrlKey && e.key.toLowerCase() === "u") {
+    e.preventDefault();
+    document.documentElement.innerHTML = encryptedView;
+  }
+});
+
+// Phát hiện mở DevTools thật sự
+let devtoolsOpen = false;
+const checkDevTools = () => {
+  const start = performance.now();
+  debugger; // tạm dừng nếu DevTools mở
+  const end = performance.now();
+  if (end - start > 100) { // nếu tạm dừng lâu => DevTools đang mở
+    if (!devtoolsOpen) {
+      devtoolsOpen = true;
+      document.documentElement.innerHTML = encryptedView;
+    }
+  } else {
+    devtoolsOpen = false;
+  }
+};
+setInterval(checkDevTools, 1000);
+
+// Ngăn chuột phải (tuỳ chọn, có thể bỏ)
+document.addEventListener("contextmenu", e => e.preventDefault());
+</script>
+
+
+
 
 </body>
 </html>
