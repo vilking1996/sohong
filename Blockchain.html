@@ -1705,35 +1705,47 @@ document.addEventListener('touchend', endDrag);
 
 
    <script>
-// === Theo dõi JSON cảnh báo 24/7 từ GitHub ===
+// === Theo dõi JSON cảnh báo toàn cầu 24/7 ===
 const ALERT_JSON = "https://raw.githubusercontent.com/vilking1996/sohong/main/logs/alert_state.json";
 const IMAGE_API = "https://api.github.com/repos/vilking1996/blockchain-backup-server/contents/logs";
 const IMAGE_BASE = "https://raw.githubusercontent.com/vilking1996/blockchain-backup-server/main/logs/";
-let lastAlert = "";
 
-// === Hàm hiển thị popup cảnh báo toàn cầu ===
-function showGlobalAlert(name, imgUrl) {
-  let oldPopup = document.getElementById("globalAlert");
-  if (oldPopup) oldPopup.remove();
+let lastAlerts = [];
 
+// === Hiển thị popup cảnh báo toàn cầu ===
+function showGlobalAlerts(alerts) {
+  // Xóa popup cũ (nếu có)
+  document.getElementById("globalAlert")?.remove();
+
+  // Tạo popup mới
   const popup = document.createElement("div");
   popup.id = "globalAlert";
+
+  // Tạo nội dung từng cảnh báo
+  const alertContent = alerts.map(a => `
+    <div style="margin:20px;">
+      <h2 style="color:white;">⚡ ${a.name.toUpperCase()} PHÁT HIỆN ⚡</h2>
+      <img src="${a.img}" style="max-width:70%;max-height:50vh;
+        border:4px solid red;border-radius:10px;box-shadow:0 0 50px red;">
+    </div>
+  `).join("");
+
   popup.innerHTML = `
     <div style="
-      position:fixed;top:0;left:0;width:100%;height:100%;
-      background:rgba(0,0,0,0.85);z-index:999999;
-      display:flex;flex-direction:column;justify-content:center;align-items:center;
+      position:fixed;inset:0;
+      background:rgba(0,0,0,0.9);
+      z-index:999999;
+      display:flex;flex-direction:column;
+      justify-content:center;align-items:center;
       color:red;text-align:center;font-family:monospace;
-      animation: alertFlash 2s infinite;
-    ">
-      <h1 style="font-size:3em;">⚠️ CẢNH BÁO TOÀN CẦU ⚠️</h1>
-      <h2 style="color:white;">${name.toUpperCase()} ĐÃ XUẤT HIỆN TRONG HỆ THỐNG!</h2>
-      <img src="${imgUrl}" style="max-width:70%;max-height:70%;
-        border:5px solid red;border-radius:10px;box-shadow:0 0 50px red;">
+      animation:alertFlash 2s infinite;overflow:auto;
+      ">
+      <h1 style="font-size:3em;margin-bottom:10px;">⚠️ CẢNH BÁO TOÀN CẦU ⚠️</h1>
+      ${alertContent}
     </div>
     <style>
       @keyframes alertFlash {
-        0%,100% { background:rgba(0,0,0,0.85); }
+        0%,100% { background:rgba(0,0,0,0.9); }
         50% { background:rgba(255,0,0,0.3); }
       }
     </style>
@@ -1741,7 +1753,7 @@ function showGlobalAlert(name, imgUrl) {
   document.body.appendChild(popup);
 }
 
-// === Lấy danh sách file trong thư mục logs ===
+// === Lấy danh sách ảnh trong logs/ ===
 async function getImageList() {
   try {
     const res = await fetch(IMAGE_API + "?t=" + Date.now());
@@ -1749,45 +1761,56 @@ async function getImageList() {
     const files = await res.json();
     return files.filter(f => f.name.endsWith(".jpg")).map(f => f.name);
   } catch (e) {
-    console.warn("Lỗi tải danh sách ảnh:", e);
+    console.warn("⚠️ Lỗi tải danh sách ảnh:", e);
     return [];
   }
 }
 
-// === Hàm kiểm tra JSON định kỳ ===
-async function checkAlert() {
+// === Kiểm tra cảnh báo định kỳ ===
+async function checkAlerts() {
   try {
     const res = await fetch(ALERT_JSON + "?t=" + Date.now());
     if (!res.ok) throw new Error("Không thể tải JSON");
     const data = await res.json();
 
-    if (Array.isArray(data)) {
-      for (let entry of data) {
-        if (entry.startsWith("block-")) {
-          const cleanName = entry.replace("block-", "");
-          if (cleanName !== lastAlert) {
-            const imgList = await getImageList();
+    if (!Array.isArray(data)) return;
 
-            // Loại bỏ phần tọa độ LAT/LON khỏi tên file để so khớp
-            const match = imgList.find(file => file.startsWith(cleanName + "_") || file === cleanName + ".jpg");
+    // Lọc danh sách alert có dạng "block-..."
+    const activeAlerts = data
+      .filter(x => x.startsWith("block-"))
+      .map(x => x.replace(/^block-/, "").replace(/\s+/g, "")); // loại bỏ "block-" và khoảng trắng
 
-            if (match) {
-              lastAlert = cleanName;
-              const imgUrl = IMAGE_BASE + match;
-              showGlobalAlert(cleanName, imgUrl);
-            }
-          }
-        }
+    // Nếu không có alert hoặc trùng với lần trước → bỏ qua
+    if (JSON.stringify(activeAlerts) === JSON.stringify(lastAlerts)) return;
+
+    lastAlerts = activeAlerts;
+
+    const imgList = await getImageList();
+    const foundAlerts = [];
+
+    for (let name of activeAlerts) {
+      // Tìm ảnh có tên bắt đầu bằng "BenStormwind", dù có _LAT..._LON...
+      const regex = new RegExp(`^${name}(_LAT[\\d\\.-]+_LON[\\d\\.-]+)?\\.jpg$`, "i");
+      const match = imgList.find(f => f.match(regex));
+      if (match) {
+        foundAlerts.push({ name, img: IMAGE_BASE + match });
       }
     }
+
+    if (foundAlerts.length > 0) {
+      showGlobalAlerts(foundAlerts);
+    } else {
+      document.getElementById("globalAlert")?.remove();
+    }
+
   } catch (e) {
-    console.warn("Lỗi khi kiểm tra JSON:", e);
+    console.warn("⚠️ Lỗi kiểm tra cảnh báo:", e);
   }
 }
 
-// === Lặp vô hạn 24/7 ===
-setInterval(checkAlert, 8000);
-checkAlert();
+// === Kiểm tra mỗi 8 giây (liên tục 24/7) ===
+setInterval(checkAlerts, 8000);
+checkAlerts();
 </script>
 
 
