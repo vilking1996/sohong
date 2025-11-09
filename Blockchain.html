@@ -1701,6 +1701,212 @@ document.addEventListener("contextmenu", e => e.preventDefault());
 
 
 
+<!-- Nút nổi -->
+<div id="floatingBtn">🗃</div>
 
+<!-- Popup -->
+<div id="popup">
+
+<!-- Nút mini hợp đồng -->
+<button id="contractBtn" 
+    style="position:absolute; top:10px; left:15px; width:30px; height:30px;
+           border:none; border-radius:50%; background:#0ff; color:#000; cursor:pointer;
+           font-size:16px; display:flex; align-items:center; justify-content:center;"
+    title="Mở hợp đồng">
+    📄
+</button>
+
+
+
+  
+  <span id="closePopup">&times;</span>
+  <div style="text-align:center;">
+    <iframe id="ytVideo" width="320" height="180"
+      src="https://www.youtube.com/embed/P_dT_a5jNV4"
+      frameborder="0" allowfullscreen>
+    </iframe>
+  </div>
+
+
+
+
+
+
+  <textarea id="commitText" placeholder="🧑‍💻Add Hash-256 to Server pdfHash.txt...👩‍💻" 
+    style="width:100%;height:60px;margin-top:10px;padding:6px;border-radius:6px;border:1px solid #0ff;
+    background:#000;color:#0ff;font-size:14px;"></textarea>
+
+  <button id="sendCommitBtn" 
+    style="margin-top:8px;padding:8px 15px;border:none;border-radius:8px;
+    background:#0ff;color:#000;font-weight:bold;cursor:pointer;">📩Sent Server🗃️</button>
+
+  <div id="commitStatus" style="margin-top:6px;color:#0ff;font-size:13px;"></div>
+
+
+
+
+
+
+
+  
+
+  <button id="hashBtn">📌Băm Hash-256 Location📍</button>
+  <div id="hashResult" style="margin-top:10px;color:#0ff;word-break:break-all;"></div>
+
+  <button id="pdfListBtn" style="margin-top:15px; padding:10px 15px; border:none; border-radius:8px; background:#0ff; color:#000; cursor:pointer; font-weight:bold;">List Hash-256 từ Server</button>
+
+  <div id="pdfListContainer" style="margin-top:10px; display:none; max-height:200px; overflow:auto; border:1px solid #0ff; border-radius:8px; padding:5px; background:#111;">
+    <input type="text" id="pdfSearch" placeholder="Tìm kiếm Hash-256..." style="width:100%; margin-bottom:5px; padding:5px; border-radius:5px; border:1px solid #0ff; background:#222; color:#0ff;">
+    <ul id="pdfList" style="list-style:none; padding:0; margin:0; color:#0ff;"></ul>
+  </div>
+</div>
+
+<style>
+#floatingBtn {
+  position:fixed; bottom:40px; right:40px;
+  width:60px;height:60px;
+  background:linear-gradient(177deg,#12ff,#ff25);
+  border-radius:50%;box-shadow:0 5px 15px rgba(0,0,0,0.5);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:28px;z-index:9999; user-select:none;
+  transition: transform 0.2s;
+}
+#floatingBtn:active { transform: scale(0.9); }
+
+
+html, body {
+  overflow-y: auto !important;
+}
+
+  
+
+#popup {
+  position:fixed; top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  background:transparent; padding:20px; border-radius:12px;
+  box-shadow:0 0 15px rgba(0,255,255,0.5);
+  display:none; z-index:10000; width:360px; max-width:90%;
+  max-height: 80vh;
+  overflow-y: auto;
+
+}
+#closePopup {
+  position:absolute; top:10px; right:15px; cursor:pointer; font-size:20px; color:#f00;
+}
+#hashBtn:hover { background:#ff24; }
+</style>
+
+
+    
+<script>
+// ===== Nút kéo rê =====
+const floatingBtn = document.getElementById('floatingBtn');
+let isDragging=false, offsetX=0, offsetY=0;
+floatingBtn.addEventListener('mousedown', e=>{ isDragging=true; offsetX=e.clientX-floatingBtn.offsetLeft; offsetY=e.clientY-floatingBtn.offsetTop; });
+document.addEventListener('mousemove', e=>{ if(isDragging){ floatingBtn.style.left = (e.clientX - offsetX) + 'px'; floatingBtn.style.top = (e.clientY - offsetY) + 'px'; } });
+document.addEventListener('mouseup', ()=>isDragging=false);
+
+// Touch
+floatingBtn.addEventListener('touchstart', e=>{ isDragging=true; const t=e.touches[0]; offsetX=t.clientX-floatingBtn.offsetLeft; offsetY=t.clientY-floatingBtn.offsetTop; });
+document.addEventListener('touchmove', e=>{ if(isDragging){ const t=e.touches[0]; floatingBtn.style.left = (t.clientX-offsetX) + 'px'; floatingBtn.style.top = (t.clientY-offsetY) + 'px'; } });
+document.addEventListener('touchend', ()=>isDragging=false);
+
+// ===== Popup =====
+const popup = document.getElementById('popup');
+const closePopup = document.getElementById('closePopup');
+floatingBtn.onclick = ()=>popup.style.display='block';
+closePopup.onclick = ()=>popup.style.display='none';
+
+// ===== Băm Hash-256 =====
+const hashBtn = document.getElementById('hashBtn');
+const hashResult = document.getElementById('hashResult');
+hashBtn.onclick = async ()=>{
+  hashResult.textContent = "Đang lấy tọa độ & băm...";
+  try{
+    const pos = await new Promise((resolve,reject)=>{ navigator.geolocation.getCurrentPosition(resolve, reject); });
+    const coords = pos.coords.latitude.toFixed(6)+","+pos.coords.longitude.toFixed(6);
+    const encoder = new TextEncoder();
+    const data = encoder.encode(coords);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(b=>b.toString(16).padStart(2,'0')).join('');
+    hashResult.textContent = "Tọa độ: "+coords+"\nHash-256: "+hashHex;
+  }catch(e){ hashResult.textContent = "Không lấy được tọa độ: "+e.message; }
+};
+
+// ===== PDF từ GitHub + tìm kiếm =====
+const pdfListBtn = document.getElementById('pdfListBtn');
+const pdfListContainer = document.getElementById('pdfListContainer');
+const pdfList = document.getElementById('pdfList');
+const pdfSearch = document.getElementById('pdfSearch');
+
+pdfListBtn.onclick = async ()=>{
+  pdfListContainer.style.display = 'block';
+  pdfList.innerHTML = "Đang tải danh sách...";
+  try{
+    const res = await fetch('https://raw.githubusercontent.com/vilking1996/sohong/main/pdfHash.txt');
+    const text = await res.text();
+    const lines = text.split('\n').filter(l=>l.trim());
+    pdfList.innerHTML = lines.map(l=>`<li style="padding:3px 0; cursor:pointer;" onclick="window.open('${l.trim()}','_blank')">${l.trim()}</li>`).join('');
+  }catch(e){
+    pdfList.innerHTML = "Không tải được danh sách: "+e.message;
+  }
+};
+
+// Tìm kiếm
+pdfSearch.addEventListener('input', ()=>{
+  const filter = pdfSearch.value.toLowerCase();
+  const items = pdfList.querySelectorAll('li');
+  items.forEach(li=>{
+    li.style.display = li.textContent.toLowerCase().includes(filter)?'block':'none';
+  });
+});
+
+
+// ===== Gửi nội dung commit vào pdfHash.txt =====
+const sendCommitBtn = document.getElementById('sendCommitBtn');
+const commitText = document.getElementById('commitText');
+const commitStatus = document.getElementById('commitStatus');
+
+sendCommitBtn.onclick = async () => {
+  const text = commitText.value.trim();
+  if (!text) {
+    commitStatus.textContent = "⚠️ Vui lòng nhập nội dung trước khi gửi.";
+    return;
+  }
+  commitStatus.textContent = "⏳ Loading Hash-256 to Server!...";
+
+  try {
+    const res = await fetch("/commitText", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text })
+    });
+    const data = await res.json();
+    if (data.success) {
+      commitStatus.textContent = "✅ Save Hash-256 pdfHash.txt thành công!";
+      commitText.value = "";
+    } else {
+      commitStatus.textContent = "❌ Lỗi: " + (data.message || "Không rõ nguyên nhân.");
+    }
+  } catch (err) {
+    commitStatus.textContent = "❌ Gửi thất bại: " + err.message;
+  }
+};
+
+
+
+popup.addEventListener('wheel', e => e.stopPropagation());
+document.body.style.touchAction = 'auto';
+document.body.style.overflow = 'auto';
+
+
+
+  const contractBtn = document.getElementById('contractBtn');
+contractBtn.onclick = () => {
+  window.open('https://blockchain-backup-server-2.onrender.com/view/Hotel.html', '_blank'); 
+};
+
+</script>
 </body>
 </html>
