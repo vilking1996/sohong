@@ -1,7 +1,7 @@
 [
   {
     "user": "Ben Stormwind",
-    "balance": 125681506.4,
+    "balance": 125681505.4,
     "logs": [
       "- 🔻 Chuyển 123 cho Ben Stormwind 124177255 bởi Walmart California lúc 20:02:27 10/10/2025 📍(10.54477, 106.40837) | TX:a4ec6bc60fcf… | Số dư: 124,177,132.00",
       "- 🔼 Nhận 123 từ Walmart California lúc 20:04:44 10/10/2025 📍(10.54477, 106.40837) | TX:a4ec6bc60fcf… | Số dư: 124,177,255.00",
@@ -546,6 +546,7 @@
       "- 🔻 Chuyển 1 cho Ben Stormwind bởi Ben Stormwind lúc 21:14:40 10/11/2025 📍(Không có tọa độ) | TX:2affc44a24ce… | Số dư: 125,681,507.40",
       "- 🔻 Chuyển 1 cho Ben Stormwind bởi Ben Stormwind lúc 21:14:47 10/11/2025 📍(Không có tọa độ) | TX:41816121d078… | Số dư: 125,681,506.40",
       "- 🔻 Chuyển 1 cho Ben Stormwind bởi Ben Stormwind lúc 21:14:52 10/11/2025 📍(Không có tọa độ) | TX:8e2ce9b623e7… | Số dư: 125,681,505.40",
+      "- 🔼 Nhận 1 từ Ben Stormwind lúc 21:15:19 10/11/2025 📍(Không có tọa độ) | TX:8e2ce9b623e7… | Số dư: 125,681,506.40",
       "- 🔻 Chuyển 1 cho Ben Stormwind bởi Ben Stormwind lúc 22:39:33 7/11/2025 📍(10.54477, 106.40835) | TX:2d4633051479… | Số dư: 125,681,520.40",
       "- 🔼 Nhận 1 từ Ben Stormwind lúc 16:32:21 8/11/2025 📍(10.54477, 106.40835) | TX:d3e65ea0a417… | Số dư: 125,681,509.40",
       "- 🔻 Chuyển 1 cho Ben Stormwind bởi Ben Stormwind lúc 16:31:40 8/11/2025 📍(10.54477, 106.40835) | TX:d3e65ea0a417… | Số dư: 125,681,508.40",
