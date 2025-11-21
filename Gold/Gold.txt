@@ -1,1 +1,4 @@
 
+=== Ben Stormwind ===
+
+2025-11-21T17:44:46.604Z | Ben Stormwind | Gold: 0 | Coord: {"lat":"10.544777","lng":"106.408373"} | Console:  | Hash: 90dd028f966916bd3151b2012ae2c22e83f485e505a1327bbe3e334e989d3c16
