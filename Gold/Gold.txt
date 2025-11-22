@@ -166,3 +166,4 @@
 2025-11-22T05:53:21.036Z | Ben Stormwind | Gold: 159 | Coord: {"lat":10.544775,"lng":106.4083643} | Console:  | Hash: e93b8d667e6787b70d329fc16a6f1f1e115b26bf057c71fc888b60cde8851314
 2025-11-22T05:53:31.039Z | Ben Stormwind | Gold: 142 | Coord: {"lat":10.544775,"lng":106.4083643} | Console: [AI] Gold tăng bất thường: +50; Boss xuất hiện!; Boss đánh trúng! -17 vàng | Hash: b07d0e0ad57dd358a95aa2a39b3ca3967ce9cfd42d013a8599581abed2bcc30a
 2025-11-22T05:54:26.852Z | Ben Stormwind | Gold: 192 | Coord: {"lat":10.5447743,"lng":106.4083675} | Console: [AI] Gold tăng bất thường: +50 | Hash: 086f28896f41a198f68356beda122bf0db316c2724e61c8131df4d2eecad2772
+2025-11-22T05:54:34.887Z | Ben Stormwind | Gold: 175 | Coord: {"lat":10.5447743,"lng":106.4083675} | Console: [AI] Gold tăng bất thường: +50; Boss xuất hiện!; Boss đánh trúng! -17 vàng | Hash: 14e689524277f214fbe5d3970c109f4936db6eb9e0cd7f26beeaa381de6428b8
