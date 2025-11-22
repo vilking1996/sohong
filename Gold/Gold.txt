@@ -59,3 +59,4 @@
 2025-11-22T04:16:41.253Z | Ben Stormwind | Gold: null | Coord: {"lat":10.5447648,"lng":106.4083785} | Console: Boss xuất hiện!; Boss đánh trúng! -17 vàng | Hash: c6f7c9d672be47a0e0cd91bee071f212787e073786ab3607d2c78589ed854101
 2025-11-22T04:16:43.252Z | Ben Stormwind | Gold: null | Coord: {"lat":10.5447648,"lng":106.4083785} | Console: Boss xuất hiện!; Boss đánh trúng! -17 vàng | Hash: 40ac9c113d57b0d76faf771bc6500261a511353edd018e541a7775b4a9233d10
 2025-11-22T04:16:45.251Z | Ben Stormwind | Gold: null | Coord: {"lat":10.5447648,"lng":106.4083785} | Console: Boss xuất hiện!; Boss đánh trúng! -17 vàng | Hash: 86d99c86eb9f41fb9209b1667c4081e997d79c8d18a5b604299602a8a6b46e22
+2025-11-22T04:16:47.252Z | Ben Stormwind | Gold: null | Coord: {"lat":10.5447648,"lng":106.4083785} | Console: Boss xuất hiện!; Boss đánh trúng! -17 vàng | Hash: 9379e5274944671da81eedc5482aef0b0784098eda7f57a862ae0aa80548c10b
