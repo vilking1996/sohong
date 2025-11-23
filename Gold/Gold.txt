@@ -275,3 +275,4 @@
 2025-11-23T12:27:55.348Z | Ben Stormwind | Gold: 2338 | Coord: {"lat":10.5447746,"lng":106.4083697} | Console: Trừ vàng -5 | Hash: 43e6b9f5a0747b7a2243a6a78eb2a62bc3b752c6cf65ba152b3f92f00f8038dc
 2025-11-23T12:28:03.350Z | Ben Stormwind | Gold: 2348 | Coord: {"lat":10.5447746,"lng":106.4083697} | Console: Trừ vàng -5; Monster tái sinh!; Boss xuất hiện!; Nhặt vàng +10 | Hash: 8161f4b29b80f963679274d67b12ccbcf52d915482225ddfa609d58842633e20
 2025-11-23T12:28:05.348Z | Ben Stormwind | Gold: 2331 | Coord: {"lat":10.5447746,"lng":106.4083697} | Console: Trừ vàng -5; Monster tái sinh!; Boss xuất hiện!; Nhặt vàng +10; Boss đánh trúng! -17 vàng (tổng hiện tại: 2331); Monster tái sinh! | Hash: b889dce32df33713e2bb1955a50bcd4d219cf3f7da98af8c018fdeedc1e00d2a
+2025-11-23T12:28:18.151Z | Ben Stormwind | Gold: 2326 | Coord: {"lat":10.5447746,"lng":106.4083697} | Console: Trừ vàng -5 | Hash: ff3f82538f6dc95b273bfd8edc1bc14c8d3c2a28243157887f39662d1bc5cd15
