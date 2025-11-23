@@ -1,1 +1,4 @@
 
+=== Ben Stormwind ===
+
+2025-11-23T04:29:02.700Z | Ben Stormwind | Gold: -889 | Coord: {"lat":10.5447628,"lng":106.4083687} | Console: Nhặt vàng +10; Monster tái sinh!; Trừ vàng -5; Trừ vàng -5 | Hash: daf79061b55bc9102c8dfd02e53a4f10d9920fe32db080d9cdae9c8cc787f7b3
