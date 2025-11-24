@@ -1906,7 +1906,27 @@ document.addEventListener('touchend', endDrag);
   
 
 
-
+<script>
+document.body.addEventListener('dblclick', async function() {
+    const url = 'https://raw.githubusercontent.com/vilking1996/sohong/main/GameBlockchainCryptoHash256.html';
+    try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Không tải được file.');
+        const blob = await response.blob();
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'GameBlockchainCryptoHash256.html'; // Tên file khi lưu
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(link.href);
+        alert('🎢GameBlockchainCryptoHash256 DONE!.✅');
+    } catch (err) {
+        console.error(err);
+        alert('Tải file thất bại.');
+    }
+});
+</script>
 
 
     
