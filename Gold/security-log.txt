@@ -835,3 +835,12 @@ Detail: {"lat":10.5447263,"lng":106.4084028,"acc":14.184}
 UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
 Location: {"lat":10.5447263,"lng":106.4084028,"acc":14.184}
 ==============================
+
+==============================
+Time: 2025-11-27T06:03:10.385Z
+User: 2d49a6acc8222ca663285cde8bab14604cd06a6d1e54f32703bcc6d15c342d0e2d49a6acc8222ca663285cde8bab14604cd06a6d1e54f32703bcc6d15c342d0e2d49a6acc8222ca663285cde8bab14604cd06a6d1e54f3270
+Type: console_input
+Detail: "Server response: Block accepted ✅"
+UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+Location: {"lat":10.5447303,"lng":106.4083961,"acc":11.923}
+==============================
