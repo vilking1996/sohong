@@ -1321,3 +1321,12 @@ Detail: "GPS ready: 10.5447272 106.4084018"
 UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
 Location: {"lat":10.5447272,"lng":106.4084018,"acc":13.662}
 ==============================
+
+==============================
+Time: 2025-11-27T13:50:51.753Z
+User: c310e76a210d153bd9cc4bb7676e9e985e81925622cc98c87f9530b85e19ff17c310e76a210d153bd9cc4bb7676e9e985e81925622cc98c87f9530b85e19ff17c310e76a210d153bd9cc4bb7676e9e985e81925622cc98c87
+Type: devtools_open
+Detail: "User mở DevTools"
+UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+Location: {"lat":10.5447272,"lng":106.4084018,"acc":13.662}
+==============================
