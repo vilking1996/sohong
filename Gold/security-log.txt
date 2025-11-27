@@ -628,3 +628,12 @@ Detail: "\nconst hackBtn = document.getElementById(\"hackBtn\""
 UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
 Location: null
 ==============================
+
+==============================
+Time: 2025-11-27T04:52:14.509Z
+User: 2d49a6acc8222ca663285cde8bab14604cd06a6d1e54f32703bcc6d15c342d0e2d49a6acc8222ca663285cde8bab14604cd06a6d1e54f32703bcc6d15c342d0e2d49a6acc8222ca663285cde8bab14604cd06a6d1e54f3270
+Type: console_input
+Detail: "GPS ready: 10.5447277 106.4083997"
+UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+Location: {"lat":10.5447277,"lng":106.4083997,"acc":13.012}
+==============================
