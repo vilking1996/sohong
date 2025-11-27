@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<title>🏖Vé bơi Stormwind Long An 24/7🏖</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+<style>
+  :root{
+    --accent:#ff2e63;
+    --muted:#444;
+    --bg:blue;
+  }
+  html,body{
+    height:100%;
+    margin:0;
+    font-family:Inter,system-ui,Arial,sans-serif;
+    background:var(--bg);
+  }
+
+  .app{
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    padding:10px;
+    gap:10px;
+    box-sizing:border-box;
+  }
+
+  .topbar{
+    display:flex;
+    justify-content:space-between;
+    font-size:16px;
+    font-weight:600;
+  }
+
+  .content{
+    flex:1;
+    display:grid;
+    grid-template-columns:1fr;
+    gap:10px;
+  }
+
+  @media(min-width:900px){
+    .content{ grid-template-columns: 320px 1fr; }
+  }
+
+  #map{
+    height:260px;
+    border-radius:10px;
+    overflow:hidden;
+    border:1px solid #eee;
+  }
+
+  .pool{
+    position:relative;
+    border-radius:10px;
+    overflow:hidden;
+    border:1px solid #eee;
+  }
+  .pool img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    cursor:pointer;
+  }
+  .hint{
+    position:absolute;bottom:10px;left:50%;transform:translateX(-50%);
+    background:rgba(0,0,0,0.5);color:#fff;padding:6px 12px;border-radius:30px;
+    font-size:13px;
+  }
+
+  
+  .ticket-popup{
+    position:absolute;
+    top:20px;
+    left:50%;
+    transform:translateX(-50%);
+    width:95%;
+    max-width:420px;
+    background:transparent;
+    border-radius:12px;
+    color:pink;
+    box-shadow:0 10px 25px rgba(0,0,0,0.25);
+    padding:15px;
+    display:none;
+    z-index:9999;
+  }
+
+  .field{margin:10px 0;display:flex;flex-direction:column;gap:5px;}
+  input, textarea{
+    padding:10px;border-radius:8px;border:1px solid #ddd;font-size:14px;
+  }
+
+  .btn{
+    padding:10px 14px;border:0;border-radius:8px;
+    font-weight:600;cursor:pointer;
+  }
+  .btn-main{background:var(--accent);color:#fff}
+  .btn-ghost{background:#f3f3f3;color:#333}
+
+  .ticket-output{
+    background:#f8f8f8;padding:10px;border-radius:10px;margin-top:10px;
+    font-family:monospace;font-size:13px;white-space:pre-wrap;
+    max-height:200px;overflow:auto;border:1px solid #e0e0e0;
+  }
+
+  .qr-box{
+    display:flex;justify-content:center;margin-top:10px;
+  }
+
+  canvas{background:#fff;border-radius:10px;padding:6px;}
+
+  /* Nút nổi */
+  .fab{
+    position:fixed;right:18px;bottom:18px;width:60px;height:60px;
+    background:var(--accent);color:#fff;
+    border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-size:26px;cursor:pointer;border:0;
+    box-shadow:0 10px 20px rgba(0,0,0,0.15);
+  }
+
+
+  .txt-popup{
+    position:fixed;inset:0;background:transparent;
+    display:none;align-items:center;justify-content:center;
+    z-index:99999;
+  }
+  .txt-box{
+    width:90%;max-width:520px;background:transparent;border-radius:10px;color:green;
+    padding:15px;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="app">
+  <div class="topbar">
+    <div>🏖Vé bơi Stormwind Long An 24/7🏖</div>
+    <div style="font-size:14px;color:#777">25.177 VND/vé</div>
+  </div>
+
+  <div class="content">
+    <div style="position:relative">
+      <div id="map"></div>
+
+      
+      <div id="ticketPopup" class="ticket-popup">
+        <h3 style="margin:0 0 8px">Tạo vé bơi</h3>
+
+        <div class="field">
+          <label>Tọa độ</label>
+          <input id="lat" type="text">
+          <input id="lng" type="text">
+        </div>
+
+        <div class="field">
+          <label>Ngày giờ</label>
+          <input id="datetime" type="datetime-local">
+        </div>
+
+        <div class="field">
+          <label>Họ tên</label>
+          <input id="name" type="text">
+        </div>
+
+        <div class="field">
+          <label>Số điện thoại</label>
+          <input id="phone" type="text">
+        </div>
+
+        <button id="createTicket" class="btn btn-main" style="width:100%">Tạo vé</button>
+
+        <!-- QR + JSON đẹp -->
+        <div id="resultArea" style="display:none;margin-top:12px">
+          <div class="qr-box">
+            <canvas id="qrCanvas" width="220" height="220"></canvas>
+          </div>
+
+          <div style="margin-top:10px;font-weight:600">Thông tin vé (JSON):</div>
+          <pre id="jsonOutput" class="ticket-output"></pre>
+
+          <button id="closePopup" class="btn btn-ghost" style="width:100%;margin-top:8px">Đóng</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="pool">
+      <img id="poolBtn" src="https://cdn.sanity.io/images/11gc3q22/production/fd61b5399fbf44ff8119c553c70133ea9b249db0-680x510.jpg?w=680&h=510&auto=format" />
+      <div class="hint">🏖Chạm để tạo vé và gữi về 0915373047🏖</div>
+    </div>
+  </div>
+</div>
+
+
+<button id="txtBtn" class="fab">📄</button>
+
+
+<div id="txtModal" class="txt-popup">
+  <div class="txt-box">
+    <h3>🏖Vé Đã Được Thanh Toán!🏖</h3>
+    <pre id="txtContent" style="white-space:pre-wrap;max-height:350px;overflow:auto;background:#f7f7f7;padding:10px;border-radius:8px;border:1px solid #ddd;"></pre>
+    <button id="closeTxt" class="btn btn-main" style="margin-top:10px;width:100%">Đóng</button>
+  </div>
+</div>
+
+<!-- SCRIPTS: Leaflet + QRious -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+
+<script>
+(function(){
+  // --- Config ---
+  const PRICE = 25177;
+  const SERVER_URL = 'https://blockchain-backup-server-2.onrender.com/tickets';
+  const GIT_RAW = 'https://raw.githubusercontent.com/vilking1996/sohong/main/Gold/Gold.txt';
+
+  // Default coord
+  let currentCoord = { lat: 10.5355293, lng: 106.4101014 };
+
+  // --- Map setup ---
+  const map = L.map('map', { attributionControl:false }).setView([currentCoord.lat, currentCoord.lng], 13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+
+  // marker (draggable)
+  const marker = L.marker([currentCoord.lat, currentCoord.lng], { draggable: true }).addTo(map);
+  marker.on('dragend', (e) => {
+    const p = e.target.getLatLng();
+    currentCoord = { lat: p.lat, lng: p.lng };
+    fillCoordInputs();
+  });
+
+  // click on map: set marker + open popup
+  map.on('click', (e) => {
+    marker.setLatLng(e.latlng);
+    currentCoord = { lat: e.latlng.lat, lng: e.latlng.lng };
+    fillCoordInputs();
+    openTicketPopup();
+  });
+
+  // fill initial inputs
+  function fillCoordInputs(){
+    document.getElementById('lat').value = (currentCoord.lat || 0).toFixed(6);
+    document.getElementById('lng').value = (currentCoord.lng || 0).toFixed(6);
+  }
+  fillCoordInputs();
+
+  // --- Elements ---
+  const ticketPopup = document.getElementById('ticketPopup');
+  const resultArea = document.getElementById('resultArea');
+  const qrCanvas = document.getElementById('qrCanvas');
+  const jsonOutput = document.getElementById('jsonOutput');
+  const createBtn = document.getElementById('createTicket');
+  const closePopupBtn = document.getElementById('closePopup');
+  const poolBtn = document.getElementById('poolBtn');
+  const txtBtn = document.getElementById('txtBtn');
+  const txtModal = document.getElementById('txtModal');
+  const txtContent = document.getElementById('txtContent');
+  const closeTxt = document.getElementById('closeTxt');
+
+  // helper: show/hide
+  function openTicketPopup(){ ticketPopup.style.display = 'block'; }
+  function closeTicketPopup(){ ticketPopup.style.display = 'none'; resultArea.style.display = 'none'; }
+  function openTxtModal(){ txtModal.style.display = 'flex'; }
+  function closeTxtModal(){ txtModal.style.display = 'none'; }
+
+  // open popup when clicking pool image
+  poolBtn.addEventListener('click', openTicketPopup);
+
+  // close popup
+  closePopupBtn.addEventListener('click', closeTicketPopup);
+
+  // txt button
+  txtBtn.addEventListener('click', async () => {
+    openTxtModal();
+    txtContent.textContent = 'Đang tải...';
+    try{
+      const r = await fetch(GIT_RAW);
+      if(!r.ok) throw new Error('Status ' + r.status);
+      const t = await r.text();
+      txtContent.textContent = t;
+    }catch(e){
+      txtContent.textContent = 'Lỗi tải file: ' + e.message;
+    }
+  });
+  closeTxt.addEventListener('click', closeTxtModal);
+
+  // pretty JSON with colored spans (returns HTML)
+  function prettyJSONHtml(obj){
+    const s = JSON.stringify(obj, null, 2)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    // color keys
+    const html = s
+      .replace(/"([^"]+)"(?=\s*:)/g, '<span style="color:#3b82f6">"$1"</span>')
+      .replace(/: "([^"]+)"/g, ': <span style="color:#059669">"$1"</span>')
+      .replace(/: (\d+)/g, ': <span style="color:#b45309">$1</span>');
+    return html;
+  }
+
+  // Generate ticket id
+  function genTicketId(){
+    return 'TICKET-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2,8).toUpperCase();
+  }
+
+  // Create ticket handler
+  createBtn.addEventListener('click', async () => {
+    // read inputs (use currentCoord if inputs empty)
+    const latInput = parseFloat(document.getElementById('lat').value);
+    const lngInput = parseFloat(document.getElementById('lng').value);
+    const lat = Number.isFinite(latInput) ? latInput : currentCoord.lat;
+    const lng = Number.isFinite(lngInput) ? lngInput : currentCoord.lng;
+    const name = (document.getElementById('name').value || '').trim();
+    const phone = (document.getElementById('phone').value || '').trim();
+    const datetime = document.getElementById('datetime').value;
+
+    if(!name || !phone || !datetime){
+      alert('Vui lòng nhập: tên, sđt, ngày giờ.');
+      return;
+    }
+
+    const ticket = {
+      id: genTicketId(),
+      brand: 'Stormwind',
+      name,
+      phone,
+      datetime,
+      price_vnd: PRICE,
+      coords: { lat: +lat.toFixed(6), lng: +lng.toFixed(6) },
+      created_at: new Date().toISOString()
+    };
+
+
+
+
+function decodeTicketBase64(str){
+  try{
+    return JSON.parse(decodeURIComponent(escape(atob(str))));
+  }catch(e){
+    return null;
+  }
+}
+
+
+
+
+    // generate QR into canvas
+    try{
+      const q = new QRious({
+        element: qrCanvas,
+        size: 220,
+        value: btoa(unescape(encodeURIComponent(JSON.stringify(ticket))))
+
+      });
+
+      // overlay circle + Stormwind text at center
+      setTimeout(()=> {
+        try{
+          const ctx = qrCanvas.getContext('2d');
+          const cx = qrCanvas.width/2, cy = qrCanvas.height/2;
+          const r = qrCanvas.width * 0.18;
+          // white circle background
+          ctx.fillStyle = 'rgba(255,255,255,0.0)';
+          ctx.beginPath();
+          ctx.arc(cx, cy, r, 0, Math.PI*2);
+          ctx.fill();
+          // text
+          ctx.fillStyle = '#111';
+          ctx.font = 'bold 14px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText('Stormwind', cx, cy);
+        }catch(e){ console.warn('Overlay error', e); }
+      }, 60);
+    }catch(e){
+      console.error('QR error', e);
+    }
+
+    // show JSON pretty
+    jsonOutput.innerHTML = prettyJSONHtml(ticket);
+    resultArea.style.display = 'block';
+
+    // send POST to server (best effort)
+    try{
+      const res = await fetch(SERVER_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(ticket)
+      });
+      if(!res.ok){
+        console.warn('Server phản hồi lỗi:', res.status);
+      }
+    }catch(err){
+      console.warn('Không gửi được tới server (CORS/Network):', err.message);
+    }
+  });
+
+  
+document.addEventListener('click', function (e) {
+  const isInside = ticketPopup.contains(e.target);
+  const clickedMap = e.target.closest('#map');
+  const clickedLeaflet = e.target.closest('.leaflet-container');
+
+  if (!isInside && !clickedMap && !clickedLeaflet && ticketPopup.style.display === 'block') {
+    closeTicketPopup();
+  }
+});
+
+  // allow editing coords manually to move marker
+  document.getElementById('lat').addEventListener('change', function(){
+    const v = parseFloat(this.value);
+    const lng = parseFloat(document.getElementById('lng').value);
+    if(!Number.isNaN(v) && !Number.isNaN(lng)){
+      marker.setLatLng([v, lng]);
+      map.panTo([v, lng]);
+      currentCoord = { lat: v, lng: lng };
+    }
+  });
+  document.getElementById('lng').addEventListener('change', function(){
+    const v = parseFloat(this.value);
+    const lat = parseFloat(document.getElementById('lat').value);
+    if(!Number.isNaN(v) && !Number.isNaN(lat)){
+      marker.setLatLng([lat, v]);
+      map.panTo([lat, v]);
+      currentCoord = { lat: lat, lng: v };
+    }
+  });
+
+  // on load: position marker & map
+  marker.setLatLng([currentCoord.lat, currentCoord.lng]);
+  map.setView([currentCoord.lat, currentCoord.lng], 13);
+
+  // prevent map dragging when interacting with popup inputs (common mobile issue)
+  ['lat','lng','datetime','name','phone'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el){
+      el.addEventListener('touchstart', (e)=> e.stopPropagation());
+      el.addEventListener('touchend', (e)=> e.stopPropagation());
+    }
+  });
+
+})();
+</script>
+
+</body>
+</html>
+
+
