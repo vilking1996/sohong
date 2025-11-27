@@ -349,3 +349,12 @@ Detail: {"lat":10.5447245,"lng":106.4083961,"acc":13.385}
 UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
 Location: {"lat":10.5447245,"lng":106.4083961,"acc":13.385}
 ==============================
+
+==============================
+Time: 2025-11-27T04:36:21.538Z
+User: 2d49a6acc8222ca663285cde8bab14604cd06a6d1e54f32703bcc6d15c342d0e2d49a6acc8222ca663285cde8bab14604cd06a6d1e54f32703bcc6d15c342d0e2d49a6acc8222ca663285cde8bab14604cd06a6d1e54f3270
+Type: console_input
+Detail: "GPS ready: 10.5447245 106.4083961"
+UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+Location: {"lat":10.5447245,"lng":106.4083961,"acc":13.385}
+==============================
