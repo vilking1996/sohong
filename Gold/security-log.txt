@@ -155,3 +155,16 @@ Region: HN
 City: Hanoi
 Location: null
 ==============================
+
+==============================
+Time: 21:48:40, 28/11/2025
+User: d2437629d10b65188655d9340c5351baeb1b031df32bb63bb6389ad031433d26d2437629d10b65188655d9340c5351baeb1b031df32bb63bb6389ad031433d26d2437629d10b65188655d9340c5351baeb1b031df32bb63bb
+Type: devtools_open
+Detail: "User mở DevTools"
+UA: Mozilla/5.0 (iPhone; CPU iPhone OS 16_7_11 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6.1 Mobile/15E148 Safari/604.1
+IP: 42.114.46.157
+Country: VN
+Region: HN
+City: Hanoi
+Location: null
+==============================
