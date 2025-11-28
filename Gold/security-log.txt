@@ -51,3 +51,16 @@ Region: HN
 City: Hanoi
 Location: {"lat":10.544789772931859,"lng":106.40831087344148,"acc":8.667135748745087}
 ==============================
+
+==============================
+Time: 15:04:05, 28/11/2025
+User: 5e21b540fa7a1c1005069ff2a18e104bcdd136906966301e2439fb5fcf076e9d5e21b540fa7a1c1005069ff2a18e104bcdd136906966301e2439fb5fcf076e9d5e21b540fa7a1c1005069ff2a18e104bcdd136906966301e2
+Type: location
+Detail: {"lat":10.544789772931859,"lng":106.40831087344148,"acc":8.667135748745087}
+UA: Mozilla/5.0 (iPhone; CPU iPhone OS 16_7_11 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6.1 Mobile/15E148 Safari/604.1
+IP: 42.114.46.157
+Country: VN
+Region: HN
+City: Hanoi
+Location: {"lat":10.544789772931859,"lng":106.40831087344148,"acc":8.667135748745087}
+==============================
