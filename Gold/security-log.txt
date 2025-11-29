@@ -1169,3 +1169,16 @@ Region: SG
 City: Ho Chi Minh City
 Location: {"lat":10.544788610326146,"lng":106.40830395375366,"acc":8.643822594950647}
 ==============================
+
+==============================
+Time: 17:01:51, 29/11/2025
+User: 700972ab2b4002471e99231ba09f5ff7b93db9396d29857e6a7951336916d692700972ab2b4002471e99231ba09f5ff7b93db9396d29857e6a7951336916d692700972ab2b4002471e99231ba09f5ff7b93db9396d29857e6
+Type: console_input
+Detail: "Sending block: [object Object]"
+UA: Mozilla/5.0 (iPhone; CPU iPhone OS 16_7_11 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6.1 Mobile/15E148 Safari/604.1
+IP: 42.115.59.22
+Country: VN
+Region: SG
+City: Ho Chi Minh City
+Location: {"lat":10.544788610326146,"lng":106.40830395375366,"acc":8.643822594950647}
+==============================
