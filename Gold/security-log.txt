@@ -64,3 +64,16 @@ Region: SG
 City: Ho Chi Minh City
 Location: {"lat":10.544788610326146,"lng":106.40830395375366,"acc":8.643822594950647}
 ==============================
+
+==============================
+Time: 16:50:49 28/11/2025
+User: 9b72f422a4d1481e52f553dea7ab23db218671e5647c8a2a0b54a66b9be793409b72f422a4d1481e52f553dea7ab23db218671e5647c8a2a0b54a66b9be793409b72f422a4d1481e52f553dea7ab23db218671e5647c8a2a0
+Type: script_injected
+Detail: "\nconst hackBtn = document.getElementById(\"hackBtn\""
+UA: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36
+IP: 173.252.95.115
+Country: US
+Region: unknown
+City: unknown
+Location: null
+==============================
