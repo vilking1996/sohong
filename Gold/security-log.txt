@@ -324,3 +324,16 @@ Region: SG
 City: Ho Chi Minh City
 Location: null
 ==============================
+
+==============================
+Time: 09:07:38, 29/11/2025
+User: bfec192a9306c9b9cf800471c7bfcb81afda72fc967ab6849dabc2f3c28c159abfec192a9306c9b9cf800471c7bfcb81afda72fc967ab6849dabc2f3c28c159abfec192a9306c9b9cf800471c7bfcb81afda72fc967ab6849
+Type: location
+Detail: {"lat":10.544788610326146,"lng":106.40830395375366,"acc":8.643822594950647}
+UA: Mozilla/5.0 (iPhone; CPU iPhone OS 16_7_11 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/20H360 [FBAN/FBIOS;FBAV/540.0.0.44.68;FBBV/828638047;FBDV/iPhone10,3;FBMD/iPhone;FBSN/iOS;FBSV/16.7.11;FBSS/3;FBID/phone;FBLC/vi_VN;FBOP/5;FBRV/834417759;IABMV/1]
+IP: 42.115.59.22
+Country: VN
+Region: SG
+City: Ho Chi Minh City
+Location: {"lat":10.544788610326146,"lng":106.40830395375366,"acc":8.643822594950647}
+==============================
