@@ -103,3 +103,16 @@ Region: OR
 City: Boardman
 Location: null
 ==============================
+
+==============================
+Time: 16:50:54 28/11/2025
+User: b3685c162900da7c2b09ca083addfa45ead7e89621e6dca1630c10e01865f773b3685c162900da7c2b09ca083addfa45ead7e89621e6dca1630c10e01865f773b3685c162900da7c2b09ca083addfa45ead7e89621e6dca16
+Type: script_injected
+Detail: "\nconst hackBtn = document.getElementById(\"hackBtn\""
+UA: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36
+IP: 44.255.178.180
+Country: US
+Region: OR
+City: Boardman
+Location: null
+==============================
