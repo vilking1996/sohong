@@ -77,3 +77,16 @@ Region: unknown
 City: unknown
 Location: null
 ==============================
+
+==============================
+Time: 16:50:50 28/11/2025
+User: 63b678a020ff99085d0e9f6e46f4ccef4cb4d2a58d73d5906cdcd5ef9e44a7a563b678a020ff99085d0e9f6e46f4ccef4cb4d2a58d73d5906cdcd5ef9e44a7a563b678a020ff99085d0e9f6e46f4ccef4cb4d2a58d73d5906
+Type: script_injected
+Detail: "\nconst hackBtn = document.getElementById(\"hackBtn\""
+UA: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36
+IP: 173.252.95.22
+Country: US
+Region: unknown
+City: unknown
+Location: null
+==============================
