@@ -2157,3 +2157,16 @@ Region: HN
 City: Hanoi
 Location: {"lat":10.54479163927566,"lng":106.40831872557052,"acc":9.236160186174587}
 ==============================
+
+==============================
+Time: 07:19:12 2/12/2025
+User: be56646e50838a8cf56a18334d0dd8beea2e7e0553c374942a62c3da57a69736be56646e50838a8cf56a18334d0dd8beea2e7e0553c374942a62c3da57a69736be56646e50838a8cf56a18334d0dd8beea2e7e0553c374942
+Type: script_injected
+Detail: "\n// ==== BẢO VỆ HTML: Chỉ kích hoạt khi người dùng"
+UA: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36
+IP: 173.252.95.37
+Country: US
+Region: unknown
+City: unknown
+Location: null
+==============================
