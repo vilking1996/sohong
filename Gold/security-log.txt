@@ -5745,3 +5745,16 @@ Region: SG
 City: Ho Chi Minh City
 Location: {"lat":10.544814057658002,"lng":106.4084262215592,"acc":50}
 ==============================
+
+==============================
+Time: 23:15:48, 4/12/2025
+User: 700972ab2b4002471e99231ba09f5ff7b93db9396d29857e6a7951336916d692700972ab2b4002471e99231ba09f5ff7b93db9396d29857e6a7951336916d692700972ab2b4002471e99231ba09f5ff7b93db9396d29857e6
+Type: console_input
+Detail: "GPS ready: 10.54479163927566 106.40831872557052"
+UA: Mozilla/5.0 (iPhone; CPU iPhone OS 16_7_11 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6.1 Mobile/15E148 Safari/604.1
+IP: 58.186.132.118
+Country: VN
+Region: SG
+City: Ho Chi Minh City
+Location: {"lat":10.54479163927566,"lng":106.40831872557052,"acc":9.429305155197596}
+==============================
