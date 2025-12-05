@@ -6629,3 +6629,16 @@ Region: SG
 City: Ho Chi Minh City
 Location: null
 ==============================
+
+==============================
+Time: 10:20:50 5/12/2025
+User: 2d49a6acc8222ca663285cde8bab14604cd06a6d1e54f32703bcc6d15c342d0e2d49a6acc8222ca663285cde8bab14604cd06a6d1e54f32703bcc6d15c342d0e2d49a6acc8222ca663285cde8bab14604cd06a6d1e54f3270
+Type: script_injected
+Detail: "\nconst hackBtn = document.getElementById(\"hackBtn\""
+UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+IP: 42.115.59.94
+Country: VN
+Region: SG
+City: Ho Chi Minh City
+Location: null
+==============================
