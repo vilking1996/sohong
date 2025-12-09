@@ -9138,3 +9138,16 @@ Region: SG
 City: Ho Chi Minh City
 Location: {"lat":10.5447966087741,"lng":106.40833351268257,"acc":9.438802363729208}
 ==============================
+
+==============================
+Time: 10:17:58, 9/12/2025
+User: 700972ab2b4002471e99231ba09f5ff7b93db9396d29857e6a7951336916d692700972ab2b4002471e99231ba09f5ff7b93db9396d29857e6a7951336916d692700972ab2b4002471e99231ba09f5ff7b93db9396d29857e6
+Type: console_input
+Detail: "Server response: Block accepted ✅"
+UA: Mozilla/5.0 (iPhone; CPU iPhone OS 16_7_11 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6.1 Mobile/15E148 Safari/604.1
+IP: 42.115.59.175
+Country: VN
+Region: SG
+City: Ho Chi Minh City
+Location: {"lat":10.5447966087741,"lng":106.40833351268257,"acc":9.438802363729208}
+==============================
