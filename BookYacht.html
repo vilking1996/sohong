@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>Book Travel — Yacht Rental (Mobile)</title>
+  <title>📃Book Travel🛥</title>
   <style>
     :root{
       --brand:#00d1b2;
@@ -28,7 +28,7 @@
       /* Cover technique for 16:9 iframe */
       width:100vw; height:56.25vw; /* 100 * 9 / 16 */
       min-height:100vh; min-width:177.77vh; /* 100 * 16 / 9 */
-      border:0; pointer-events:none;
+      border:0; pointer-events:auto;
     }
 
     /* Gradient overlay for readability */
@@ -105,20 +105,25 @@
   </style>
 </head>
 <body>
-  <!-- Fullscreen YouTube background (replace VIDEO_ID as you like) -->
-  <div class="video-bg" aria-hidden="true">
-    <iframe
-      <iframe
-  
-  id="bgVideo"
-  src="https://www.youtube.com/embed/mrhacHYujtM?autoplay=1&mute=1&controls=0&loop=1&playlist=mrhacHYujtM"
-  frameborder="0"
-  allow="autoplay; fullscreen; picture-in-picture">
+  <!-- Fullscreen YouTube background -->
+<div class="video-bg" aria-hidden="true">
+  <iframe
+    id="bgVideo"
+    src="https://www.youtube.com/embed/mrhacHYujtM
+      ?autoplay=1
+      &mute=1
+      &controls=0
+      &loop=1
+      &playlist=mrhacHYujtM
+      &playsinline=1
+      &enablejsapi=1"
+    frameborder="0"
+    allow="autoplay; fullscreen"
+    allowfullscreen>
+  </iframe>
+</div>
+<div class="scrim" aria-hidden="true"></div>
 
-
-    ></iframe>
-  </div>
-  <div class="scrim" aria-hidden="true"></div>
 
   <!-- Centered CTA -->
   <div class="center">
@@ -374,31 +379,29 @@
   
 
     
-    <script>
-        var player;
+   <script>
+  let player;
 
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('bgVideo', {
-                events: {
-                    'onReady': onPlayerReady
-                }
-            });
+  function onYouTubeIframeAPIReady() {
+    player = new YT.Player('bgVideo', {
+      events: {
+        onReady: () => {
+          // Unmute khi user click bất kỳ đâu
+          document.body.addEventListener('click', () => {
+            if (player && player.unMute) {
+              player.unMute();
+              player.setVolume(80);
+            }
+          }, { once: true });
         }
+      }
+    });
+  }
 
-        
-        function onPlayerReady(event) {
-            
-            document.getElementById('bgVideo').addEventListener('click', function() {
-                player.unMute(); 
-            });
-        }
-
-        
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-    </script>
+  const tag = document.createElement('script');
+  tag.src = "https://www.youtube.com/iframe_api";
+  document.head.appendChild(tag);
+</script>
 
 
   
