@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>Ben Stormwind — Disability Fund</title>
+
+  <!-- html2pdf -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <style>
+    *{box-sizing:border-box; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;}
+    body{margin:0; background:url('https://disantrangan.vn/wp-content/uploads/2020/10/121117971_2765303100373791_7445944636032009541_o.jpg'); background-size: cover; color:#fff;}
+
+    .wrap{
+      max-width:430px;
+      margin:auto;
+      padding:16px;
+    }
+
+    .card{
+  background: linear-gradient(
+    180deg,
+    rgba(26,28,36,0.17),
+    rgba(15,16,22,0.17)
+  );
+  border-radius:18px;
+  padding:16px;
+
+  /* glass blur */
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  /* viền kính mờ */
+  border:1px solid rgba(255,255,255,0.08);
+
+  /* bóng đổ mềm */
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.45),
+    inset 0 0 0.5px rgba(255,255,255,.17);
+}
+
+
+    .avatar{
+width:100%;
+max-height:220px; /* thu nhỏ ảnh phía trên */
+border-radius:14px;
+overflow:hidden;
+}
+
+
+.avatar img{
+width:100%;
+height:220px; /* chiều cao cố định cho ảnh */
+object-fit:contain; /* không cắt góc */
+display:block;
+}
+
+    h1{
+      font-size:20px;
+      margin:14px 0 6px;
+      color:#bbb1710;
+      text-align:center;
+    }
+
+    p.desc{
+      font-size:14px;
+      line-height:1.5;
+      color:#ff6fb1;
+      opacity:.9;
+      text-align:center;
+      margin-bottom:14px;
+    }
+
+    .amount{
+      margin-top:12px;
+      padding:14px;
+      border-radius:14px;
+      background:#0b0c11;
+      text-align:center;
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .amount span{
+      display:block;
+      font-size:13px;
+      opacity:.7;
+    }
+
+    .amount strong{
+      font-size:22px;
+      color:#4cffc1;
+      letter-spacing:.3px;
+    }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      margin:14px 0;
+    }
+
+    button{
+      flex:1;
+      border:none;
+      border-radius:14px;
+      padding:12px;
+      font-size:14px;
+      font-weight:600;
+      cursor:pointer;
+    }
+
+    .btn-upload{background:#2d6bff; color:red;}
+    .btn-pdf{background:#15c39a; color:#04130d;}
+
+    input[type=file]{display:none;}
+
+    .gallery{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      margin-top:12px;
+    }
+
+    .gallery img{
+      width:100%;
+      max-height:260mm; /* không vượt quá chiều cao A4 */
+      height:auto;
+      object-fit:contain;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,.08);
+      background:#000;
+      padding:4px;
+      box-sizing:border-box;
+      break-inside:avoid;
+      page-break-inside:avoid;
+    }
+
+    footer{
+      margin-top:12px;
+      font-size:11px;
+      opacity:.5;
+      text-align:center;
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrap" id="pdfArea">
+  <div class="card">
+
+    <!-- Top Image -->
+    <div class="avatar">
+      <img src="https://raw.githubusercontent.com/vilking1996/sohong/main/Admin.png" alt="Ben Stormwind" />
+    </div>
+
+    <h1>Ben Stormwind Disability Support Fund</h1>
+
+    <p class="desc">
+      This fund is dedicated to supporting individuals with disabilities,
+      providing long-term care, accessibility solutions, and life-enhancing assistance.
+      Managed transparently under the ownership of Ben Stormwind and World Bank.
+    </p>
+
+    <!-- Amount -->
+    <div class="amount">
+      <span>Owner Balance</span>
+      <strong>5,124,177,255.23 USD</strong>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button class="btn-upload" onclick="fileInput.click()">Upload Images</button>
+      <button class="btn-pdf" onclick="exportPDF()">Export PDF</button>
+      <input id="fileInput" type="file" accept="image/*" multiple />
+    </div>
+
+    <!-- Gallery -->
+    <div class="gallery" id="gallery"></div>
+
+    <footer>
+      © Ben Stormwind — Disability Fund Record
+    </footer>
+
+  </div>
+</div>
+
+<script>
+  const input = document.getElementById('fileInput');
+  const gallery = document.getElementById('gallery');
+
+  input.addEventListener('change', () => {
+    [...input.files].forEach(file => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        gallery.appendChild(img);
+      };
+      reader.readAsDataURL(file);
+    });
+    input.value = '';
+  });
+
+  function exportPDF(){
+    const el = document.getElementById('pdfArea');
+    html2pdf().set({
+      margin: [10,8,10,8],
+      filename: 'Ben_Stormwind_Disability_Fund.pdf',
+      image: { type: 'jpeg', quality: 1 },
+      html2canvas: {
+        scale: 2,
+        useCORS: true,
+        scrollY: 0,
+        windowWidth: document.documentElement.scrollWidth
+      },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      pagebreak: { mode: ['avoid-all','css','legacy'] }
+    }).from(el).save();
+  }
+</script>
+
+</body>
+</html>
