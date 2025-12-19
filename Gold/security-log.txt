@@ -518,3 +518,16 @@ Region: 38
 City: Matsuyama
 Location: {"lat":35.6833,"lng":139.6833,"acc":1000}
 ==============================
+
+==============================
+Time: 17:12:13 19/12/2025
+User: 89de4206df54a0a79
+Type: location
+Detail: {"lat":35.6833,"lng":139.6833,"acc":1000}
+UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+IP: 219.109.61.100
+Country: JP
+Region: 38
+City: Matsuyama
+Location: {"lat":35.6833,"lng":139.6833,"acc":1000}
+==============================
