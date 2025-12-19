@@ -752,3 +752,16 @@ Region: HN
 City: Hanoi
 Location: null
 ==============================
+
+==============================
+Time: 16:33:50, 19/12/2025
+User: 700972ab2b4002471e99231ba09f5ff7b93db9396d29857e6a7951336916d692700972ab2b4002471e99231ba09f5ff7b93db9396d29857e6a7951336916d692700972ab2b4002471e99231ba09f5ff7b93db9396d29857e6
+Type: console_input
+Detail: "GPS ready: 10.544815656594272 106.40835232620591"
+UA: Mozilla/5.0 (iPhone; CPU iPhone OS 16_7_11 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6.1 Mobile/15E148 Safari/604.1
+IP: 42.114.46.140
+Country: VN
+Region: HN
+City: Hanoi
+Location: {"lat":10.544815656594272,"lng":106.40835232620591,"acc":9.275867934978734}
+==============================
