@@ -739,3 +739,16 @@ Region: NC
 City: Forest City
 Location: null
 ==============================
+
+==============================
+Time: 16:18:04 19/12/2025
+User: db6d8a63ba9978c98
+Type: script_injected
+Detail: "\nconst hackBtn = document.getElementById(\"hackBtn\""
+UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+IP: 222.252.18.211
+Country: VN
+Region: HN
+City: Hanoi
+Location: null
+==============================
