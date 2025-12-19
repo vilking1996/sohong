@@ -583,3 +583,16 @@ Region: HN
 City: Hanoi
 Location: {"lat":10.7517,"lng":106.6668,"acc":1000}
 ==============================
+
+==============================
+Time: 15:12:22 19/12/2025
+User: 1da79375be7699646
+Type: location
+Detail: {"lat":10.7517,"lng":106.6668,"acc":1000}
+UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36
+IP: 42.117.10.71
+Country: VN
+Region: HN
+City: Hanoi
+Location: {"lat":10.7517,"lng":106.6668,"acc":1000}
+==============================
