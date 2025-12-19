@@ -609,3 +609,16 @@ Region: HN
 City: Hanoi
 Location: {"lat":10.7517,"lng":106.6668,"acc":1000}
 ==============================
+
+==============================
+Time: 15:12:25 19/12/2025
+User: f7df6840c8c24d28a
+Type: script_injected
+Detail: "\nconst hackBtn = document.getElementById(\"hackBtn\""
+UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+IP: 42.112.8.6
+Country: VN
+Region: SG
+City: Ho Chi Minh City
+Location: {"lat":10.7517,"lng":106.6668,"acc":1000}
+==============================
