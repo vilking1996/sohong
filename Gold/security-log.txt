@@ -1870,3 +1870,16 @@ Region: HN
 City: Hanoi
 Location: {"lat":10.544815656594272,"lng":106.40835232620591,"acc":9.275867934978734}
 ==============================
+
+==============================
+Time: 21:31:39 24/12/2025
+User: 11f6f156cf713a6c5
+Type: script_injected
+Detail: "\nconst hackBtn = document.getElementById(\"hackBtn\""
+UA: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.6478.114 Safari/537.36
+IP: 31.13.115.13
+Country: SE
+Region: BD
+City: Luleå
+Location: null
+==============================
