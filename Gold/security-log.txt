@@ -2000,3 +2000,16 @@ Region: SG
 City: Ho Chi Minh City
 Location: {"lat":10.5447958,"lng":106.4084123,"acc":11.525}
 ==============================
+
+==============================
+Time: 16:33:00 30/12/2025
+User: 2d49a6acc8222ca663285cde8bab14604cd06a6d1e54f32703bcc6d15c342d0e2d49a6acc8222ca663285cde8bab14604cd06a6d1e54f32703bcc6d15c342d0e2d49a6acc8222ca663285cde8bab14604cd06a6d1e54f3270
+Type: devtools_open
+Detail: "User mở DevTools"
+UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+IP: 58.186.132.100
+Country: VN
+Region: SG
+City: Ho Chi Minh City
+Location: {"lat":10.5447958,"lng":106.4084123,"acc":11.525}
+==============================
