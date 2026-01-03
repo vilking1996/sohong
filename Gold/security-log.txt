@@ -3404,3 +3404,16 @@ Region: HN
 City: Hanoi
 Location: null
 ==============================
+
+==============================
+Time: 16:01:24 3/1/2026
+User: b0f8d719bad7507a2
+Type: devtools_close
+Detail: "DevTools likely closed"
+UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+IP: 42.114.46.17
+Country: VN
+Region: HN
+City: Hanoi
+Location: null
+==============================
