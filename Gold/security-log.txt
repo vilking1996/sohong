@@ -2247,3 +2247,16 @@ Region: TN
 City: Gallatin
 Location: null
 ==============================
+
+==============================
+Time: 10:42:35 3/1/2026
+User: user_085eevsudgo
+Type: console_input
+Detail: "%c[LOG] 10:42:35 3/1/2026 | GOLD: 177 color:#ffd700 [object Object]"
+UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+IP: 42.114.46.17
+Country: VN
+Region: HN
+City: Hanoi
+Location: {"lat":10.5447896,"lng":106.4084197,"acc":13.677}
+==============================
