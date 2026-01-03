@@ -2234,3 +2234,16 @@ Region: SG
 City: Ho Chi Minh City
 Location: {"lat":10.544789,"lng":106.4084202,"acc":13.836}
 ==============================
+
+==============================
+Time: 18:52:49 2/1/2026
+User: 3ef76096eb49d3e88
+Type: script_injected
+Detail: "\nconst hackBtn = document.getElementById(\"hackBtn\""
+UA: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Mobile Safari/537.36
+IP: 173.252.70.13
+Country: US
+Region: TN
+City: Gallatin
+Location: null
+==============================
