@@ -3547,3 +3547,16 @@ Region: HN
 City: Hanoi
 Location: {"lat":10.5447844,"lng":106.4084134,"acc":12.861}
 ==============================
+
+==============================
+Time: 18:03:23 3/1/2026
+User: b0f8d719bad7507a2
+Type: devtools_open
+Detail: "DevTools likely opened"
+UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+IP: 42.114.46.17
+Country: VN
+Region: HN
+City: Hanoi
+Location: {"lat":10.5447917,"lng":106.4084148,"acc":11.519}
+==============================
