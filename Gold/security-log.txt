@@ -3300,3 +3300,16 @@ Region: HN
 City: Hanoi
 Location: {"lat":10.5447805,"lng":106.4084165,"acc":12.192}
 ==============================
+
+==============================
+Time: 15:38:14 3/1/2026
+User: b0f8d719bad7507a2
+Type: console_warn
+Detail: "Không gửi được log: TypeError: Failed to fetch"
+UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+IP: 42.114.46.17
+Country: VN
+Region: HN
+City: Hanoi
+Location: {"lat":10.544786,"lng":106.4084161,"acc":11.496}
+==============================
