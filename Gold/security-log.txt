@@ -2390,3 +2390,16 @@ Region: HN
 City: Hanoi
 Location: {"lat":10.5447772,"lng":106.4084179,"acc":11.936}
 ==============================
+
+==============================
+Time: 10:46:33 3/1/2026
+User: b0f8d719bad7507a2
+Type: console_input
+Detail: "🔊 Audio unlocked"
+UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+IP: 42.114.46.17
+Country: VN
+Region: HN
+City: Hanoi
+Location: null
+==============================
