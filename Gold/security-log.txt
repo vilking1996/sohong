@@ -4886,3 +4886,16 @@ Region: HN
 City: Hanoi
 Location: {"lat":10.5447746,"lng":106.4084158,"acc":12.946}
 ==============================
+
+==============================
+Time: 22:47:24 6/1/2026
+User: af40a96add191e7c3
+Type: script_injected
+Detail: "\n// ==== BẢO VỆ HTML: Chỉ kích hoạt khi người dùng"
+UA: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Mobile Safari/537.36
+IP: 31.13.127.7
+Country: IE
+Region: L
+City: Clonee
+Location: null
+==============================
