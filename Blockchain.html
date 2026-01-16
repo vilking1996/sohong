@@ -267,7 +267,7 @@
     for (let i = 0; i < count; i++) {
       const coin = document.createElement("div");
       coin.className = "coin";
-      coin.innerHTML = "🪙";
+      coin.innerHTML = "💸";
       coin.style.left = Math.random() * 90 + "%";
       coin.style.fontSize = (18 + Math.random() * 14) + "px";
       coin.style.animationDelay = (Math.random() * 3) + "s";
@@ -1077,23 +1077,23 @@ canvas{display:none}
         <h3>Mở két sắt offline (Safe Money)</h3>
         <div class="small">Điền thông tin và chụp ảnh — dữ liệu sẽ được lưu vào nhật ký - Fill in the information and take a photo — the data will be saved in logs.</div>
       </div>
-      <div style="margin-left:auto"><button class="btn secondary" id="closeModal">Close</button></div>
+      <div style="margin-left:auto"><button class="btn secondary" id="closeModal">❌Close📵</button></div>
     </div>
     <div class="modal-body">
       <div>
         <div class="form-row">
           <label for="nameInput">Name</label>
-          <input type="text" id="nameInput" placeholder="Full Name - Mail" />
+          <input type="text" id="nameInput" placeholder="🤠Full Name or Mail📬" />
         </div>
         <div class="form-row" style="margin-top:8px">
-          <label for="idInput">ID</label>
+          <label for="idInput">💳ID or CCCD💳</label>
           <input type="text" id="idInput" placeholder="ID" />
         </div>
 
         <div style="display:flex;gap:10px;margin-top:12px;align-items:center">
-          <button class="btn" id="startCamera">Mở camera</button>
-          <button class="btn secondary" id="captureBtn">Take Photo</button>
-          <button class="btn secondary" id="downloadLog">Down Log</button>
+          <button class="btn" id="startCamera">📺Mở camera</button>
+          <button class="btn secondary" id="captureBtn">📸Take🎥 Photo📇</button>
+          <button class="btn secondary" id="downloadLog">📇Down Log🗃️</button>
         </div>
 
         <div style="margin-top:12px;color:#9fbbe6;font-size:13px">Stt: <span id="statusText">Chưa chụp (Not taken yet)</span></div>
