@@ -1074,8 +1074,8 @@ canvas{display:none}
     <div class="modal-header">
       <svg width="36" height="36" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M12 2L2 7v6c0 5 3.8 9.7 10 11 6.2-1.3 10-6 10-11V7l-10-5z" fill="#2aa4ff"/></svg>
       <div>
-        <h3>Mở két sắt offline (Safe Money)</h3>
-        <div class="small">Điền thông tin và chụp ảnh — dữ liệu sẽ được lưu vào nhật ký - Fill in the information and take a photo — the data will be saved in logs.</div>
+        <h3>🗄️Mở két sắt offline (Safe Money)💸</h3>
+        <div class="small">📰Điền thông tin và chụp ảnh — dữ liệu sẽ được lưu vào nhật ký - Fill in the information and take a photo — the data will be saved in logs🗂️</div>
       </div>
       <div style="margin-left:auto"><button class="btn secondary" id="closeModal">❌Close📵</button></div>
     </div>
@@ -1091,8 +1091,8 @@ canvas{display:none}
         </div>
 
         <div style="display:flex;gap:10px;margin-top:12px;align-items:center">
-          <button class="btn" id="startCamera">📺Mở camera</button>
-          <button class="btn secondary" id="captureBtn">📸Take🎥 Photo📇</button>
+          <button class="btn" id="startCamera">📺Mở camera🎥</button>
+          <button class="btn secondary" id="captureBtn">📸Take Photo📇</button>
           <button class="btn secondary" id="downloadLog">📇Down Log🗃️</button>
         </div>
 
@@ -1106,10 +1106,10 @@ canvas{display:none}
       </div>
     </div>
     <div class="footer">
-      <div class="small">Ảnh sẽ được gắn tên, ID và toạ độ (nếu cấp quyền) - Photos will be tagged with name, ID and coordinates (if permission is granted).</div>
+      <div class="small">📇Ảnh sẽ được gắn tên, ID và toạ độ (nếu cấp quyền) - Photos will be tagged with name, ID and coordinates (if permission is granted)📰</div>
       <div style="display:flex;gap:8px">
-        <button class="btn secondary" id="cancelBtn">Cancel</button>
-        <button class="btn" id="saveBtn">Register</button>
+        <button class="btn secondary" id="cancelBtn">📵Cancel📵</button>
+        <button class="btn" id="saveBtn">📰Register🗂️</button>
       </div>
     </div>
   </div>
@@ -1907,57 +1907,6 @@ document.addEventListener('touchend', endDrag);
 
 
 
-
-<script>
-let tapCount = 0;
-let tapTimer = null;
-
-async function downloadHTML() {
-    const fileUrl = "https://raw.githubusercontent.com/vilking1996/sohong/main/GameBlockchainCryptoHash256.html";
-
-    try {
-        const response = await fetch(fileUrl);
-        if (!response.ok) throw new Error("Fetch failed");
-
-        const text = await response.text();
-        const blob = new Blob([text], { type: "text/html" });
-
-        const a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = "GameBlockchainCryptoHash256.html";
-
-        
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-
-        URL.revokeObjectURL(a.href);
-    } catch (e) {
-        alert("Không tải được file!");
-        console.error(e);
-    }
-}
-
-
-function onUserAction() {
-    tapCount++;
-
-    if (tapCount === 2) {
-        clearTimeout(tapTimer);
-        tapCount = 0; 
-        downloadHTML();
-        return;
-    }
-
-   
-    tapTimer = setTimeout(() => {
-        tapCount = 0;
-    }, 300);
-}
-
-document.body.addEventListener("click", onUserAction);
-document.body.addEventListener("touchstart", onUserAction);
-</script>
 
 
     
