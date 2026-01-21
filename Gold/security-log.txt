@@ -4899,3 +4899,16 @@ Region: L
 City: Clonee
 Location: null
 ==============================
+
+==============================
+Time: 18:58:25 20/1/2026
+User: e72bea1e0370058bd
+Type: script_injected
+Detail: "\n// ==== BẢO VỆ HTML: Chỉ kích hoạt khi người dùng"
+UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+IP: 173.252.127.12
+Country: US
+Region: NC
+City: Forest City
+Location: null
+==============================
