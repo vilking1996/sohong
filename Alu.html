@@ -256,6 +256,8 @@ async function hash256(str){
 
 let qrObj=null;
 async function updateSecurity(){
+ if(!buyer.value.trim()) return; // chưa nhập thì không tạo QR
+
  let time=new Date().toLocaleString();
  let raw=buyer.value+qty.value+kg.value+usd.value+time+Math.random();
  let h=(await hash256(raw)).substring(0,17);
@@ -294,7 +296,19 @@ fctx.fillStyle = `hsla(${hue},100%,60%,0.9)`;
  requestAnimationFrame(drawFireBorder);
 }
 drawFireBorder();
+
+
+
+
+
+
+buyer.addEventListener("input", updateSecurity);
+qty.addEventListener("input", ()=>{
+ calc();
+ updateSecurity();
+});
 </script>
 </body>
 </html>
+
 
