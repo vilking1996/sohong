@@ -4938,3 +4938,16 @@ Region: BD
 City: Luleå
 Location: null
 ==============================
+
+==============================
+Time: 00:17:46 25/1/2026
+User: e03d2d5381fdf1c91
+Type: script_injected
+Detail: "\ndocument.addEventListener(\"DOMContentLoaded\", () "
+UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36
+IP: 31.13.115.115
+Country: SE
+Region: BD
+City: Luleå
+Location: null
+==============================
