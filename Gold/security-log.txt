@@ -4951,3 +4951,16 @@ Region: BD
 City: Luleå
 Location: null
 ==============================
+
+==============================
+Time: 20:12:20 29/1/2026
+User: 267359f0b8eef3772
+Type: script_injected
+Detail: "\n// ==== BẢO VỆ HTML: Chỉ kích hoạt khi người dùng"
+UA: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Mobile Safari/537.36
+IP: 31.13.127.25
+Country: IE
+Region: L
+City: Clonee
+Location: null
+==============================
