@@ -4964,3 +4964,16 @@ Region: L
 City: Clonee
 Location: null
 ==============================
+
+==============================
+Time: 20:12:47 29/1/2026
+User: fac2655c508d99adc
+Type: script_injected
+Detail: "\nconst hackBtn = document.getElementById(\"hackBtn\""
+UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0
+IP: 66.220.149.3
+Country: US
+Region: OR
+City: Prineville
+Location: null
+==============================
