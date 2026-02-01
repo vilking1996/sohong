@@ -4977,3 +4977,16 @@ Region: OR
 City: Prineville
 Location: null
 ==============================
+
+==============================
+Time: 11:29:35, 1/2/2026
+User: 592b449480609ccdf
+Type: script_injected
+Detail: "\ndocument.addEventListener(\"DOMContentLoaded\", () "
+UA: Mozilla/5.0 (iPhone; CPU iPhone OS 16_7_11 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6.1 Mobile/15E148 Safari/604.1
+IP: 42.114.46.37
+Country: VN
+Region: HN
+City: Hanoi
+Location: null
+==============================
