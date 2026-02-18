@@ -5055,3 +5055,16 @@ Region: SG
 City: Ho Chi Minh City
 Location: {"lat":10.544217364357861,"lng":106.41061684881029,"acc":124}
 ==============================
+
+==============================
+Time: 22:22:18 18/2/2026
+User: 56f23fd4219ef7133
+Type: devtools_close
+Detail: "DevTools likely closed"
+UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
+IP: 42.115.59.226
+Country: VN
+Region: SG
+City: Ho Chi Minh City
+Location: {"lat":10.544217364357861,"lng":106.41061684881029,"acc":124}
+==============================
