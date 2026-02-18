@@ -5016,3 +5016,16 @@ Region: SG
 City: Ho Chi Minh City
 Location: null
 ==============================
+
+==============================
+Time: 22:21:25 18/2/2026
+User: 56f23fd4219ef7133
+Type: devtools_open
+Detail: "DevTools likely opened"
+UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
+IP: 42.115.59.226
+Country: VN
+Region: SG
+City: Ho Chi Minh City
+Location: {"lat":10.54424204745848,"lng":106.41056425600752,"acc":126}
+==============================
