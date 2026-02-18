@@ -5003,3 +5003,16 @@ Region: HN
 City: Hanoi
 Location: {"lat":10.544818796145547,"lng":106.40837860893026,"acc":8.270099383652724}
 ==============================
+
+==============================
+Time: 22:17:45 18/2/2026
+User: 56f23fd4219ef7133
+Type: script_injected
+Detail: "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"
+UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
+IP: 42.115.59.226
+Country: VN
+Region: SG
+City: Ho Chi Minh City
+Location: null
+==============================
