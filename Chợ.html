@@ -456,7 +456,7 @@ pet:"🐶"
 
 
 
-const map = L.map('map').setView([10.762622,106.660172],25)
+const map = L.map('map').setView([10.762622,106.660172],18)
 
 
 
@@ -464,7 +464,8 @@ const normalLayer = L.tileLayer(
     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     {
         attribution: '&copy; OpenStreetMap contributors'
-        
+        maxZoom: 19
+        detectRetina: true
     }
 )
 
@@ -473,7 +474,7 @@ const satelliteLayer = L.tileLayer(
     'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     {
         attribution: 'Tiles © Esri'
-        
+        maxZoom: 19
     }
 )
 
@@ -1107,6 +1108,7 @@ function goToCoordinate(){
 
 </body>
 </html>
+
 
 
 
