@@ -388,6 +388,19 @@ Tổng: <b id="cartTotal">0</b> đ
 <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
 
 <script>
+
+
+let ownerId = localStorage.getItem("ownerId")
+
+if(!ownerId){
+    ownerId = crypto.randomUUID()
+    localStorage.setItem("ownerId", ownerId)
+}
+
+
+
+
+    
 let editMode = false
 
 let myShopId = localStorage.getItem("myShopId") || null
@@ -1060,12 +1073,7 @@ socket.on("shop_deleted",(id)=>{
 
 
 
-let ownerId = localStorage.getItem("ownerId")
 
-if(!ownerId){
-    ownerId = crypto.randomUUID()
-    localStorage.setItem("ownerId", ownerId)
-}
 
 
 
@@ -1094,6 +1102,7 @@ function goToCoordinate(){
 
 </body>
 </html>
+
 
 
 
