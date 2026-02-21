@@ -1,0 +1,1048 @@
+ <!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>🛒Shop Market🛒</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<style>
+html,body{margin:0;height:100%;font-family:sans-serif}
+#map{position:absolute;top:0;bottom:0;width:100%}
+
+
+.shopForm{
+position:fixed;top:50%;left:50%;
+transform:translate(-50%,-50%);
+background:transparent;padding:20px;
+border-radius:16px;
+box-shadow:0 20px 40px rgba(0,0,0,.2);
+width:95%;max-width:420px;
+z-index:9999;display:none;
+max-height:90vh;overflow:auto;
+}
+
+.input{
+width:100%;padding:10px;margin-bottom:10px;
+border-radius:10px;border:1px solid #ddd;background:black;
+}
+
+.productBox{
+border:1px solid #eee;
+padding:10px;border-radius:10px;
+margin-bottom:10px;
+}
+
+button{
+padding:8px 14px;border:none;
+border-radius:8px;cursor:pointer;
+}
+
+.btnMain{background:#111;color:#fff}
+.btnGray{background:#eee}
+
+
+.custom-marker{
+width:44px;height:44px;border-radius:50%;
+display:flex;align-items:center;justify-content:center;
+font-size:20px;color:#fff;font-weight:bold;
+box-shadow:0 8px 20px rgba(0,0,0,.3);
+border:3px solid #fff;
+}
+
+
+#cartIcon{
+position:fixed;top:75px;right:20px;
+background:#111;color:green;
+width:55px;height:55px;
+display:flex;align-items:center;justify-content:center;
+border-radius:50%;font-size:22px;
+cursor:pointer;z-index:9999;
+}
+
+.badge{
+position:absolute;top:-5px;right:-5px;
+background:red;color:#fff;
+font-size:12px;padding:3px 6px;
+border-radius:20px;
+}
+
+#cartPanel{
+position:fixed;right:-350px;top:0;
+width:320px;height:100%;
+background:transparent;
+box-shadow:-5px 0 20px rgba(0,0,0,.2);
+padding:20px;transition:.3s;
+overflow:auto;z-index:9998;
+}
+
+#cartPanel.open{right:0}
+
+.invoice{
+background:#f5f5f5;padding:10px;
+border-radius:10px;margin-top:10px;
+font-size:13px;
+}
+
+
+
+
+
+
+
+
+
+
+.leaflet-popup-content-wrapper{
+position:relative;
+background:linear-gradient(145deg,#111,#1a1a1a);
+color:#ffe6f7;
+border-radius:20px;
+overflow:hidden;
+box-shadow:
+0 0 20px rgba(255,20,147,0.6),
+0 0 40px rgba(255,0,204,0.4);
+}
+
+
+.leaflet-popup-content-wrapper::before{
+content:"";
+position:absolute;
+inset:-2px;
+border-radius:22px;
+padding:2px;
+background:linear-gradient(
+90deg,
+#ff00cc,
+#ff69b4,
+#ff1493,
+#ff00cc
+);
+background-size:300% 300%;
+animation:pinkLightning 2.5s linear infinite;
+pointer-events:none;
+
+
+
+-webkit-mask:
+linear-gradient(#000 0 0) content-box,
+linear-gradient(#000 0 0);
+-webkit-mask-composite:xor;
+mask-composite:exclude;
+}
+
+@keyframes pinkLightning{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+.leaflet-popup-tip{
+background:#111;
+}
+
+.fairy-header{
+display:flex;
+gap:12px;
+align-items:center;
+margin-bottom:10px;
+}
+
+.fairy-avatar{
+width:60px;
+height:60px;
+border-radius:50%;
+object-fit:cover;
+border:2px solid hotpink;
+box-shadow:0 0 15px rgba(255,20,147,0.7);
+}
+
+.fairy-title{
+font-size:18px;
+font-weight:bold;
+color:#ff69b4;
+letter-spacing:1px;
+}
+
+.fairy-status{
+font-size:13px;
+opacity:0.8;
+}
+
+.fairy-product{
+margin-top:12px;
+padding:10px;
+background:rgba(255,255,255,0.03);
+border-radius:12px;
+border:1px solid rgba(255,105,180,0.2);
+}
+
+.fairy-product b{
+color:#fff;
+}
+
+.fairy-images{
+display:flex;
+gap:6px;
+overflow-x:auto;
+margin:8px 0;
+}
+
+.fairy-images img{
+height:100px;
+border-radius:12px;
+border:1px solid rgba(255,105,180,0.5);
+box-shadow:0 0 10px rgba(255,20,147,0.4);
+}
+
+.fairy-btn{
+position:relative;
+background:linear-gradient(120deg,#ff1493,#ff69b4,#ff1493);
+background-size:300% 300%;
+color:black;
+border:none;
+padding:6px 12px;
+border-radius:10px;
+cursor:pointer;
+font-weight:bold;
+animation:pinkLightning 3s linear infinite;
+box-shadow:0 0 15px rgba(255,20,147,0.7);
+}
+
+.fairy-btn:hover{
+opacity:0.95;
+}
+
+
+
+.fairy-product-row{
+display:flex;
+gap:14px;
+overflow-x:auto;
+padding:12px 0;
+scroll-snap-type:x proximity;
+-webkit-overflow-scrolling: touch;
+scroll-behavior:smooth;
+touch-action:pan-x;
+pointer-events:auto;
+}
+
+.fairy-product-row::-webkit-scrollbar{
+height:6px;
+}
+
+.fairy-product-row::-webkit-scrollbar-thumb{
+background:linear-gradient(90deg,#ff1493,#ff69b4);
+border-radius:10px;
+}
+
+.fairy-product-card{
+min-width:220px;
+max-width:220px;
+background:linear-gradient(145deg,#141414,#1c1c1c);
+border-radius:18px;
+padding:12px;
+border:1px solid rgba(255,105,180,0.4);
+box-shadow:0 0 20px rgba(255,20,147,0.3);
+scroll-snap-align:start;
+flex-shrink:0;
+}
+
+.fairy-product-card img{
+width:100%;
+height:100px;
+object-fit:cover;
+border-radius:12px;
+margin-bottom:8px;
+border:1px solid rgba(255,105,180,0.4);
+}
+
+.fairy-product-name{
+font-weight:bold;
+color:#ff69b4;
+margin-bottom:4px;
+font-size:14px;
+}
+
+.fairy-product-price{
+font-size:13px;
+margin-bottom:8px;
+}
+
+
+
+
+
+#coordinateBox{
+    position:absolute;
+    top:10px;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:1000;
+    background:transparent;
+    padding:10px;
+    border-radius:8px;
+    box-shadow:0 0 10px rgba(0,0,0,0.4);
+}
+
+#coordinateBox input{
+    width:150px;
+    margin-right:5px;
+    background:transparent;
+}
+</style>
+</head>
+<body>
+
+<div id="coordinateBox">
+    <input id="latInput" placeholder="Latitude">
+    <input id="lngInput" placeholder="Longitude">
+    <button onclick="goToCoordinate()">🎢Go🎪</button>
+</div>
+
+
+
+
+
+<div id="map"></div>
+
+<!-- CART -->
+<div id="cartIcon">
+🛒
+<div class="badge" id="cartCount">0</div>
+</div>
+
+<div id="cartPanel">
+<h3>Giỏ hàng</h3>
+<div id="cartItems"></div>
+<hr>
+Tổng: <b id="cartTotal">0</b> đ
+<br><br>
+<button class="btnMain" onclick="checkout()">Thanh toán</button>
+<div id="invoiceArea"></div>
+</div>
+
+<!-- FORM -->
+<div class="shopForm" id="shopForm">
+<h3>🎪Tạo Shop🎪</h3>
+
+
+<input id="shopName" class="input" placeholder="🎪Tên shop🎪">
+<input id="shopPhone" class="input" placeholder="📳SĐT📳">
+<input id="shopZalo" class="input" placeholder="📳Zalo📳">
+<input id="shopAvatar" class="input" placeholder="🎭Link avatar🎭">
+<input id="shopYoutube" class="input" placeholder="🖥Link Youtube🖥">
+<select id="shopIcon" class="input">
+<option value="restaurant">🍜 Nhà hàng</option>
+<option value="coffee">☕ Cafe</option>
+<option value="fastfood">🍔 Đồ ăn nhanh</option>
+<option value="market">🛒 Tạp hóa</option>
+<option value="clothes">👕 Thời trang</option>
+<option value="phone">📱 Điện thoại</option>
+<option value="pharmacy">💊 Nhà thuốc</option>
+<option value="beauty">💄 Làm đẹp</option>
+<option value="shipper">🚚 Shipper</option>
+<option value="taxi">🚕 Taxi</option>
+<option value="hotel">🏨 Khách sạn</option>
+<option value="pet">🐶 Pet shop</option>
+</select>
+
+
+
+
+
+
+
+<label>
+<input type="checkbox" id="shopStatus" checked> 🎢Đang mở cửa🎠
+</label>
+
+<hr>
+<div id="products"></div>
+
+<button onclick="addProduct()" class="btnGray">+ Thêm sản phẩm</button>
+<br><br>
+<button onclick="saveShop()" class="btnMain">Lưu Shop</button>
+<button onclick="closeForm()" class="btnGray">Hủy</button>
+</div>
+
+<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+
+<script>
+let editMode = false
+
+let myShopId = localStorage.getItem("myShopId") || null
+
+const SERVER="https://blockchain-backup-server-2.onrender.com"
+
+
+
+const socket = io(SERVER, {
+    reconnectionAttempts: 3,
+    transports: ["websocket"]
+})
+
+socket.on("connect",()=>{
+    console.log("Connected:", socket.id)
+})
+
+
+
+
+
+let selectedLatLng=null
+let markers=[]
+let loadedShops={}
+let loadedShopsData={}
+
+let userLocation=null
+let userMarker=null
+let cart=[]
+
+const businessIcons = {
+restaurant:"🍜",
+coffee:"☕",
+fastfood:"🍔",
+market:"🛒",
+clothes:"👕",
+phone:"📱",
+pharmacy:"💊",
+beauty:"💄",
+shipper:"🚚",
+taxi:"🚕",
+hotel:"🏨",
+pet:"🐶"
+}
+
+
+
+
+const map = L.map('map').setView([10.762622,106.660172],25)
+
+
+
+const normalLayer = L.tileLayer(
+    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    {
+        attribution: '&copy; OpenStreetMap contributors'
+        
+    }
+)
+
+
+const satelliteLayer = L.tileLayer(
+    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    {
+        attribution: 'Tiles © Esri'
+        
+    }
+)
+
+
+normalLayer.addTo(map)
+
+
+L.control.layers(
+    {
+        "🌍 Bản đồ thường": normalLayer,
+        "🛰 Vệ tinh thật": satelliteLayer
+    }
+).addTo(map)
+
+
+
+
+if(navigator.geolocation){
+
+    navigator.geolocation.getCurrentPosition(pos=>{
+
+        userLocation = {
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude
+        }
+
+        
+        map.setView([userLocation.lat,userLocation.lng],15)
+
+        
+        if(userMarker){
+            map.removeLayer(userMarker)
+        }
+
+        
+        const userIcon = L.divIcon({
+            className:"",
+            html:`
+            <div style="
+                width:50px;
+                height:50px;
+                border-radius:50%;
+                background:linear-gradient(135deg,#00f2ff,#0077ff);
+                border:4px solid white;
+                box-shadow:0 0 20px cyan,0 0 40px #00f2ff;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                font-size:20px;
+                color:white;
+                font-weight:bold;
+            ">
+                📍
+            </div>
+            `,
+            iconSize:[50,50]
+        })
+
+        userMarker = L.marker(
+            [userLocation.lat,userLocation.lng],
+            {icon:userIcon}
+        ).addTo(map)
+        .bindPopup("📍 Vị trí của bạn")
+
+    },err=>{
+        console.log("Không lấy được vị trí:",err)
+    })
+}
+
+
+
+
+
+map.on("click",e=>{
+selectedLatLng=e.latlng
+openForm()
+})
+
+function openForm(){
+document.getElementById("shopForm").style.display="block"
+}
+
+function closeForm(){
+document.getElementById("shopForm").style.display="none"
+document.getElementById("products").innerHTML=""
+}
+
+/* PRODUCT */
+function addProduct(data={}){
+const box=document.createElement("div")
+box.className="productBox"
+box.innerHTML=`
+<input class="input name" placeholder="Tên SP" value="${data.name||''}">
+<input type="number" class="input price" placeholder="Giá" value="${data.price||''}">
+<input class="input img" placeholder="Link ảnh cách nhau dấu phẩy" value="${data.images?data.images.join(","):""}">
+<button onclick="this.parentElement.remove()">Xóa</button>
+`
+document.getElementById("products").appendChild(box)
+}
+
+/* SAVE SHOP */
+function saveShop(){
+
+if(!selectedLatLng){
+alert("Chọn vị trí trước!")
+return
+}
+
+if(!editMode && myShopId){
+alert("Bạn đã có shop rồi!")
+return
+}
+
+const id = editMode
+? myShopId
+: Date.now().toString(36)+Math.random().toString(36).slice(2)
+
+const shop={
+id:id,
+owner: ownerId,
+name:shopName.value,
+phone:shopPhone.value,
+zalo:shopZalo.value,
+avatar:shopAvatar.value,
+youtube:shopYoutube.value,
+icon: shopIcon.value,
+online:shopStatus.checked,
+lat:selectedLatLng.lat,
+lng:selectedLatLng.lng,
+products:[]
+}
+
+document.querySelectorAll(".productBox").forEach(box=>{
+shop.products.push({
+name:box.querySelector(".name").value,
+price:parseInt(box.querySelector(".price").value||0),
+images:box.querySelector(".img").value
+.split(",")
+.map(i=>i.trim())
+.filter(i=>i)
+})
+})
+
+console.log("Đang gửi shop lên server:", shop)
+socket.emit("create_shop", shop)
+
+
+localStorage.setItem("myShopId", id)
+myShopId = id
+editMode = false
+
+closeForm()
+}
+
+
+
+
+
+
+
+
+function editShop(id){
+const shop = loadedShopsData[id]
+if(!shop) return
+
+editMode = true
+myShopId = id
+selectedLatLng = {lat:shop.lat, lng:shop.lng}
+
+shopName.value = shop.name
+shopPhone.value = shop.phone
+shopZalo.value = shop.zalo
+shopAvatar.value = shop.avatar
+shopYoutube.value = shop.youtube
+shopIcon.value = shop.icon || "restaurant"
+shopStatus.checked = shop.online
+
+document.getElementById("products").innerHTML=""
+shop.products.forEach(p=>addProduct(p))
+
+openForm()
+
+
+
+
+
+}
+
+function deleteShop(id){
+if(!confirm("Xóa shop?")) return
+
+socket.emit("delete_shop", id)
+
+localStorage.removeItem("myShopId")
+myShopId = null
+}
+
+
+socket.on("disconnect",()=>{
+if(myShopId){
+socket.emit("shop_offline", myShopId)
+}
+console.log("Socket disconnected")
+})
+
+
+
+
+
+/* DISTANCE */
+function distance(lat1,lng1,lat2,lng2){
+const R=6371
+const dLat=(lat2-lat1)*Math.PI/180
+const dLng=(lng2-lng1)*Math.PI/180
+const a=Math.sin(dLat/2)**2+
+Math.cos(lat1*Math.PI/180)*
+Math.cos(lat2*Math.PI/180)*
+Math.sin(dLng/2)**2
+return (R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))).toFixed(2)
+}
+
+/* YOUTUBE */
+function extractYoutubeID(url){
+let reg=/[?&]v=([^&#]*)|youtu\.be\/([^&#]*)/
+let match=url.match(reg)
+return match?(match[1]||match[2]):""
+}
+
+/* HASH 32 */
+function simpleHash(str){
+let h1=0xdeadbeef^str.length
+let h2=0x41c6ce57^str.length
+for(let i=0;i<str.length;i++){
+let ch=str.charCodeAt(i)
+h1=Math.imul(h1^ch,2654435761)
+h2=Math.imul(h2^ch,1597334677)
+}
+h1=Math.imul(h1^(h1>>>16),2246822507)
+h2=Math.imul(h2^(h2>>>13),3266489909)
+return (h2>>>0).toString(16).padStart(8,"0")+
+(h1>>>0).toString(16).padStart(8,"0")
+}
+
+/* CART */
+function addToCart(name,price,shopId){
+
+let shop = loadedShopsData[shopId]
+
+cart.push({
+name:name,
+price:price,
+shopId:shopId,
+shopName:shop.name,
+shopPhone:shop.phone
+})
+
+updateCart()
+}
+
+
+
+
+
+
+
+function removeCart(i){
+cart.splice(i,1)
+updateCart()
+}
+
+function updateCart(){
+document.getElementById("cartCount").innerText=cart.length
+let html=""
+let total=0
+cart.forEach((i,index)=>{
+total+=i.price
+html+=`${i.name} - ${i.price} đ 
+<button onclick="removeCart(${index})">❌</button><br>`
+})
+document.getElementById("cartItems").innerHTML=html
+document.getElementById("cartTotal").innerText=total
+}
+
+function checkout(){
+
+if(cart.length===0){
+alert("Giỏ hàng trống!")
+return
+}
+
+let now=new Date()
+let lat=userLocation?userLocation.lat:0
+let lng=userLocation?userLocation.lng:0
+
+let grouped = {}
+
+cart.forEach(item=>{
+if(!grouped[item.shopId]){
+grouped[item.shopId]={
+shopName:item.shopName,
+shopPhone:item.shopPhone,
+items:[],
+total:0
+}
+}
+grouped[item.shopId].items.push(item)
+grouped[item.shopId].total += item.price
+})
+
+let grandTotal = cart.reduce((a,b)=>a+b.price,0)
+
+let raw=now.toISOString()+grandTotal+lat+lng
+let hash=simpleHash(raw)
+
+let signature = `
+<svg width="220" height="80">
+<path d="M10 50 Q 30 10, 50 50 T 90 50 
+Q 110 20, 130 55 Q 150 35, 170 55 T 210 45"
+stroke="black" fill="transparent"
+stroke-width="3" stroke-linecap="round"/>
+<text x="40" y="75" font-size="14">
+Ben Stormwind
+</text>
+</svg>
+`
+
+let invoiceHTML = `
+<div class="invoice">
+<b style="font-size:16px">HÓA ĐƠN THANH TOÁN</b><br>
+${now.toLocaleString()}<br>
+📍 ${lat.toFixed(5)}, ${lng.toFixed(5)}<br>
+<hr>
+`
+
+Object.values(grouped).forEach(shop=>{
+
+invoiceHTML += `
+<div style="margin-bottom:15px;padding:8px;border:1px solid #ddd;border-radius:10px">
+<b>🏮 ${shop.shopName}</b><br>
+📞 <a href="tel:${shop.shopPhone}" 
+style="color:#007bff;text-decoration:none;font-weight:bold;"
+onmouseover="this.style.textDecoration='underline'"
+onmouseout="this.style.textDecoration='none'">
+${shop.shopPhone}
+</a>
+<hr>
+`
+
+
+shop.items.forEach(i=>{
+invoiceHTML += `${i.name} - ${i.price.toLocaleString()} đ<br>`
+})
+
+invoiceHTML += `
+<hr>
+Tổng shop: <b>${shop.total.toLocaleString()} đ</b>
+</div>
+`
+})
+
+invoiceHTML += `
+<hr>
+<b style="font-size:15px">TỔNG CỘNG: ${grandTotal.toLocaleString()} đ</b><br>
+🔐 Hash xác thực: <b>${hash}</b>
+
+<div style="text-align:right;margin-top:15px">
+${signature}
+</div>
+
+</div>
+`
+
+document.getElementById("invoiceArea").innerHTML = invoiceHTML
+
+cart=[]
+updateCart()
+}
+
+
+
+
+
+/* RENDER SHOP */
+function renderShop(shop){
+
+
+let isMine = shop.id === myShopId
+
+let icon=L.divIcon({
+className:"",
+html:`<div class="custom-marker" 
+style="
+background:${shop.online?'#4caf50':'#555'};
+${isMine ? `
+box-shadow:0 0 20px gold,0 0 35px orange;
+border:4px solid gold;
+transform:scale(1.2);
+` : ""}
+">
+${isMine ? "⭐ " : ""}
+${businessIcons[shop.icon] || "🏮"}
+</div>`,
+iconSize: isMine ? [52,52] : [44,44]
+})
+
+
+
+
+
+
+
+let html=`
+<div class="fairy-header">
+<img src="${shop.avatar||'https://via.placeholder.com/60'}" class="fairy-avatar">
+<div>
+<div class="fairy-title">${shop.name}</div>
+<div class="fairy-status">
+${shop.online?"🟢 Đang mở cửa":"🔴 Đã đóng cửa"}
+</div>
+</div>
+</div>
+`
+
+
+
+html += `
+<div style="margin-top:8px;font-size:14px">
+
+<a href="tel:${shop.phone}" 
+style="display:block;color:#fff;text-decoration:none;margin-bottom:4px">
+📞 Gọi: ${shop.phone}
+</a>
+
+<a href="https://zalo.me/${shop.phone}" target="_blank"
+style="display:block;color:#fff;text-decoration:none;margin-bottom:4px">
+💬 Zalo
+</a>
+
+<a href="https://wa.me/${shop.phone.replace(/[^0-9]/g,'')}" target="_blank"
+style="display:block;color:#fff;text-decoration:none">
+🟢 WhatsApp
+</a>
+
+</div>
+`
+
+
+
+
+
+if(userLocation){
+let d=distance(userLocation.lat,userLocation.lng,shop.lat,shop.lng)
+html+=`<div style="font-size:13px;opacity:.7;">📍 Cách bạn ${d} km</div>`
+}
+
+if(shop.youtube){
+let id=extractYoutubeID(shop.youtube)
+if(id){
+html+=`
+<div style="margin-top:10px">
+<iframe width="100%" height="177"
+style="border-radius:15px;border:1px solid rgba(255,215,0,0.3)"
+src="https://www.youtube.com/embed/${id}"
+frameborder="0" allowfullscreen></iframe>
+</div>` 
+}
+}
+
+html += `<div class="fairy-product-row">`
+
+shop.products.forEach(p=>{
+html += `
+<div class="fairy-product-card">
+${p.images && p.images.length
+? `<img src="${p.images[0]}">`
+: `<div style="height:120px;display:flex;align-items:center;justify-content:center;opacity:.5">Không ảnh</div>`
+}
+<div class="fairy-product-name">${p.name}</div>
+<div class="fairy-product-price">${p.price} đ</div>
+<button class="fairy-btn"
+onclick="addToCart('${p.name}',${p.price},'${shop.id}')">
+Thêm
+</button>
+</div>
+`
+})
+
+html += `</div>`
+
+
+
+
+
+if(shop.id === myShopId){
+html += `
+<hr>
+<button class="fairy-btn" onclick="editShop('${shop.id}')">Sửa</button>
+<button class="fairy-btn" onclick="deleteShop('${shop.id}')">Xóa</button>
+`
+}
+
+
+
+
+let marker=L.marker([shop.lat,shop.lng],{icon})
+.addTo(map).bindPopup(html,{maxWidth:350})
+
+markers.push(marker)
+}
+
+
+
+
+
+
+
+/* SOCKET */
+
+
+socket.on("init_shops",(data)=>{
+markers.forEach(m=>map.removeLayer(m))
+markers=[]
+loadedShops={}
+loadedShopsData={}
+
+data.forEach(shop=>{
+renderShop(shop)
+loadedShops[shop.id]=true
+loadedShopsData[shop.id]=shop
+})
+})
+
+
+socket.on("shop_created",(shop)=>{
+
+// xóa marker cũ nếu có
+markers.forEach((m,i)=>{
+if(loadedShopsData[shop.id] &&
+m.getLatLng().lat===loadedShopsData[shop.id].lat){
+map.removeLayer(m)
+}
+})
+
+renderShop(shop)
+loadedShops[shop.id]=true
+loadedShopsData[shop.id]=shop
+})
+
+
+
+socket.on("connect",()=>console.log("Socket connected"))
+
+
+document.getElementById("cartIcon").onclick=function(){
+document.getElementById("cartPanel").classList.toggle("open")
+}
+
+
+
+socket.on("shop_deleted",(id)=>{
+    markers.forEach(m=>{
+        if(loadedShopsData[id] &&
+        m.getLatLng().lat === loadedShopsData[id].lat){
+            map.removeLayer(m)
+        }
+    })
+
+    delete loadedShopsData[id]
+})
+
+
+
+
+
+
+let ownerId = localStorage.getItem("ownerId")
+
+if(!ownerId){
+    ownerId = crypto.randomUUID()
+    localStorage.setItem("ownerId", ownerId)
+}
+
+
+
+
+
+function goToCoordinate(){
+
+    let lat = parseFloat(document.getElementById("latInput").value)
+    let lng = parseFloat(document.getElementById("lngInput").value)
+
+    if(isNaN(lat) || isNaN(lng)){
+        alert("Tọa độ không hợp lệ")
+        return
+    }
+
+    selectedLatLng = {
+        lat: lat,
+        lng: lng
+    }
+
+    map.setView([lat,lng],18)
+
+    openForm()   
+}
+</script>
+
+</body>
+</html>
