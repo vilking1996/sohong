@@ -493,7 +493,7 @@ L.control.layers(
 
 if(navigator.geolocation){
 
-    navigator.geolocation.getCurrentPosition(pos=>{
+    navigator.geolocation.watchPosition(pos=>{
 
         userLocation = {
             lat: pos.coords.latitude,
@@ -533,10 +533,15 @@ if(navigator.geolocation){
         })
 
         userMarker = L.marker(
-            [userLocation.lat,userLocation.lng],
-            {icon:userIcon}
-        ).addTo(map)
-        .bindPopup("📍 Vị trí của bạn")
+    [userLocation.lat,userLocation.lng],
+    {icon:userIcon}
+).addTo(map)
+.bindPopup(`
+📡 Tọa độ GPS của bạn<br>
+Lat: ${userLocation.lat.toFixed(6)}<br>
+Lng: ${userLocation.lng.toFixed(6)}
+`)
+.openPopup()
 
     },err=>{
         console.log("Không lấy được vị trí:",err)
@@ -1102,6 +1107,7 @@ function goToCoordinate(){
 
 </body>
 </html>
+
 
 
 
