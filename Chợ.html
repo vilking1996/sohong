@@ -350,6 +350,7 @@ Tổng: <b id="cartTotal">0</b> đ
 <input id="shopZalo" class="input" placeholder="📳Zalo📳">
 <input id="shopAvatar" class="input" placeholder="🎭Link avatar🎭">
 <input id="shopYoutube" class="input" placeholder="🖥Link Youtube🖥">
+<input id="shopPassword" class="input" type="password" placeholder="🔒Password shop">
 <select id="shopIcon" class="input">
 <option value="restaurant">🍜 Nhà hàng</option>
 <option value="coffee">☕ Cafe</option>
@@ -586,6 +587,7 @@ zalo:shopZalo.value,
 avatar:shopAvatar.value,
 youtube:shopYoutube.value,
 icon: shopIcon.value,
+password: shopPassword.value,
 online:shopStatus.checked,
 lat:selectedLatLng.lat,
 lng:selectedLatLng.lng,
@@ -622,8 +624,20 @@ closeForm()
 
 
 function editShop(id){
-const shop = loadedShopsData[id]
-if(!shop) return
+
+    const password = prompt("Nhập mật khẩu để sửa:")
+
+    if(!password) return
+
+    const shop = loadedShopsData[id]
+
+    if(shop.password !== password){
+        alert("Sai mật khẩu!")
+        return
+    }
+
+    // cho phép edit tiếp
+}
 
 editMode = true
 myShopId = id
@@ -649,12 +663,15 @@ openForm()
     
 function deleteShop(id){
 
-    if(!confirm("Xóa shop?")) return
+    const password = prompt("Nhập mật khẩu shop:")
+
+    if(!password) return
 
     socket.emit("delete_shop", {
         shopId: id,
-        owner: ownerId
+        password: password
     })
+}
 
     localStorage.removeItem("myShopId")
     myShopId = null
@@ -1072,5 +1089,6 @@ function goToCoordinate(){
 
 </body>
 </html>
+
 
 
