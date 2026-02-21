@@ -464,8 +464,7 @@ const normalLayer = L.tileLayer(
     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     {
         attribution: '&copy; OpenStreetMap contributors'
-        maxZoom: 19
-        detectRetina: true
+        
     }
 )
 
@@ -474,7 +473,7 @@ const satelliteLayer = L.tileLayer(
     'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     {
         attribution: 'Tiles © Esri'
-        maxZoom: 19
+       
     }
 )
 
@@ -1108,6 +1107,7 @@ function goToCoordinate(){
 
 </body>
 </html>
+
 
 
 
