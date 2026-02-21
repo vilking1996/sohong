@@ -641,20 +641,23 @@ document.getElementById("products").innerHTML=""
 shop.products.forEach(p=>addProduct(p))
 
 openForm()
-
-
-
-
-
 }
 
+
+
+
+    
 function deleteShop(id){
-if(!confirm("Xóa shop?")) return
 
-socket.emit("delete_shop", id)
+    if(!confirm("Xóa shop?")) return
 
-localStorage.removeItem("myShopId")
-myShopId = null
+    socket.emit("delete_shop", {
+        shopId: id,
+        owner: ownerId
+    })
+
+    localStorage.removeItem("myShopId")
+    myShopId = null
 }
 
 
@@ -1069,4 +1072,5 @@ function goToCoordinate(){
 
 </body>
 </html>
+
 
