@@ -402,6 +402,13 @@ const socket = io(SERVER, {
 
 socket.on("connect",()=>{
     console.log("Connected:", socket.id)
+
+    if(myShopId){
+        socket.emit("reconnect_shop", {
+            shopId: myShopId,
+            ownerId: ownerId
+        })
+    }
 })
 
 
@@ -1062,4 +1069,5 @@ function goToCoordinate(){
 
 </body>
 </html>
+
 
