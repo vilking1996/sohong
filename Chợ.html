@@ -964,12 +964,11 @@ html += `
 
 
 
-let marker = L.marker([shop.lat,shop.lng],{icon})
-.addTo(map)
-.bindPopup(html,{maxWidth:350})
+let marker=L.marker([shop.lat,shop.lng],{icon})
+.addTo(map).bindPopup(html,{maxWidth:350})
 
-marker.shopId = shop.id
 markers.push(marker)
+}
 
 
 
@@ -996,13 +995,16 @@ loadedShopsData[shop.id]=shop
 
 socket.on("shop_created",(shop)=>{
 
-markers.forEach((m)=>{
-    if(m.shopId === shop.id){
-        map.removeLayer(m)
-    }
+// xóa marker cũ nếu có
+markers.forEach((m,i)=>{
+if(loadedShopsData[shop.id] &&
+m.getLatLng().lat===loadedShopsData[shop.id].lat){
+map.removeLayer(m)
+}
 })
 
 renderShop(shop)
+loadedShops[shop.id]=true
 loadedShopsData[shop.id]=shop
 })
 
@@ -1018,14 +1020,14 @@ document.getElementById("cartPanel").classList.toggle("open")
 
 
 socket.on("shop_deleted",(id)=>{
+    markers.forEach(m=>{
+        if(loadedShopsData[id] &&
+        m.getLatLng().lat === loadedShopsData[id].lat){
+            map.removeLayer(m)
+        }
+    })
 
-markers.forEach((m)=>{
-    if(m.shopId === id){
-        map.removeLayer(m)
-    }
-})
-
-delete loadedShopsData[id]
+    delete loadedShopsData[id]
 })
 
 
@@ -1067,6 +1069,4 @@ function goToCoordinate(){
 
 </body>
 </html>
-
-
 
