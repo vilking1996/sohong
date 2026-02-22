@@ -496,57 +496,65 @@ L.control.layers(
 
 if(navigator.geolocation){
 
-    navigator.geolocation.watchPosition(pos=>{
+    navigator.geolocation.watchPosition(
+        pos=>{
 
-    userLocation = {
-        lat: pos.coords.latitude,
-        lng: pos.coords.longitude
-    }
+            userLocation = {
+                lat: pos.coords.latitude,
+                lng: pos.coords.longitude
+            }
 
-    if(userMarker){
-        userMarker.setLatLng([userLocation.lat,userLocation.lng])
-    } else {
+            if(userMarker){
 
-        const userIcon = L.divIcon({
-            className:"",
-            html:`
-            <div style="
-                width:25px;
-                height:25px;
-                border-radius:50%;
-                background:#0077ff;
-                border:3px solid white;
-                box-shadow:0 0 10px #00f2ff;
-                display:flex;
-                align-items:center;
-                justify-content:center;
-                font-size:14px;
-                color:black;
-            ">
-                📍
-            </div>
-            `,
-            iconSize:[25,25]
-        })
+                userMarker.setLatLng([userLocation.lat,userLocation.lng])
 
-        userMarker = L.marker(
-            [userLocation.lat,userLocation.lng],
-            {icon:userIcon}
-        ).addTo(map)
+                userMarker.setPopupContent(`
+                📡 GPS của bạn<br>
+                Lat: ${userLocation.lat.toFixed(6)}<br>
+                Lng: ${userLocation.lng.toFixed(6)}
+                `)
 
+            } else {
 
+                const userIcon = L.divIcon({
+                    className:"",
+                    html:`
+                    <div style="
+                        width:25px;
+                        height:25px;
+                        border-radius:50%;
+                        background:#0077ff;
+                        border:3px solid white;
+                        box-shadow:0 0 10px #00f2ff;
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+                        font-size:14px;
+                        color:black;
+                    ">
+                        📍
+                    </div>
+                    `,
+                    iconSize:[25,25]
+                })
 
-            
-.bindPopup(`
-📡GPS your📡<br>
-Lat: ${userLocation.lat.toFixed(6)}<br>
-Lng: ${userLocation.lng.toFixed(6)}
-`)
-.openPopup()
+                userMarker = L.marker(
+                    [userLocation.lat,userLocation.lng],
+                    {icon:userIcon}
+                )
+                .addTo(map)
+                .bindPopup(`
+                📡 GPS của bạn<br>
+                Lat: ${userLocation.lat.toFixed(6)}<br>
+                Lng: ${userLocation.lng.toFixed(6)}
+                `)
+            }
 
-    },err=>{
-        console.log("Không lấy được vị trí:",err)
-    })
+        },
+        err=>{
+            console.log("Không lấy được vị trí:",err)
+        }
+    )
 }
 
 
@@ -1108,6 +1116,7 @@ function goToCoordinate(){
 
 </body>
 </html>
+
 
 
 
