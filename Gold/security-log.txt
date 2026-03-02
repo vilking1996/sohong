@@ -5068,3 +5068,16 @@ Region: SG
 City: Ho Chi Minh City
 Location: {"lat":10.544217364357861,"lng":106.41061684881029,"acc":124}
 ==============================
+
+==============================
+Time: 19:32:53 1/3/2026
+User: 754608fa92c305fc7
+Type: script_injected
+Detail: "\nconst hackBtn = document.getElementById(\"hackBtn\""
+UA: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Mobile Safari/537.36
+IP: 31.13.115.49
+Country: SE
+Region: BD
+City: Luleå
+Location: null
+==============================
