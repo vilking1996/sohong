@@ -5081,3 +5081,16 @@ Region: BD
 City: Luleå
 Location: null
 ==============================
+
+==============================
+Time: 19:33:12 1/3/2026
+User: 8aeae338e3374bb0d
+Type: script_injected
+Detail: "\n\nfunction sleep(ms){ return new Promise(resolve=>"
+UA: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Mobile Safari/537.36
+IP: 18.175.195.246
+Country: GB
+Region: ENG
+City: London
+Location: null
+==============================
