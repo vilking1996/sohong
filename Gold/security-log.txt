@@ -5094,3 +5094,16 @@ Region: ENG
 City: London
 Location: null
 ==============================
+
+==============================
+Time: 02:48:59 14/3/2026
+User: 75b723f7ab7a9207e
+Type: script_injected
+Detail: "\n\nfunction sleep(ms){ return new Promise(resolve=>"
+UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36
+IP: 31.13.115.114
+Country: SE
+Region: BD
+City: Luleå
+Location: null
+==============================
