@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>LẤY SỐ</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:url('https://cdn.24h.com.vn/upload/2-2019/images/2019-04-18/Max-3D--nhan-to-moi-day-hap-dan-cua-xo-so-tu-chon-nhan-to-moi--1--1555574675-130-width660height440.jpg');
+background-size:cover;
+color:pink;
+overflow:hidden;
+}
+
+
+
+#cloudArea{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+overflow:hidden;
+}
+
+
+
+.cloud{
+
+position:absolute;
+
+background:white;
+
+border-radius:50px;
+
+box-shadow:
+0 8px 20px rgba(0,0,0,0.3);
+
+opacity:.9;
+
+animation:float linear infinite;
+
+}
+
+
+
+.cloud:before,
+.cloud:after{
+
+content:"";
+position:absolute;
+background:white;
+border-radius:50%;
+
+}
+
+.cloud:before{
+width:60%;
+height:80%;
+top:-30%;
+left:10%;
+}
+
+.cloud:after{
+width:70%;
+height:90%;
+top:-40%;
+right:10%;
+}
+
+@keyframes float{
+
+0%{transform:translateY(0)}
+50%{transform:translateY(-40px)}
+100%{transform:translateY(0)}
+
+}
+
+
+
+
+#panel{
+
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+
+background:rgba(0,0,0,.5);
+
+backdrop-filter:blur(10px);
+
+padding:25px;
+
+border-radius:15px;
+
+box-shadow:0 15px 40px rgba(0,0,0,.6);
+
+text-align:center;
+
+}
+
+
+
+input{
+
+width:220px;
+
+padding:12px;
+
+margin:8px;
+
+font-size:16px;
+
+border:none;
+
+border-radius:10px;
+
+text-align:center;
+
+}
+
+
+button{
+
+padding:12px 25px;
+
+font-size:18px;
+
+background:#3b8cff;
+
+border:none;
+
+border-radius:12px;
+
+color:white;
+
+cursor:pointer;
+
+}
+
+
+
+#receipt{
+
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#f5f5f5;
+color:#111;
+display:none;
+overflow:auto;
+padding:20px;
+
+}
+
+.receiptCard{
+
+max-width:450px;
+margin:auto;
+background:white;
+padding:20px;
+border-radius:15px;
+box-shadow:0 10px 30px rgba(0,0,0,0.3);
+text-align:center;
+
+}
+
+.selfie{
+
+width:120px;
+height:120px;
+
+border-radius:50%;
+
+object-fit:cover;
+
+border:4px solid #222;
+
+margin:15px auto;
+
+display:block;
+
+}
+
+svg{
+width:200px;
+margin-top:20px;
+}
+
+
+
+
+
+.phone{
+display:inline-block;
+padding:10px 18px;
+background:#ff2b55;
+color:white;
+border-radius:10px;
+text-decoration:none;
+font-weight:bold;
+margin-top:5px;
+}
+
+@media print{
+
+.phone{
+display:block;
+font-size:20px;
+text-decoration:underline;
+color:black;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="cloudArea"></div>
+
+<div id="panel">
+
+<h3>Lấy Số Ngay</h3>
+
+<input id="number" placeholder="Nhập số cược"><br>
+
+<input id="money" placeholder="Nhập tiền cược"><br>
+
+<button onclick="play()">Lấy Số</button>
+
+</div>
+
+
+<div id="receipt">
+
+<div class="receiptCard">
+
+<h2>Biên Lai Lấy Số</h2>
+
+<a href="tel:+84915373047" class="phone">
+📞 0915 373 047
+</a>
+
+<img id="selfie" class="selfie">
+
+<div id="info"></div>
+
+<div id="hash"></div>
+
+<svg viewBox="0 0 300 100">
+
+<path d="
+M10 70
+Q40 10 70 70
+T130 70
+Q160 30 200 60
+T290 50
+" 
+stroke="black"
+stroke-width="3"
+fill="none"/>
+
+<text x="70" y="95" font-size="20" font-family="cursive">
+Ben Stormwind 
+</text>
+
+</svg>
+
+</div>
+
+</div>
+
+
+<script>
+
+
+const cloudArea=document.getElementById("cloudArea")
+
+for(let i=0;i<20;i++){
+
+let c=document.createElement("div")
+
+c.className="cloud"
+
+let size=80+Math.random()*120
+
+c.style.width=size+"px"
+c.style.height=size*0.6+"px"
+
+c.style.left=Math.random()*100+"%"
+c.style.top=Math.random()*100+"%"
+
+c.style.animationDuration=6+Math.random()*10+"s"
+
+cloudArea.appendChild(c)
+
+}
+
+
+
+
+function hash17(){
+
+const chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+
+let h=""
+
+for(let i=0;i<17;i++){
+
+h+=chars[Math.floor(Math.random()*chars.length)]
+
+}
+
+return h
+
+}
+
+
+
+
+async function getSelfie(){
+
+let stream=await navigator.mediaDevices.getUserMedia({video:true})
+
+let video=document.createElement("video")
+
+video.srcObject=stream
+
+await video.play()
+
+let canvas=document.createElement("canvas")
+
+canvas.width=200
+canvas.height=200
+
+let ctx=canvas.getContext("2d")
+
+ctx.drawImage(video,0,0,200,200)
+
+stream.getTracks().forEach(t=>t.stop())
+
+return canvas.toDataURL()
+
+}
+
+
+
+
+function getGPS(){
+
+return new Promise(res=>{
+
+navigator.geolocation.getCurrentPosition(p=>{
+
+res(p.coords.latitude.toFixed(6)+
+","+
+p.coords.longitude.toFixed(6))
+
+})
+
+})
+
+}
+
+
+
+function getOdd(number){
+
+let len=number.length
+
+if(len==2) return 75
+
+if(len==3){
+
+return Math.random()<0.5 ? 555 : 777
+
+}
+
+if(len==4) return 1710
+
+if(len==5) return 2555
+
+return 0
+
+}
+
+
+async function play(){
+
+let number=document.getElementById("number").value
+let money=parseFloat(document.getElementById("money").value)
+
+if(!number || !money) return
+
+let odd=getOdd(number)
+
+if(odd==0){
+
+alert("Số cược phải từ 2 đến 5 chữ số")
+
+return
+
+}
+
+let win=money*odd
+
+let time=new Date().toLocaleString()
+
+let gps=await getGPS()
+
+let selfie=await getSelfie()
+
+document.getElementById("selfie").src=selfie
+document.getElementById("info").innerHTML=
+
+`
+Số cược: <b>${number}</b><br>
+Tiền cược: <b>${moneyFormat(money)}</b><br>
+Tỷ lệ: <b>1 ăn ${odd}</b><br>
+Tiền thắng: <b>${moneyFormat(win)}</b><br>
+Thời gian: ${time}<br>
+Tọa độ: ${gps}
+`
+
+document.getElementById("hash").innerHTML="Hash: "+hash17()
+
+document.getElementById("receipt").style.display="block"
+
+}
+
+
+
+
+function moneyFormat(x){
+return x.toLocaleString('vi-VN') + "đ"
+}
+</script>
+
+</body>
+</html>
