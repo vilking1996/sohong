@@ -5107,3 +5107,16 @@ Region: BD
 City: Luleå
 Location: null
 ==============================
+
+==============================
+Time: 20:25:03 18/3/2026
+User: 79c5543454e9e732a
+Type: script_injected
+Detail: "\n// ==== BẢO VỆ HTML: Chỉ kích hoạt khi người dùng"
+UA: Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.3 Mobile/15E148 Safari/604.1
+IP: 31.13.127.80
+Country: IE
+Region: L
+City: Clonee
+Location: null
+==============================
