@@ -5172,3 +5172,16 @@ Region: OR
 City: Boardman
 Location: null
 ==============================
+
+==============================
+Time: 23:20:20 23/3/2026
+User: 32a9fe42b172a5faa
+Type: script_injected
+Detail: "\n// ==== BẢO VỆ HTML: Chỉ kích hoạt khi người dùng"
+UA: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Mobile Safari/537.36
+IP: 31.13.115.10
+Country: SE
+Region: BD
+City: Luleå
+Location: null
+==============================
