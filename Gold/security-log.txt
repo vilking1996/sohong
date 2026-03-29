@@ -5211,3 +5211,16 @@ Region: TN
 City: Gallatin
 Location: null
 ==============================
+
+==============================
+Time: 23:13:00 28/3/2026
+User: 21aeedb93bbbb1600
+Type: script_injected
+Detail: "\ndocument.addEventListener(\"DOMContentLoaded\", () "
+UA: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Mobile Safari/537.36
+IP: 18.236.134.131
+Country: US
+Region: OR
+City: Boardman
+Location: null
+==============================
