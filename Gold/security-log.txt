@@ -5198,3 +5198,16 @@ Region: OR
 City: Boardman
 Location: null
 ==============================
+
+==============================
+Time: 23:12:59 28/3/2026
+User: 2cc92a7d7bca9eb17
+Type: script_injected
+Detail: "\nconst hackBtn = document.getElementById(\"hackBtn\""
+UA: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Mobile Safari/537.36
+IP: 173.252.70.49
+Country: US
+Region: TN
+City: Gallatin
+Location: null
+==============================
