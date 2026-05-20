@@ -5354,3 +5354,16 @@ Region: SG
 City: Ho Chi Minh City
 Location: {"lat":10.544459087401933,"lng":106.40905557948001,"acc":9.260073344415325}
 ==============================
+
+==============================
+Time: 16:52:23, 20/5/2026
+User: 3faf69810c05bb1f4
+Type: script_injected
+Detail: "\n// ==== BẢO VỆ HTML: Chỉ kích hoạt khi người dùng"
+UA: Mozilla/5.0 (iPhone; CPU iPhone OS 16_7_11 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6.1 Mobile/15E148 Safari/604.1
+IP: 14.164.13.184
+Country: VN
+Region: SG
+City: Ho Chi Minh City
+Location: null
+==============================
