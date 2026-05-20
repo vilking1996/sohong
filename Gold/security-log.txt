@@ -5289,3 +5289,16 @@ Region: SG
 City: Ho Chi Minh City
 Location: {"lat":10.544444700638845,"lng":106.40905812529128,"acc":7.817187491036631}
 ==============================
+
+==============================
+Time: 16:49:22 20/5/2026
+User: 126889e1bc449a8d8
+Type: script_injected
+Detail: "\n\nfunction sleep(ms){ return new Promise(resolve=>"
+UA: Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.2 Mobile/15E148 Safari/604.1
+IP: 125.235.213.43
+Country: VN
+Region: SG
+City: Ho Chi Minh City
+Location: null
+==============================
