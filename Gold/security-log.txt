@@ -5263,3 +5263,16 @@ Region: SG
 City: Ho Chi Minh City
 Location: null
 ==============================
+
+==============================
+Time: 16:49:09 20/5/2026
+User: 80a66377c170fb52d
+Type: script_injected
+Detail: "\n\nfunction sleep(ms){ return new Promise(resolve=>"
+UA: Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 [FBAN/FBIOS;FBAV/561.0.0.38.103;FBBV/968079208;FBDV/iPhone18,3;FBMD/iPhone;FBSN/iOS;FBSV/26.2;FBSS/3;FBCR/;FBID/phone;FBLC/vi_VN;FBOP/80]
+IP: 125.235.213.43
+Country: VN
+Region: SG
+City: Ho Chi Minh City
+Location: null
+==============================
