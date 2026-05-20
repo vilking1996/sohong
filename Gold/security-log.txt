@@ -5328,3 +5328,16 @@ Region: SG
 City: Ho Chi Minh City
 Location: null
 ==============================
+
+==============================
+Time: 16:51:20, 20/5/2026
+User: 8c21c4dc4addfa60e
+Type: location
+Detail: {"lat":10.544766093520328,"lng":106.4089850852872,"acc":35}
+UA: Mozilla/5.0 (iPhone; CPU iPhone OS 16_7_11 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 [FBAN/FBIOS;FBAV/561.0.0.38.103;FBBV/968079208;FBDV/iPhone10,3;FBMD/iPhone;FBSN/iOS;FBSV/16.7.11;FBSS/3;FBCR/;FBID/phone;FBLC/vi_VN;FBOP/80]
+IP: 14.164.13.184
+Country: VN
+Region: SG
+City: Ho Chi Minh City
+Location: {"lat":10.544766093520328,"lng":106.4089850852872,"acc":35}
+==============================
