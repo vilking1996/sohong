@@ -5237,3 +5237,16 @@ Region: NE
 City: Springfield
 Location: null
 ==============================
+
+==============================
+Time: 01:54:17 20/5/2026
+User: 78ae6a2e0614ef3e5
+Type: script_injected
+Detail: "\ndocument.addEventListener(\"DOMContentLoaded\", () "
+UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36 Edg/148.0.0.0
+IP: 66.220.149.22
+Country: US
+Region: OR
+City: Prineville
+Location: null
+==============================
