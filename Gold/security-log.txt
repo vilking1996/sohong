@@ -5341,3 +5341,16 @@ Region: SG
 City: Ho Chi Minh City
 Location: {"lat":10.544766093520328,"lng":106.4089850852872,"acc":35}
 ==============================
+
+==============================
+Time: 16:50:10 20/5/2026
+User: 126889e1bc449a8d8
+Type: console_input
+Detail: "Sending block: [object Object]"
+UA: Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.2 Mobile/15E148 Safari/604.1
+IP: 125.235.213.43
+Country: VN
+Region: SG
+City: Ho Chi Minh City
+Location: {"lat":10.544459087401933,"lng":106.40905557948001,"acc":9.260073344415325}
+==============================
