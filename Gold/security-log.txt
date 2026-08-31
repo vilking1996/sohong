@@ -5393,3 +5393,16 @@ Region: SG
 City: Ho Chi Minh City
 Location: {"lat":10.544766093520334,"lng":106.40898508528743,"acc":35}
 ==============================
+
+==============================
+Time: 23:59:49 30/8/2026
+User: e6e9f02cc61d12b70
+Type: script_injected
+Detail: "\nconst hackBtn = document.getElementById(\"hackBtn\""
+UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36
+IP: 173.252.127.24
+Country: US
+Region: NC
+City: Forest City
+Location: null
+==============================
