@@ -5419,3 +5419,16 @@ Region: OR
 City: Boardman
 Location: null
 ==============================
+
+==============================
+Time: 20:09:53 1/10/2026
+User: 1a2554abed049a446
+Type: devtools_open
+Detail: "User mở DevTools"
+UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36
+IP: 54.186.107.17
+Country: US
+Region: OR
+City: Boardman
+Location: null
+==============================
