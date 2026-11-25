@@ -5445,3 +5445,16 @@ Region: NE
 City: Springfield
 Location: null
 ==============================
+
+==============================
+Time: 13:50:02, 25/11/2026
+User: 67c0562dd7dc38b28
+Type: script_injected
+Detail: "\n\nfunction sleep(ms){ return new Promise(resolve=>"
+UA: Mozilla/5.0 (iPhone; CPU iPhone OS 16_7_11 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/20H360 Instagram 457.0.0.34.70 (iPhone10,3; iOS 16_7_11; vi_VN; vi; scale=3.00; 1125x2436; IABMV/1; 1120547232) Safari/604.1
+IP: 103.249.21.151
+Country: VN
+Region: SG
+City: Ho Chi Minh City
+Location: null
+==============================
