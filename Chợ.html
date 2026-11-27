@@ -596,9 +596,19 @@ const id = editMode
 ? myShopId
 : Date.now().toString(36)+Math.random().toString(36).slice(2)
 
+
+
+
+const now = Date.now()
+const oldShop = loadedShopsData[id]
+
 const shop={
 id:id,
 owner: ownerId,
+
+createdAt: oldShop?.createdAt || now,
+lastModifiedAt: now,
+
 name:shopName.value,
 phone:shopPhone.value,
 zalo:shopZalo.value,
@@ -611,6 +621,13 @@ lat:selectedLatLng.lat,
 lng:selectedLatLng.lng,
 products:[]
 }
+
+
+
+
+
+
+
 
 document.querySelectorAll(".productBox").forEach(box=>{
 shop.products.push({
